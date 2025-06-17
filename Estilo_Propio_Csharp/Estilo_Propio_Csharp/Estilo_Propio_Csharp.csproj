@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9E6F8A9E-E85A-44C3-BAD0-8DC5610E0A6D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Estilo_Propio_Csharp</RootNamespace>
+    <AssemblyName>Estilo_Propio_Csharp</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\_SIGEDebug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Janus.Data.v4, Version=4.0.36.0, Culture=neutral, PublicKeyToken=21d5517571b185bf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\SIGE\_SIGEUserControls\Janus.Data.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Janus.Windows.ButtonBar.v4, Version=4.0.36.0, Culture=neutral, PublicKeyToken=21d5517571b185bf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\Janus Systems\Controls for Microsoft .NET\Windows Forms Controls v4\Bin\v4.0.36\Janus.Windows.ButtonBar.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Janus.Windows.Common.v4, Version=4.0.36.0, Culture=neutral, PublicKeyToken=21d5517571b185bf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\Janus Systems\Controls for Microsoft .NET\Windows Forms Controls v4\Bin\v4.0.36\Janus.Windows.Common.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Janus.Windows.GridEX.v4, Version=4.0.36.0, Culture=neutral, PublicKeyToken=21d5517571b185bf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\SIGE\_SIGEUserControls\Janus.Windows.GridEX.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Janus.Windows.UI.v4, Version=4.0.36.0, Culture=neutral, PublicKeyToken=21d5517571b185bf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\Janus Systems\Controls for Microsoft .NET\Windows Forms Controls v4\Bin\v4.0.36\Janus.Windows.UI.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="ProyectoBase">
+      <HintPath>C:\SIGE\_SIGEUserControls\ProyectoBase.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClsForm.cs" />
+    <Compile Include="ClsHelper.cs" />
+    <Compile Include="clsBtnSeguridadJanus.cs" />
+    <Compile Include="FrmBandejaBibliotecaFormaMedir.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaFormaMedir.Designer.cs">
+      <DependentUpon>FrmBandejaBibliotecaFormaMedir.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaFormaMedir_Man.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaFormaMedir_Man.Designer.cs">
+      <DependentUpon>FrmBandejaBibliotecaFormaMedir_Man.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaGraficos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaGraficos.Designer.cs">
+      <DependentUpon>FrmBandejaBibliotecaGraficos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaGraficos_AddImagen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaGraficos_AddImagen.designer.cs">
+      <DependentUpon>FrmBandejaBibliotecaGraficos_AddImagen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaGraficos_MAN.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaGraficos_MAN.Designer.cs">
+      <DependentUpon>FrmBandejaBibliotecaGraficos_MAN.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaGraficos_VerEPV.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBandejaBibliotecaGraficos_VerEPV.Designer.cs">
+      <DependentUpon>FrmBandejaBibliotecaGraficos_VerEPV.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmBusquedaGeneral.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBusquedaGeneral.Designer.cs">
+      <DependentUpon>FrmBusquedaGeneral.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmBusquedaSensitiva.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBusquedaSensitiva.Designer.cs">
+      <DependentUpon>FrmBusquedaSensitiva.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MenuPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MenuPrincipal.Designer.cs">
+      <DependentUpon>MenuPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModGeneral.cs" />
+    <Compile Include="oParent.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResponseSystem.cs" />
+    <Compile Include="VariablesGenerales.cs" />
+    <EmbeddedResource Include="FrmBandejaBibliotecaFormaMedir.resx">
+      <DependentUpon>FrmBandejaBibliotecaFormaMedir.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBandejaBibliotecaFormaMedir_Man.resx">
+      <DependentUpon>FrmBandejaBibliotecaFormaMedir_Man.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBandejaBibliotecaGraficos.resx">
+      <DependentUpon>FrmBandejaBibliotecaGraficos.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBandejaBibliotecaGraficos_AddImagen.resx">
+      <DependentUpon>FrmBandejaBibliotecaGraficos_AddImagen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBandejaBibliotecaGraficos_MAN.resx">
+      <DependentUpon>FrmBandejaBibliotecaGraficos_MAN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBandejaBibliotecaGraficos_VerEPV.resx">
+      <DependentUpon>FrmBandejaBibliotecaGraficos_VerEPV.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBusquedaGeneral.resx">
+      <DependentUpon>FrmBusquedaGeneral.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBusquedaSensitiva.resx">
+      <DependentUpon>FrmBusquedaSensitiva.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MenuPrincipal.resx">
+      <DependentUpon>MenuPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 y x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Image1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\21999582-botón-añadir-icono-más.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Clone Stamp Tool_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\accept_16X16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AGREGAR.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_right_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ic_database_add_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Magic-wand_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\new_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QUITAR.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search01_16X16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ic_application_modules_48X48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ic_application_modules_star_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ic_copy2_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ic_copy2_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search_02_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ic_table_header_edit_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search_16X16.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
