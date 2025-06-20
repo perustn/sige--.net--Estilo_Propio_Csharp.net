@@ -600,6 +600,11 @@ namespace Estilo_Propio_Csharp
                             withBlock2.Caption = "ESTACIÓN MODIFICACIÓN";
                         }
 
+                        {
+                            var withBlock2 = withBlock1.Columns["Atributos"];
+                            withBlock2.Width = 170;
+                        }
+
                         withBlock1.Columns.Add(new GridEXColumn()
                         {
                             Key = K_strColCheck,
@@ -612,7 +617,7 @@ namespace Estilo_Propio_Csharp
                         });
                     }
                 }
-                gridEX1.FrozenColumns = 8;
+                gridEX1.FrozenColumns = 9;
                 gridEX1.RootTable.Columns[K_strColCheck].Position = 0;
             }
             catch (Exception ex)
@@ -658,6 +663,16 @@ namespace Estilo_Propio_Csharp
                         oFrmMod.TxtDescripcion.Text= gridEX1.GetValue(gridEX1.RootTable.Columns["Descripcion"].Index).ToString();
                         oFrmMod.TxtDescripcionDetallada.Text= gridEX1.GetValue(gridEX1.RootTable.Columns["Descripcion_Det"].Index).ToString();
                         oFrmMod.TxtRutaImagen.Text= gridEX1.GetValue(gridEX1.RootTable.Columns["Imagen"].Index).ToString();
+                        if (gridEX1.GetValue(gridEX1.RootTable.Columns["IsSolicitaAtributo"].Index).ToString() =="SI")
+                        {
+                            oFrmMod.PanelAtributos.Visible = true;
+                            oFrmMod.Size = new System.Drawing.Size(527, 442);
+                        }
+                        else
+                        {
+                            oFrmMod.PanelAtributos.Visible = false;
+                            oFrmMod.Size = new System.Drawing.Size(527, 292);
+                        }
                         oFrmMod.nombreArchivo = "";
                         oFrmMod.ShowDialog();
                         if (oFrmMod.IsCambioOK == true)
