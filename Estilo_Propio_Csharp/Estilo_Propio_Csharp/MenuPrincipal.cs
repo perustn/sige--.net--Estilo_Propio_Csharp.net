@@ -33,5 +33,11 @@ namespace Estilo_Propio_Csharp
             FrmBandejaBibliotecaFormaMedir FRM = new FrmBandejaBibliotecaFormaMedir();
             FRM.ShowDialog();
         }
+
+        private void uiButton2_Click(object sender, EventArgs e)
+        {
+            FrmCargaUPCdesdeExcel FRM = new FrmCargaUPCdesdeExcel();
+            FRM.ShowDialog();
+        }
     }
 }

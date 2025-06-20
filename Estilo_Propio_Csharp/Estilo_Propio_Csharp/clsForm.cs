@@ -95,7 +95,11 @@ namespace Estilo_Propio_Csharp
                 case "FRMBANDEJABIBLIOTECAFORMAMEDIR_MAN":
                     MyForm = new FrmBandejaBibliotecaFormaMedir_Man();
                     break;
-             }
+
+                case "FRMCARGAUPCDESDEEXCEL":
+                    MyForm = new FrmCargaUPCdesdeExcel();
+                    break;
+            }
             return MyForm;
         }
 

@@ -32,6 +32,7 @@ namespace Estilo_Propio_Csharp
             this.label1 = new System.Windows.Forms.Label();
             this.BtnBuscar = new Janus.Windows.EditControls.UIButton();
             this.uiButton1 = new Janus.Windows.EditControls.UIButton();
+            this.uiButton2 = new Janus.Windows.EditControls.UIButton();
             this.SuspendLayout();
             // 
             // label1
@@ -48,13 +49,13 @@ namespace Estilo_Propio_Csharp
             // 
             this.BtnBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnBuscar.ImageKey = "48px-Crystal_Clear_action_apply.png";
-            this.BtnBuscar.Location = new System.Drawing.Point(12, 107);
+            this.BtnBuscar.Location = new System.Drawing.Point(8, 107);
             this.BtnBuscar.Name = "BtnBuscar";
             this.BtnBuscar.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
             this.BtnBuscar.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.BtnBuscar.Size = new System.Drawing.Size(209, 47);
             this.BtnBuscar.TabIndex = 148;
-            this.BtnBuscar.Text = "Bandeja Seguimiento de Cotizaciones de Precios de Tela ";
+            this.BtnBuscar.Text = "Bandeja Biblioteca Graficos";
             this.BtnBuscar.TextHorizontalAlignment = Janus.Windows.EditControls.TextAlignment.Empty;
             this.BtnBuscar.VisualStyle = Janus.Windows.UI.VisualStyle.Office2010;
             this.BtnBuscar.Click += new System.EventHandler(this.BtnBuscar_Click);
@@ -69,16 +70,32 @@ namespace Estilo_Propio_Csharp
             this.uiButton1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.uiButton1.Size = new System.Drawing.Size(209, 47);
             this.uiButton1.TabIndex = 149;
-            this.uiButton1.Text = "Bandeja Seguimiento de Cotizaciones de Precios de Tela ";
+            this.uiButton1.Text = "Bandeja Biblioteca Forma Medir";
             this.uiButton1.TextHorizontalAlignment = Janus.Windows.EditControls.TextAlignment.Empty;
             this.uiButton1.VisualStyle = Janus.Windows.UI.VisualStyle.Office2010;
             this.uiButton1.Click += new System.EventHandler(this.uiButton1_Click);
+            // 
+            // uiButton2
+            // 
+            this.uiButton2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.uiButton2.ImageKey = "48px-Crystal_Clear_action_apply.png";
+            this.uiButton2.Location = new System.Drawing.Point(8, 213);
+            this.uiButton2.Name = "uiButton2";
+            this.uiButton2.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
+            this.uiButton2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.uiButton2.Size = new System.Drawing.Size(209, 47);
+            this.uiButton2.TabIndex = 150;
+            this.uiButton2.Text = "Carga UPC desde archivo";
+            this.uiButton2.TextHorizontalAlignment = Janus.Windows.EditControls.TextAlignment.Empty;
+            this.uiButton2.VisualStyle = Janus.Windows.UI.VisualStyle.Office2010;
+            this.uiButton2.Click += new System.EventHandler(this.uiButton2_Click);
             // 
             // MenuPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(229, 450);
+            this.Controls.Add(this.uiButton2);
             this.Controls.Add(this.uiButton1);
             this.Controls.Add(this.BtnBuscar);
             this.Controls.Add(this.label1);
@@ -95,6 +112,7 @@ namespace Estilo_Propio_Csharp
         private System.Windows.Forms.Label label1;
         internal Janus.Windows.EditControls.UIButton BtnBuscar;
         internal Janus.Windows.EditControls.UIButton uiButton1;
+        internal Janus.Windows.EditControls.UIButton uiButton2;
     }
 }
 
