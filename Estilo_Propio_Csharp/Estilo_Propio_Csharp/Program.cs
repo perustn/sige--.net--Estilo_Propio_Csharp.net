@@ -12,11 +12,22 @@ namespace Estilo_Propio_Csharp
         /// Punto de entrada principal para la aplicación.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MenuPrincipal());
+
+            // Puedes realizar acciones basadas en los argumentos
+            if (args.Length > 0)
+            {
+                VariablesGenerales.pConnect = args[0];
+                Application.Run(new FrmCargaUPCdesdeExcel());
+            }else
+            {
+                Application.Run(new MenuPrincipal());
+            }
+
+           
         }
     }
 }

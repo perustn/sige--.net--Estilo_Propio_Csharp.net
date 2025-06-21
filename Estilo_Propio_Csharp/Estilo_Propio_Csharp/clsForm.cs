@@ -99,6 +99,10 @@ namespace Estilo_Propio_Csharp
                 case "FRMCARGAUPCDESDEEXCEL":
                     MyForm = new FrmCargaUPCdesdeExcel();
                     break;
+
+                case "FRMCARGAUPCDESDEEXCEL_MAIN":
+                    MyForm = new FrmCargaUPCdesdeExcel_Main();
+                    break;
             }
             return MyForm;
         }
