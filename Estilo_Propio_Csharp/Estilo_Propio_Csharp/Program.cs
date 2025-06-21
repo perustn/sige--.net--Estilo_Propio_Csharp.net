@@ -21,6 +21,13 @@ namespace Estilo_Propio_Csharp
             if (args.Length > 0)
             {
                 VariablesGenerales.pConnect = args[0];
+                VariablesGenerales.pConnectSeguridad = args[1];
+                VariablesGenerales.pConnectVB6 = args[2];
+                VariablesGenerales.pCodEmpresa = args[3];
+                VariablesGenerales.pUsuario = args[4];
+                VariablesGenerales.pRuta = args[5];
+                VariablesGenerales.pCodPerfil = args[6];
+
                 Application.Run(new FrmCargaUPCdesdeExcel());
             }else
             {

@@ -51,6 +51,7 @@ namespace Estilo_Propio_Csharp
             this.Name = "FrmCargaUPCdesdeExcel_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main";
+            this.Load += new System.EventHandler(this.FrmCargaUPCdesdeExcel_Main_Load);
             this.ResumeLayout(false);
 
         }
