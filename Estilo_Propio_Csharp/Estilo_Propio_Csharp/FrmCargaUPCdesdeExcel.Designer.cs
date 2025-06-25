@@ -29,7 +29,6 @@ namespace Estilo_Propio_Csharp
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmCargaUPCdesdeExcel));
             this.uiGroupBox1 = new Janus.Windows.EditControls.UIGroupBox();
             this.txtDesCliente = new System.Windows.Forms.TextBox();
             this.txtAbrCliente = new System.Windows.Forms.TextBox();
@@ -171,12 +170,12 @@ namespace Estilo_Propio_Csharp
             // 
             // btnCargaExcel
             // 
-            this.btnCargaExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnCargaExcel.Image")));
+            this.btnCargaExcel.Image = global::Estilo_Propio_Csharp.Properties.Resources.ic_copy2_48x48;
             this.btnCargaExcel.Location = new System.Drawing.Point(171, 3);
             this.btnCargaExcel.Name = "btnCargaExcel";
             this.btnCargaExcel.Size = new System.Drawing.Size(147, 24);
             this.btnCargaExcel.TabIndex = 0;
-            this.btnCargaExcel.Text = "Extraer Datos Excel";
+            this.btnCargaExcel.Text = "Extraer Datos ";
             this.btnCargaExcel.VisualStyle = Janus.Windows.UI.VisualStyle.Office2010;
             this.btnCargaExcel.Click += new System.EventHandler(this.btnCargaExcel_Click);
             // 

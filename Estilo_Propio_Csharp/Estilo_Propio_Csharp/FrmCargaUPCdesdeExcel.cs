@@ -24,7 +24,6 @@ namespace Estilo_Propio_Csharp
             InitializeComponent();
         }
 
-
         //VARIABLES        
         string filePath = "";
         string sNom_Archivo = "";
@@ -32,11 +31,15 @@ namespace Estilo_Propio_Csharp
         bool IsArchivoProcesado = false;
         IWorkbook workbook;
 
+        enum FormatoDocumento
+        {
+            Excel,
+            Pdf
+        }
+
         ClsHelper oHP = new ClsHelper();
         //DATATABLE PARA LA INFO FINAL
         DataTable oDT_Datos_Finales = new DataTable();
-
-
 
         string codCliente = "";
         string poPETER = "";
@@ -46,11 +49,8 @@ namespace Estilo_Propio_Csharp
         string codOrganizacionFOOT = "FJ";
         string codOrganizacionSTITCH = "SGH";
 
-
         private void FrmCargaUPCdesdeExcel_Load(object sender, EventArgs e)
         {
-
-
             //DATATABLE PARA ALMACENAR LA INFO FINAL
             oDT_Datos_Finales.Columns.Add("PO", typeof(string));
             oDT_Datos_Finales.Columns.Add("Talla", typeof(string));
@@ -118,7 +118,7 @@ namespace Estilo_Propio_Csharp
             //LIMPIAMOS LOS DATATABLES
             oDT_Datos_Finales.Clear();
 
-            sFormato = "1";
+            FormatoDocumento sFormato = FormatoDocumento.Excel;
 
             if (string.IsNullOrWhiteSpace(codOrganizacion) ||
                         (codOrganizacion != codOrganizacionPETER &&
@@ -160,7 +160,7 @@ namespace Estilo_Propio_Csharp
                     }
                     else if (Path.GetExtension(filePath).ToLower() == ".pdf")
                     {
-                        sFormato = "2";
+                        sFormato = FormatoDocumento.Pdf;
                     }
                     else
                     {
@@ -169,9 +169,9 @@ namespace Estilo_Propio_Csharp
                     }
                 }
 
-                string nombreSinExtension = Path.GetFileNameWithoutExtension(filePath);
+                string nombreArchivoSinExtension = Path.GetFileNameWithoutExtension(filePath);
 
-                CargaExcel(sFormato, nombreSinExtension);
+                ExtraerData(sFormato, nombreArchivoSinExtension);
 
             }
             catch (IOException ioEx)
@@ -188,160 +188,151 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        private void CargaExcel(string sFormato, string nomArchivo)
+        private void ExtraerData(FormatoDocumento sFormato, string nomArchivo)
         {
             try
             {
                 var mc = new ClsHelper();
 
-                if (sFormato == "2")
+                switch (sFormato)
                 {
-                    if (codOrganizacion == codOrganizacionSTITCH)
-                    {
-                        ExtractTableDataSTITCH_v2(txtRuta_Archivo_Excel.Text.Trim());
-                    }
-
-                    if (codOrganizacion == codOrganizacionPETER)
-                    {
-                        ExtractTableData(txtRuta_Archivo_Excel.Text.Trim());
-                    }
-
-                }
-
-                if (sFormato == "1")
-                {
-
-                    int col_PO = -1;
-                    int col_Talla = -1;
-                    int col_CodColor = -1;
-                    int col_DesColor = -1;
-                    int col_Precio = -1;
-                    int col_EstiloCliente = -1;
-                    int col_EstiloClienteDes = -1;
-                    int col_UPC = -1;
-
-                    int col_PO_Line_Item = -1;
-                    int col_Material_Key = -1;
-
-                    for (int i = 0; i < workbook.NumberOfSheets; i++)
-                    {
-                        ISheet sheet = workbook.GetSheetAt(i);
-                        string sheetName = sheet.SheetName.ToUpper();
-
-                        if (codOrganizacion == codOrganizacionPETER)         //peter                   
-                            if (!sheetName.Contains("ORDERMANAGMENT")) continue;
-                        if (codOrganizacion == codOrganizacionTMW)   //tmw
-                            if (!sheetName.Contains("SHEET1")) continue;
-                        //filaEncabezado = 2;
-
-                        if (codOrganizacion == codOrganizacionFOOT)  //foot
-                            if (!sheetName.Contains("SHEET1")) continue;
-
-                        // Buscar fila de encabezados
-                        for (int rowIndex = sheet.FirstRowNum; rowIndex <= sheet.LastRowNum; rowIndex++)
+                    case FormatoDocumento.Pdf:
+                        if (codOrganizacion == codOrganizacionSTITCH)
                         {
-                            IRow row = sheet.GetRow(rowIndex);
-                            ///////IRow row = sheet.GetRow(filaEncabezado);
-                            if (row == null) continue;
+                            ExtractTableDataSTITCH_v2(txtRuta_Archivo_Excel.Text.Trim());
+                        }
+                        else if (codOrganizacion == codOrganizacionPETER)
+                        {
+                            //ExtractTableData(txtRuta_Archivo_Excel.Text.Trim());
+                            ExtractTableData2(txtRuta_Archivo_Excel.Text.Trim());
+                        }
+                        break;
+                    case FormatoDocumento.Excel:
 
-                            col_PO = col_Talla = col_CodColor = col_DesColor = col_Precio = col_EstiloCliente = col_EstiloClienteDes = col_UPC = col_PO_Line_Item = col_Material_Key = -1;
+                            int col_PO = -1;
+                            int col_Talla = -1;
+                            int col_CodColor = -1;
+                            int col_DesColor = -1;
+                            int col_Precio = -1;
+                            int col_EstiloCliente = -1;
+                            int col_EstiloClienteDes = -1;
+                            int col_UPC = -1;
 
+                            int col_PO_Line_Item = -1;
+                            int col_Material_Key = -1;
 
-                            for (int cellIndex = 0; cellIndex < row.LastCellNum; cellIndex++)
+                            for (int i = 0; i < workbook.NumberOfSheets; i++)
                             {
-                                string header = mc.GetCellValue(row.GetCell(cellIndex)).ToString().ToUpper();
+                                ISheet sheet = workbook.GetSheetAt(i);
+                                string sheetName = sheet.SheetName.ToUpper();
 
-                                if (codOrganizacion == codOrganizacionPETER)
-                                {
-                                    if (header.Contains("VARPONUMBER")) col_PO = cellIndex;
-                                    if (header.Contains("VARSIZE_SIZE")) col_Talla = cellIndex;
-                                    if (header.Contains("VARCOLORCODE")) col_CodColor = cellIndex;
-                                    if (header.Contains("VARPRICE")) col_Precio = cellIndex;
-                                    if (header.Contains("VARSTYLECODE")) col_EstiloCliente = cellIndex;
-                                    if (header.Contains("UPC")) col_UPC = cellIndex;
-                                }
-                                else if (codOrganizacion == codOrganizacionTMW)
-                                {
-                                    if (header.Contains("PO #")) col_PO = cellIndex;
-                                    if (header.Contains("SIZE (ATTRIBUTE)")) col_Talla = cellIndex;
-                                    if (header.Contains("COLOR DESC") && col_DesColor == -1) col_DesColor = cellIndex;
-                                    if (header.Contains("COLOR") && col_CodColor == -1) col_CodColor = cellIndex;
-                                    if (header.Contains("STYLE #")) col_EstiloCliente = cellIndex;
-                                    if (header.Contains("STYLE DESC")) col_EstiloClienteDes = cellIndex;
-                                    if (header.Contains("UPC")) col_UPC = cellIndex;
-                                    if (header.Contains("PO LINE ITEM")) col_PO_Line_Item = cellIndex;
-                                    if (header.Contains("MATERIAL - KEY")) col_Material_Key = cellIndex;
-                                }
-                                else if (codOrganizacion == codOrganizacionFOOT)
-                                {
+                                if (codOrganizacion == codOrganizacionPETER)  //peter                   
+                                    if (!sheetName.Contains("ORDERMANAGMENT")) continue;
+                                if (codOrganizacion == codOrganizacionTMW)   //tmw
+                                    if (!sheetName.Contains("SHEET1")) continue;
+                                if (codOrganizacion == codOrganizacionFOOT)  //foot
+                                    if (!sheetName.Contains("SHEET1")) continue;
 
-                                    if (header.Contains("ITEM#")) col_Talla = cellIndex;
-                                    ///if (header.Contains("Name")) col_DesColor = cellIndex;
-                                    if (header.Contains("ITEM#")) col_EstiloCliente = cellIndex;
-                                    if (header.Contains("NAME")) col_EstiloClienteDes = cellIndex;
-                                    if (header.Contains("UPC")) col_UPC = cellIndex;
-                                }
-                            }
-
-                            //if (col_PO >= 0 && col_Talla >= 0 && col_CodColor>0 && col_Precio> 0 && col_EstiloCliente > 0 && col_UPC> 0)
-                            if (col_UPC > 0)
-                            {
-                                int emptyRowCounter = 0;
-                                for (int r = rowIndex + 1; r <= sheet.LastRowNum; r++)
-                                ///for (int r = filaEncabezado + 1; r <= sheet.LastRowNum; r++)
+                                // Buscar fila de encabezados
+                                for (int rowIndex = sheet.FirstRowNum; rowIndex <= sheet.LastRowNum; rowIndex++)
                                 {
+                                    IRow row = sheet.GetRow(rowIndex);
 
-                                    IRow dataRow = sheet.GetRow(r);
-                                    if (dataRow == null)
+                                    if (row == null) continue;
+
+                                    col_PO = col_Talla = col_CodColor = col_DesColor = col_Precio = col_EstiloCliente = col_EstiloClienteDes = col_UPC = col_PO_Line_Item = col_Material_Key = -1;
+
+                                    for (int cellIndex = 0; cellIndex < row.LastCellNum; cellIndex++)
                                     {
-                                        emptyRowCounter++;
-                                        if (emptyRowCounter > 50) break;
-                                        continue;
-                                    }
+                                        string header = mc.GetCellValue(row.GetCell(cellIndex)).ToString().ToUpper();
 
-                                    string po = col_PO >= 0 ? mc.GetCellValue(dataRow.GetCell(col_PO))?.ToString() ?? "" : "";
-                                    string talla = col_Talla >= 0 ? mc.GetCellValue(dataRow.GetCell(col_Talla))?.ToString() ?? "" : "";
-
-                                    string codColor = col_CodColor >= 0 ? mc.GetCellValue(dataRow.GetCell(col_CodColor))?.ToString() ?? "" : "";
-                                    string desColor = col_DesColor >= 0 ? mc.GetCellValue(dataRow.GetCell(col_DesColor))?.ToString() ?? "" : "";
-                                    string precio = col_Precio >= 0 ? mc.GetCellValue(dataRow.GetCell(col_Precio))?.ToString() ?? "" : "";
-                                    string estilo = col_EstiloCliente >= 0 ? mc.GetCellValue(dataRow.GetCell(col_EstiloCliente))?.ToString() ?? "" : "";
-                                    string estiloDes = col_EstiloClienteDes >= 0 ? mc.GetCellValue(dataRow.GetCell(col_EstiloClienteDes))?.ToString() ?? "" : "";
-                                    string upc = col_UPC >= 0 ? mc.GetCellValue(dataRow.GetCell(col_UPC))?.ToString() ?? "" : "";
-
-                                    string poLineItem = col_PO_Line_Item >= 0 ? mc.GetCellValue(dataRow.GetCell(col_PO_Line_Item))?.ToString() ?? "" : "";
-                                    string materialKey = col_Material_Key >= 0 ? mc.GetCellValue(dataRow.GetCell(col_Material_Key))?.ToString() ?? "" : "";
-
-                                    if (codOrganizacion == codOrganizacionFOOT)
-                                    {
-                                        string[] partesNomArchivo = nomArchivo.Split('-');
-                                        po = partesNomArchivo[1].Replace(" ", "");
-
-                                        if (!string.IsNullOrWhiteSpace(talla) && talla.Contains("-"))
+                                        if (codOrganizacion == codOrganizacionPETER)
                                         {
-                                            string[] partes = talla.Split('-');
-                                            estilo = partes[0];
-                                            talla = partes[1].Replace(" ", "");
+                                            if (header.Contains("VARPONUMBER")) col_PO = cellIndex;
+                                            if (header.Contains("VARSIZE_SIZE")) col_Talla = cellIndex;
+                                            if (header.Contains("VARCOLORCODE")) col_CodColor = cellIndex;
+                                            if (header.Contains("VARPRICE")) col_Precio = cellIndex;
+                                            if (header.Contains("VARSTYLECODE")) col_EstiloCliente = cellIndex;
+                                            if (header.Contains("UPC")) col_UPC = cellIndex;
+                                        }
+                                        else if (codOrganizacion == codOrganizacionTMW)
+                                        {
+                                            if (header.Contains("PO #")) col_PO = cellIndex;
+                                            if (header.Contains("SIZE (ATTRIBUTE)")) col_Talla = cellIndex;
+                                            if (header.Contains("COLOR DESC") && col_DesColor == -1) col_DesColor = cellIndex;
+                                            if (header.Contains("COLOR") && col_CodColor == -1) col_CodColor = cellIndex;
+                                            if (header.Contains("STYLE #")) col_EstiloCliente = cellIndex;
+                                            if (header.Contains("STYLE DESC")) col_EstiloClienteDes = cellIndex;
+                                            if (header.Contains("UPC")) col_UPC = cellIndex;
+                                            if (header.Contains("PO LINE ITEM")) col_PO_Line_Item = cellIndex;
+                                            if (header.Contains("MATERIAL - KEY")) col_Material_Key = cellIndex;
+                                        }
+                                        else if (codOrganizacion == codOrganizacionFOOT)
+                                        {
+                                            if (header.Contains("ITEM#")) col_Talla = cellIndex;
+                                            if (header.Contains("ITEM#")) col_EstiloCliente = cellIndex;
+                                            if (header.Contains("NAME")) col_EstiloClienteDes = cellIndex;
+                                            if (header.Contains("UPC")) col_UPC = cellIndex;
                                         }
                                     }
 
-                                    // Si está vacío, contamos; si no, reiniciamos contador
-                                    if (string.IsNullOrWhiteSpace(po) && string.IsNullOrWhiteSpace(talla))
+                                    if (col_UPC > 0)
                                     {
-                                        emptyRowCounter++;
-                                        if (emptyRowCounter > 50) break;
-                                        continue;
+                                        int emptyRowCounter = 0;
+                                        for (int r = rowIndex + 1; r <= sheet.LastRowNum; r++)
+                                        {
+                                            IRow dataRow = sheet.GetRow(r);
+                                            if (dataRow == null)
+                                            {
+                                                emptyRowCounter++;
+                                                if (emptyRowCounter > 50) break;
+                                                continue;
+                                            }
+
+                                            string po = col_PO >= 0 ? mc.GetCellValue(dataRow.GetCell(col_PO))?.ToString() ?? "" : "";
+                                            string talla = col_Talla >= 0 ? mc.GetCellValue(dataRow.GetCell(col_Talla))?.ToString() ?? "" : "";
+
+                                            string codColor = col_CodColor >= 0 ? mc.GetCellValue(dataRow.GetCell(col_CodColor))?.ToString() ?? "" : "";
+                                            string desColor = col_DesColor >= 0 ? mc.GetCellValue(dataRow.GetCell(col_DesColor))?.ToString() ?? "" : "";
+                                            string precio = col_Precio >= 0 ? mc.GetCellValue(dataRow.GetCell(col_Precio))?.ToString() ?? "" : "";
+                                            string estilo = col_EstiloCliente >= 0 ? mc.GetCellValue(dataRow.GetCell(col_EstiloCliente))?.ToString() ?? "" : "";
+                                            string estiloDes = col_EstiloClienteDes >= 0 ? mc.GetCellValue(dataRow.GetCell(col_EstiloClienteDes))?.ToString() ?? "" : "";
+                                            string upc = col_UPC >= 0 ? mc.GetCellValue(dataRow.GetCell(col_UPC))?.ToString() ?? "" : "";
+
+                                            string poLineItem = col_PO_Line_Item >= 0 ? mc.GetCellValue(dataRow.GetCell(col_PO_Line_Item))?.ToString() ?? "" : "";
+                                            string materialKey = col_Material_Key >= 0 ? mc.GetCellValue(dataRow.GetCell(col_Material_Key))?.ToString() ?? "" : "";
+
+                                            if (codOrganizacion == codOrganizacionFOOT)
+                                            {
+                                                string[] partesNomArchivo = nomArchivo.Split('-');
+                                                po = partesNomArchivo[1].Replace(" ", "");
+
+                                                if (!string.IsNullOrWhiteSpace(talla) && talla.Contains("-"))
+                                                {
+                                                    string[] partes = talla.Split('-');
+                                                    estilo = partes[0];
+                                                    talla = partes[1].Replace(" ", "");
+                                                }
+                                            }
+
+                                            // Si está vacío, contamos; si no, reiniciamos contador
+                                            if (string.IsNullOrWhiteSpace(po) && string.IsNullOrWhiteSpace(talla))
+                                            {
+                                                emptyRowCounter++;
+                                                if (emptyRowCounter > 50) break;
+                                                continue;
+                                            }
+                                            emptyRowCounter = 0;
+
+                                            // Agregar a DataTable
+                                            oDT_Datos_Finales.Rows.Add(po, talla, codColor, precio, estilo, upc, desColor, estiloDes, poLineItem, materialKey);
+                                        }
+
+                                        break; // Ya procesamos la hoja
                                     }
-                                    emptyRowCounter = 0;
-
-                                    // Agregar a DataTable
-                                    oDT_Datos_Finales.Rows.Add(po, talla, codColor, precio, estilo, upc, desColor, estiloDes, poLineItem, materialKey);
                                 }
-
-                                break; // Ya procesamos la hoja
                             }
-                        }
-                    }
+                        break;
                 }
 
                 if (oDT_Datos_Finales.Rows.Count > 0)
@@ -359,11 +350,6 @@ namespace Estilo_Propio_Csharp
                 //throw;
             }
         }
-
-
-
-
-
 
         /////////////////////////////////////////////////////
         public void ExtractTableData(string pdfFilePath)
@@ -496,6 +482,113 @@ namespace Estilo_Propio_Csharp
             }
         }
 
+
+        public void ExtractTableData2(string pdfFilePath)
+        {
+            using (PdfDocument document = PdfDocument.Open(pdfFilePath))
+            {
+                bool tablaIniciada = false;
+                float toleranciaY = 2f;
+                float toleranciaX = 30f; // tolerancia horizontal para asignar columnas
+                string ItemNumber = "";
+                string Barcode = "";
+                string Style = "";
+                string Color = "";
+                string Size = "";
+                string precio = "";
+
+
+                Dictionary<string, float> posicionesColumnas = null; // se llena al detectar encabezado
+
+                for (int pageNum = 1; pageNum <= document.NumberOfPages; pageNum++)
+                {
+                    var page = document.GetPage(pageNum);
+                    var words = page.GetWords().ToList();
+
+                    if (!words.Any())
+                        continue;
+
+                    var sortedWords = words
+                        .OrderByDescending(w => w.BoundingBox.Top)
+                        .ThenBy(w => w.BoundingBox.Left)
+                        .ToList();
+
+                    var lines = sortedWords
+                        .GroupBy(w => w.BoundingBox.Top, new DoubleToleranceComparer(toleranciaY))
+                        .ToList();
+                    
+                    foreach (var line in lines)
+                    {
+                        var lineWords = line.OrderBy(w => w.BoundingBox.Left).ToList();
+
+
+                        // Detectar línea encabezado tabla
+                        if (!tablaIniciada && lineWords.Any(w => w.Text.Equals("varPrice", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            tablaIniciada = true;
+
+                            // Crear diccionario con posiciones de columnas basadas en encabezado
+                            posicionesColumnas = new Dictionary<string, float>();
+
+                            foreach (var w in lineWords)
+                            {
+                                // Usar el texto como clave, y posición Left como valor                                
+                                posicionesColumnas[w.Text] = (float)w.BoundingBox.Left;
+                            }
+
+                            // Por ejemplo, si quieres renombrar claves para que coincidan con tus propiedades
+                            // Puedes hacer un mapeo aquí, si el encabezado es diferente
+
+                            continue; // saltar línea encabezado
+                        }
+
+                        if (!tablaIniciada)
+                            continue;
+
+                        ////////////////// Detectar fin tabla
+                        ////////////////if (lineWords.Any(w => w.Text.Equals("PO", StringComparison.OrdinalIgnoreCase)))
+                        ////////////////    break;
+
+                        if (posicionesColumnas == null)
+                            continue; // seguridad
+
+                        // Ahora asignar las palabras de la fila a cada columna según proximidad en X
+                        Dictionary<string, string> fila = new Dictionary<string, string>();
+
+                        foreach (var col in posicionesColumnas)
+                        {
+                            // Buscar la palabra más cercana a la posición X de la columna
+                            var palabraColumna = lineWords
+                                .Where(w => Math.Abs(w.BoundingBox.Left - col.Value) < toleranciaX)
+                                .OrderBy(w => Math.Abs(w.BoundingBox.Left - col.Value))
+                                .FirstOrDefault();
+
+                            fila[col.Key] = palabraColumna?.Text ?? "";
+                        }
+
+                        try
+                        {
+                            ItemNumber = fila.ContainsKey("varPONumber") ? fila["varPONumber"] : "";
+                            Barcode = fila.ContainsKey("UPC") ? fila["UPC"] : "";
+                            Style = fila.ContainsKey("varStyleCode") ? fila["varStyleCode"] : "";
+                            Color = fila.ContainsKey("varColorCode") ? fila["varColorCode"] : "";
+                            Size = fila.ContainsKey("varSize_Size") ? fila["varSize_Size"] : "";
+                            precio = fila.ContainsKey("varPrice") ? fila["varPrice"] : "";
+
+                            if (!string.IsNullOrWhiteSpace(Barcode))
+                            {
+                                oDT_Datos_Finales.Rows.Add(ItemNumber, Size, Color, precio, Style, Barcode, Color, "", "", "");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error procesando fila: {ex.Message}");
+                        }
+                    }
+                }
+            }
+        }
+
         public void ExtractTableDataSTITCH_v2(string pdfFilePath)
         {
             using (PdfDocument document = PdfDocument.Open(pdfFilePath))
@@ -550,28 +643,9 @@ namespace Estilo_Propio_Csharp
                         var styleLine = lines[i + 4];
                         var priceLine = lines[i + 5];
 
-
-                        ////////////////////////////////////
-                        // --- Calcular color con control de proximidad ---
-                        var colorWord1 = generalInfo.ElementAtOrDefault(1);
-                        var colorWord2 = generalInfo.ElementAtOrDefault(2);
-                        string color;
-
-                        if (colorWord1 != null && colorWord2 != null)
-                        {
-                            float espacioMaximo = 10f; // Ajusta según pruebas
-                            double distancia = colorWord2.BoundingBox.Left - colorWord1.BoundingBox.Right;
-
-                            if (distancia <= espacioMaximo)
-                                color = $"{colorWord1.Text} {colorWord2.Text}";
-                            else
-                                color = colorWord1.Text;
-                        }
-                        else
-                        {
-                            color = colorWord1?.Text ?? "";
-                        }
-
+                        List<string> frases = GroupWordsByProximity(generalInfo);
+                        string color = frases.ElementAtOrDefault(1);
+                        string ec_des = frases.ElementAtOrDefault(2);
                         ///////////////////////////////////
 
                         foreach (var sizeWord in sizeLine)
@@ -591,7 +665,7 @@ namespace Estilo_Propio_Csharp
                                              (!string.IsNullOrWhiteSpace(style) ? style : "");
 
                             // Agregar a DataTable
-                            oDT_Datos_Finales.Rows.Add(po, size, color, price, GetWordAt(generalInfo, 0), fullUpc, color, GetWordAt(generalInfo, 2), "", "");
+                            oDT_Datos_Finales.Rows.Add(po, size, color, price, GetWordAt(generalInfo, 0), fullUpc, color, ec_des, "", "");
 
                         }
 
@@ -600,6 +674,25 @@ namespace Estilo_Propio_Csharp
                 }
             }
         }
+
+    public static List<string> GroupWordsByProximity(List<Word> words)
+    {
+        float espacioMaximo = 10f; // Ajusta según pruebas
+        string frase = "";
+        var phrases = new List<string>();
+        for (int i = 1; i < words.Count; i++)
+        {
+            var previousWord = words[i - 1];
+            var currentWord = words[i];
+            double distancia = currentWord.BoundingBox.Left - previousWord.BoundingBox.Right;
+            if (distancia <= espacioMaximo)
+                frase = $"{previousWord.Text} {currentWord.Text}";
+            else
+                frase = previousWord.Text;
+                phrases.Add(frase);
+        }
+        return phrases;
+    }
 
         public string FindNearestTextSafe(List<Word> line, double x, float maxDist = 20f)
         {
@@ -691,11 +784,12 @@ namespace Estilo_Propio_Csharp
                 FrmBusquedaGeneral oTipo = new FrmBusquedaGeneral();
                 if (opcion == 1)
                 {
-                    oTipo.sQuery = "select Abr_cliente, Nom_cliente, Cod_cliente,cod_organizacion from tg_cliente where cod_organizacion in ('TM','PM','FJ','SGH') and abr_cliente like '%" + txtAbrCliente.Text + "%'";
+
+                    oTipo.sQuery = string.Format("exec tg_ayuda_cliente_carga_upc @opcion = '{0}', @abr_cliente = '{1}'", "1", txtAbrCliente.Text);
                 }
                 else
                 {
-                    oTipo.sQuery = "select Abr_cliente, Nom_cliente, Cod_cliente,cod_organizacion from tg_cliente where cod_organizacion in ('TM','PM','FJ','SGH') and Nom_cliente like '%" + txtDesCliente.Text + "%'";
+                    oTipo.sQuery = string.Format("exec tg_ayuda_cliente_carga_upc @opcion = '{0}', @Nom_cliente = '{1}'", "2", txtDesCliente.Text);
                 }
 
                 oTipo.Cargar_Datos();
@@ -761,11 +855,7 @@ namespace Estilo_Propio_Csharp
                 return;
             }
 
-
-
-            DataTable DtClientes = oHP.DevuelveDatos("select cod_cliente from tg_cliente where cod_organizacion in ('TM','PM','FJ','SGH') and cod_cliente='" + codCliente + "'", VariablesGenerales.pConnect);
-
-            if (DtClientes == null || DtClientes.Rows.Count == 0)
+            if (codCliente.Equals(""))
             {
                 MessageBox.Show("Cliente no válido o no permitido", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -786,6 +876,7 @@ namespace Estilo_Propio_Csharp
                         string NumMovimiento = string.Empty;
                         foreach (DataRow row in oDT_Datos_Finales.Rows)
                         {
+                            cmd.Parameters.Clear();
 
                             //PROCESAMOS LA INFO FINAL
                             cmd.CommandText = "UP_ACTUALIZA_TG_LOTCOLTAL_BITACORA_UPC";
@@ -803,7 +894,7 @@ namespace Estilo_Propio_Csharp
                         }
                         transaction.Commit();
 
-                        MessageBox.Show("Se Ha Generado CORRECTAMENTE", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Se han guardado los datos CORRECTAMENTE", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {

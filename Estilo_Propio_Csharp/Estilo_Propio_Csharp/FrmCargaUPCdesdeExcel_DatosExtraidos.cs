@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Janus.Windows.GridEX;
 using NPOI.SS.Formula.Functions;
 using System.Xml;
+using System.Diagnostics;
 
 namespace Estilo_Propio_Csharp
 {
@@ -20,8 +21,6 @@ namespace Estilo_Propio_Csharp
         ClsHelper oHP = new ClsHelper();
         Color colEmpresa = new Color();
         public DataTable oDT_Datos = new DataTable();
-        string strSQL;
-
 
         public FrmCargaUPCdesdeExcel_DatosExtraidos()
         {
@@ -43,15 +42,12 @@ namespace Estilo_Propio_Csharp
             GridEX1.DataSource = oDT_Datos;
             oHP.CheckLayoutGridEx(GridEX1);
 
-
             GridEX1.FilterMode = FilterMode.Automatic;
             GridEX1.DefaultFilterRowComparison = FilterConditionOperator.Contains;
 
             GridEX1.RootTable.HeaderLines = 2;
-            GridEX1.RootTable.RowHeight = 30;
+            GridEX1.RootTable.RowHeight = 20;
             GridEX1.RootTable.PreviewRow = true;
-            //GridEX1.RootTable.Groups.Add("SHIPMENT");
-
             foreach (GridEXColumn oGridEXColumn in GridEX1.RootTable.Columns)
             {
                 oGridEXColumn.WordWrap = true;
@@ -60,52 +56,45 @@ namespace Estilo_Propio_Csharp
                 oGridEXColumn.Visible = true;
             }
 
-            //////////////GridEXColumn SHIPMENT = GridEX1.RootTable.Columns["SHIPMENT"];
-            //////////////SHIPMENT.Caption = "SHIPMENT";
-            //////////////SHIPMENT.Width = 70;
-
-            //////////////GridEXColumn COD_DESTINO = GridEX1.RootTable.Columns["COD_DESTINO"];
-            //////////////COD_DESTINO.Caption = "CODIGO DESTINO";
-            //////////////COD_DESTINO.Width = 80;
-
-            //////////////GridEXColumn FINAL_NDC = GridEX1.RootTable.Columns["FINAL_INDC"];
-            //////////////FINAL_NDC.Caption = "FINAL INDC";
-            //////////////FINAL_NDC.Width = 90;
-
-            //////////////GridEXColumn DES_RATIO_TALLA = GridEX1.RootTable.Columns["DES_RATIO_TALLA"];
-            //////////////DES_RATIO_TALLA.Caption = "RATIO TALLAS";
-            //////////////DES_RATIO_TALLA.Width = 80;
-
-            //////////////GridEXColumn QTY_CASE_PACK = GridEX1.RootTable.Columns["QTY_CASE_PACK"];
-            //////////////QTY_CASE_PACK.Caption = "QTY CASE PACK";
-            //////////////QTY_CASE_PACK.Width = 90;
-
-            //////////////GridEXColumn COD_ESTILO = GridEX1.RootTable.Columns["COD_ESTILO"];
-            //////////////COD_ESTILO.Caption = "CODIGO ESTILO";
-            //////////////COD_ESTILO.Width = 90;
-
-            //////////////GridEXColumn DES_ESTILO = GridEX1.RootTable.Columns["DES_ESTILO"];
-            //////////////DES_ESTILO.Caption = "ESTILO";
-            //////////////DES_ESTILO.Width = 100;
-
-            //////////////GridEXColumn COD_COLOR = GridEX1.RootTable.Columns["COD_COLOR"];
-            //////////////COD_COLOR.Caption = "CODIGO COLOR";
-            //////////////COD_COLOR.Width = 90;
-
-            //////////////GridEXColumn COD_TALLA = GridEX1.RootTable.Columns["COD_TALLA"];
-            //////////////COD_TALLA.Caption = "CODIGO TALLA";
-            //////////////COD_TALLA.Width = 80;
-
-            //////////////GridEXColumn CANTIDAD = GridEX1.RootTable.Columns["CANTIDAD"];
-            //////////////CANTIDAD.Caption = "CANTIDAD";
-            //////////////CANTIDAD.Width = 90;
-            //////////////CANTIDAD.AggregateFunction = Janus.Windows.GridEX.AggregateFunction.Sum;
-            //////////////CANTIDAD.TotalFormatString = "#,##0.00";
+            GridEX1.RootTable.Columns["PO"].Position = 0;
+            GridEX1.RootTable.Columns["ESTILO_CLIENTE"].Position =1;
+            GridEX1.RootTable.Columns["ESTILO_CLIENTE_DES"].Position = 2;
+            GridEX1.RootTable.Columns["COD_COLOR"].Position = 3;
+            GridEX1.RootTable.Columns["DES_COLOR"].Position = 4;
+            GridEX1.RootTable.Columns["TALLA"].Position = 5;
+            GridEX1.RootTable.Columns["PRECIO"].Position = 6;
+            GridEX1.RootTable.Columns["UPC"].Position = 7;
+            GridEX1.RootTable.Columns["PO_LINE_ITEM"].Position = 8;
+            GridEX1.RootTable.Columns["Material_Key"].Position = 9;
         }
 
         private void chkExpandir_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void buttonBar1_ItemClick(object sender, Janus.Windows.ButtonBar.ItemEventArgs e)
+        {
+            switch (e.Item.Key)
+            {
+                case "EXPORTAR":
+                    if (GridEX1.RowCount == 0)
+                        return;
+                    string Ruta_Archivo;
+
+                    Ruta_Archivo = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                    Random numAleatorio = new Random(System.Convert.ToInt32(DateTime.Now.Ticks & int.MaxValue));
+                    string RutaUniArchivo = string.Format(Ruta_Archivo + @"\Export_{0}.xls", System.Convert.ToString(numAleatorio.Next()));
+                    System.IO.FileStream fs = new System.IO.FileStream(RutaUniArchivo, System.IO.FileMode.Create);
+
+                    gridEXExporter1.ExportMode = Janus.Windows.GridEX.ExportMode.AllRows;
+                    gridEXExporter1.GridEX = GridEX1;
+                    gridEXExporter1.Export(fs);
+                    fs.Close();
+                    Process.Start(RutaUniArchivo);
+                    break;
+            }
         }
     }
 }

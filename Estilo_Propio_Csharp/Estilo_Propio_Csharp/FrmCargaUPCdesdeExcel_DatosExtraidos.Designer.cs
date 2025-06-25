@@ -29,18 +29,24 @@ namespace Estilo_Propio_Csharp
         /// </summary>
         private void InitializeComponent()
         {
-            Janus.Windows.GridEX.GridEXLayout GridEX1_DesignTimeLayout = new Janus.Windows.GridEX.GridEXLayout();
+            this.components = new System.ComponentModel.Container();
+            Janus.Windows.ButtonBar.ButtonBarGroup buttonBar1_Group_0 = new Janus.Windows.ButtonBar.ButtonBarGroup();
+            Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_0 = new Janus.Windows.ButtonBar.ButtonBarItem();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmCargaUPCdesdeExcel_DatosExtraidos));
+            Janus.Windows.GridEX.GridEXLayout GridEX1_DesignTimeLayout = new Janus.Windows.GridEX.GridEXLayout();
             this.Label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.GridEX1 = new Janus.Windows.GridEX.GridEX();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.txtNomArchivo = new System.Windows.Forms.TextBox();
             this.txtCliente = new System.Windows.Forms.TextBox();
+            this.buttonBar1 = new Janus.Windows.ButtonBar.ButtonBar();
+            this.GridEX1 = new Janus.Windows.GridEX.GridEX();
+            this.gridEXExporter1 = new Janus.Windows.GridEX.Export.GridEXExporter(this.components);
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GridEX1)).BeginInit();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GridEX1)).BeginInit();
             this.SuspendLayout();
             // 
             // Label3
@@ -60,34 +66,13 @@ namespace Estilo_Propio_Csharp
             // panel1
             // 
             this.panel1.Controls.Add(this.GridEX1);
+            this.panel1.Controls.Add(this.buttonBar1);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1063, 373);
+            this.panel1.Size = new System.Drawing.Size(1063, 470);
             this.panel1.TabIndex = 1;
-            // 
-            // GridEX1
-            // 
-            this.GridEX1.AllowEdit = Janus.Windows.GridEX.InheritableBoolean.False;
-            this.GridEX1.AlternatingColors = true;
-            GridEX1_DesignTimeLayout.LayoutString = resources.GetString("GridEX1_DesignTimeLayout.LayoutString");
-            this.GridEX1.DesignTimeLayout = GridEX1_DesignTimeLayout;
-            this.GridEX1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GridEX1.EnterKeyBehavior = Janus.Windows.GridEX.EnterKeyBehavior.None;
-            this.GridEX1.FilterMode = Janus.Windows.GridEX.FilterMode.Automatic;
-            this.GridEX1.FilterRowUpdateMode = Janus.Windows.GridEX.FilterRowUpdateMode.WhenValueChanges;
-            this.GridEX1.Font = new System.Drawing.Font("Arial", 8.25F);
-            this.GridEX1.GroupTotals = Janus.Windows.GridEX.GroupTotals.Always;
-            this.GridEX1.Location = new System.Drawing.Point(0, 30);
-            this.GridEX1.Name = "GridEX1";
-            this.GridEX1.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
-            this.GridEX1.RecordNavigator = true;
-            this.GridEX1.SelectionMode = Janus.Windows.GridEX.SelectionMode.MultipleSelection;
-            this.GridEX1.Size = new System.Drawing.Size(1063, 343);
-            this.GridEX1.TabIndex = 2;
-            this.GridEX1.TotalRow = Janus.Windows.GridEX.InheritableBoolean.True;
-            this.GridEX1.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
             // 
             // panel2
             // 
@@ -143,20 +128,77 @@ namespace Estilo_Propio_Csharp
             this.txtCliente.Size = new System.Drawing.Size(295, 20);
             this.txtCliente.TabIndex = 123;
             // 
+            // buttonBar1
+            // 
+            this.buttonBar1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonBar1.DragStyle = Janus.Windows.ButtonBar.DragStyle.InvertedRect;
+            buttonBar1_Item_0_0.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_0.Image")));
+            buttonBar1_Item_0_0.Key = "EXPORTAR";
+            buttonBar1_Item_0_0.Text = "Exportar";
+            buttonBar1_Group_0.Items.AddRange(new Janus.Windows.ButtonBar.ButtonBarItem[] {
+            buttonBar1_Item_0_0});
+            buttonBar1_Group_0.Key = "Group1";
+            buttonBar1_Group_0.Text = "New Group";
+            buttonBar1_Group_0.TextAlignment = Janus.Windows.ButtonBar.Alignment.Near;
+            buttonBar1_Group_0.View = Janus.Windows.ButtonBar.ButtonBarView.SmallIcons;
+            this.buttonBar1.Groups.AddRange(new Janus.Windows.ButtonBar.ButtonBarGroup[] {
+            buttonBar1_Group_0});
+            this.buttonBar1.HeaderGroupVisible = false;
+            this.buttonBar1.Location = new System.Drawing.Point(0, 30);
+            this.buttonBar1.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonBar1.Name = "buttonBar1";
+            this.buttonBar1.OfficeColorScheme = Janus.Windows.ButtonBar.OfficeColorScheme.Blue;
+            this.buttonBar1.Orientation = Janus.Windows.ButtonBar.ButtonBarOrientation.Horizontal;
+            this.buttonBar1.SelectionArea = Janus.Windows.ButtonBar.SelectionArea.FullItem;
+            this.buttonBar1.Size = new System.Drawing.Size(1063, 25);
+            this.buttonBar1.SmallImageSize = new System.Drawing.Size(18, 18);
+            this.buttonBar1.TabIndex = 29;
+            this.buttonBar1.Text = "buttonBar1";
+            this.buttonBar1.VisualStyle = Janus.Windows.ButtonBar.VisualStyle.Office2010;
+            this.buttonBar1.ItemClick += new Janus.Windows.ButtonBar.ItemEventHandler(this.buttonBar1_ItemClick);
+            // 
+            // GridEX1
+            // 
+            this.GridEX1.AllowEdit = Janus.Windows.GridEX.InheritableBoolean.False;
+            this.GridEX1.AlternatingColors = true;
+            GridEX1_DesignTimeLayout.LayoutString = "<GridEXLayoutData><RootTable><Key>DataTable1</Key><Caption>DataTable1</Caption><A" +
+    "llowEdit>False</AllowEdit><GroupCondition /></RootTable></GridEXLayoutData>";
+            this.GridEX1.DesignTimeLayout = GridEX1_DesignTimeLayout;
+            this.GridEX1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GridEX1.EnterKeyBehavior = Janus.Windows.GridEX.EnterKeyBehavior.None;
+            this.GridEX1.FilterMode = Janus.Windows.GridEX.FilterMode.Automatic;
+            this.GridEX1.FilterRowUpdateMode = Janus.Windows.GridEX.FilterRowUpdateMode.WhenValueChanges;
+            this.GridEX1.Font = new System.Drawing.Font("Arial", 8.25F);
+            this.GridEX1.GroupTotals = Janus.Windows.GridEX.GroupTotals.Always;
+            this.GridEX1.Location = new System.Drawing.Point(0, 55);
+            this.GridEX1.Name = "GridEX1";
+            this.GridEX1.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
+            this.GridEX1.RecordNavigator = true;
+            this.GridEX1.SelectionMode = Janus.Windows.GridEX.SelectionMode.MultipleSelection;
+            this.GridEX1.Size = new System.Drawing.Size(1063, 415);
+            this.GridEX1.TabIndex = 30;
+            this.GridEX1.TotalRow = Janus.Windows.GridEX.InheritableBoolean.True;
+            this.GridEX1.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
+            // 
+            // gridEXExporter1
+            // 
+            this.gridEXExporter1.GridEX = this.GridEX1;
+            // 
             // FrmCargaUPCdesdeExcel_DatosExtraidos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1063, 373);
+            this.ClientSize = new System.Drawing.Size(1063, 470);
             this.Controls.Add(this.panel1);
             this.Name = "FrmCargaUPCdesdeExcel_DatosExtraidos";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Datos Extraidos";
             this.Load += new System.EventHandler(this.FrmCargaUPCdesdeExcel_DatosExtraidos_Load);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.GridEX1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GridEX1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -165,10 +207,12 @@ namespace Estilo_Propio_Csharp
 
         public System.Windows.Forms.Label Label3;
         private System.Windows.Forms.Panel panel1;
-        protected Janus.Windows.GridEX.GridEX GridEX1;
         private System.Windows.Forms.Panel panel2;
         public System.Windows.Forms.Label label1;
         public System.Windows.Forms.TextBox txtNomArchivo;
         public System.Windows.Forms.TextBox txtCliente;
+        protected Janus.Windows.GridEX.GridEX GridEX1;
+        private Janus.Windows.ButtonBar.ButtonBar buttonBar1;
+        private Janus.Windows.GridEX.Export.GridEXExporter gridEXExporter1;
     }
 }

@@ -117,7 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GridEX1_DesignTimeLayout.LayoutString" xml:space="preserve">
-    <value>&lt;GridEXLayoutData&gt;&lt;RootTable&gt;&lt;Key&gt;DataTable1&lt;/Key&gt;&lt;Caption&gt;DataTable1&lt;/Caption&gt;&lt;Columns Collection="true" ElementName="Column"&gt;&lt;Column0 ID="Total"&gt;&lt;AggregateFunction&gt;Sum&lt;/AggregateFunction&gt;&lt;Caption&gt;Total&lt;/Caption&gt;&lt;DataMember&gt;CANTIDAD&lt;/DataMember&gt;&lt;Key&gt;Total&lt;/Key&gt;&lt;Position&gt;0&lt;/Position&gt;&lt;Width&gt;61&lt;/Width&gt;&lt;/Column0&gt;&lt;/Columns&gt;&lt;AllowEdit&gt;False&lt;/AllowEdit&gt;&lt;GroupCondition /&gt;&lt;/RootTable&gt;&lt;/GridEXLayoutData&gt;</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="buttonBar1_Item_0_0.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
+        ZVJlYWR5ccllPAAABF1JREFUaEPtmV9v01YYxj2J8u8bDFbCn6tpHwhpF8DayyFgn2DdQLvaljChaSK0
+        TZqoTSmhkExihaRpYZS2XHQXoy2k6bpAWZl2TzdRXp7HteHUOY7jxKGW1lf6Ka593nOe5/j1OZZr7MRO
+        7MROhCf6M0/ILtAJjoQUaqNGS7USPAk+AtPgGaiGDGp6AA4CS7USPAkOgz+BhJQVEAGWaiV4Evw/DSSG
+        n0jq2pKkLXic0LRz0kReewxkblSkdP8vmZzaZKz0TJJXy9q2Kk3ktcdAbqwqUw9fyP3ZF+Zv/nZV285J
+        E3nBG+CMFe8+N0WQe9NrmNll6dO0VWkyL1gDHIyDcnBbSPHec8/yaTYPBH8HWAa2COKnfJrIC9bAey4f
+        EpyBbSgfEuwdeM/lQ4Iz4FoGQ/r2Ni2UD2nMgHOH3LJT4hpF6spgYKQsqRGXPAjwKh+vcdGmMQNMYMfc
+        HScseMyZ4zUacJYB/07BQAFtnHk855anlo/XuGjTmAG6ZqK9SxIe8xyvuZUBB3HL4zWv8nEd98GaeQ1t
+        WjdAIXyH0ZWBlwG3PIypN/Dwb5maxl34dVXSWR8GOJh9K1V4jjWuKwOWh5lnldCWPJYAystr9VHHncCs
+        3518KnNfpGT2bErSmUXpGy63/hDzQdWWAQw0lacYeJufrcggBE92XZHFzi5ZONQlhc96JZmeX+nNLkf6
+        ri5ZqpVQDdgdOnFbfdQy0OEnj4YSqXkpnrgsCxC/eOCkyXykWyaOX6pmvykcHe35xVKtBJI9DRCvMnCj
+        0bzE4CJmO/5O/MFTKv/h/PnHH57Yi2NLuRVI9jTgtYq40WheYvixjN6clZmzF2UhQgNbxNusgx6wz5K+
+        GeigrgEO1lT5AO+8siQzCzKam5FCcVzGb9+R2TMxmOh2M/ESxCzpm4GOPO9Ae8qnLANDv8vclTOyNNgl
+        pcKYFMc9Tfg30J7ywcxD/G/xz+VVdLdsxHZLZfCUjNc34b+E2lE+fap4CJeoYeJuAs9EKw8xb7u9Q/K3
+        0fLR5bmJr2di5twPUvr0x2r2wh3/yyhnjJ88+E7CXZKfQvha4GznRJc3dOOPuuJtbBN8JgrFklzH6oQl
+        dqV3pOJ/I+OrsLrD8th6va1LbV5FBjKPPMXbbMQ68GB3m6uTr9dpUCOmVbzKRsdGtMNcnbjEWv1slwH/
+        4l/F9shc/LS5xDLf6svTAD+vz4BV8DQIMPNViFiD+NeNipfoB/8+unxyFXnMt/uiJn76r/t5nf88OASO
+        BkF8uHrkevrWx/9c+iSJdf61XmwN6xvRXRdupnLHkO/sk9r0/+AIOuQ78K2xB4K+BC8VgfVYB1+BvWD7
+        Qn4CcaMDInosUTqxTsIhniFZMGp0Sr+xLDGtWCcU/zXYfvEMyYOfjYjkjBVJQmB9E+GZeTuEBvIwkIeB
+        HES6mwifeIaoBvIQqjcRrrJRQ5wGak1wVeIDHj7xDAiuNWCb6De4H1yU7439+G0hDOMN5A+RxgA8EAcA
+        AAAASUVORK5CYII=
+</value>
   </data>
+  <metadata name="gridEXExporter1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>
