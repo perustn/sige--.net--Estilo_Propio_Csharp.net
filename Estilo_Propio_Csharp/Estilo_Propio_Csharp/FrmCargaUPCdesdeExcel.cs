@@ -37,12 +37,10 @@ namespace Estilo_Propio_Csharp
             Pdf
         }
 
-        ClsHelper oHP = new ClsHelper();
         //DATATABLE PARA LA INFO FINAL
         DataTable oDT_Datos_Finales = new DataTable();
 
         string codCliente = "";
-        string poPETER = "";
         string codOrganizacion = "";
         string codOrganizacionPETER = "PM";
         string codOrganizacionTMW = "TM";
@@ -64,7 +62,6 @@ namespace Estilo_Propio_Csharp
             oDT_Datos_Finales.Columns.Add("PO_Line_Item", typeof(string));
             oDT_Datos_Finales.Columns.Add("Material_Key", typeof(string));
         }
-
 
         private void btnBuscarArchivo_Click(object sender, EventArgs e)
         {
@@ -199,11 +196,10 @@ namespace Estilo_Propio_Csharp
                     case FormatoDocumento.Pdf:
                         if (codOrganizacion == codOrganizacionSTITCH)
                         {
-                            ExtractTableDataSTITCH_v4(txtRuta_Archivo_Excel.Text.Trim());
+                            ExtractTableDataSTITCH(txtRuta_Archivo_Excel.Text.Trim());
                         }
                         else if (codOrganizacion == codOrganizacionPETER)
                         {
-                            //ExtractTableData(txtRuta_Archivo_Excel.Text.Trim());
                             ExtractTableData2(txtRuta_Archivo_Excel.Text.Trim());
                         }
                         break;
@@ -226,12 +222,15 @@ namespace Estilo_Propio_Csharp
                                 ISheet sheet = workbook.GetSheetAt(i);
                                 string sheetName = sheet.SheetName.ToUpper();
 
-                                if (codOrganizacion == codOrganizacionPETER)  //peter                   
-                                    if (!sheetName.Contains("ORDERMANAGMENT")) continue;
-                                if (codOrganizacion == codOrganizacionTMW)   //tmw
-                                    if (!sheetName.Contains("SHEET1")) continue;
-                                if (codOrganizacion == codOrganizacionFOOT)  //foot
-                                    if (!sheetName.Contains("SHEET1")) continue;
+                                if  (workbook.NumberOfSheets > 1) {
+                                    if (codOrganizacion == codOrganizacionPETER) { }
+                                        if (!sheetName.Contains("ORDERMANAGMENT")) continue;
+                                    if (codOrganizacion == codOrganizacionTMW)
+                                        if (!sheetName.Contains("SHEET1")) continue;
+                                    if (codOrganizacion == codOrganizacionFOOT)
+                                        if (!sheetName.Contains("SHEET1")) continue;
+                                }
+                               
 
                                 // Buscar fila de encabezados
                                 for (int rowIndex = sheet.FirstRowNum; rowIndex <= sheet.LastRowNum; rowIndex++)
@@ -351,138 +350,6 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        /////////////////////////////////////////////////////
-        public void ExtractTableData(string pdfFilePath)
-        {
-            using (PdfDocument document = PdfDocument.Open(pdfFilePath))
-            {
-                bool tablaIniciada = false;
-                float toleranciaY = 2f;
-                float toleranciaX = 30f; // tolerancia horizontal para asignar columnas
-                string ItemNumber = "";
-                string Barcode = "";
-                string Style = "";
-                string Color = "";
-                string Size = "";
-
-
-                Dictionary<string, float> posicionesColumnas = null; // se llena al detectar encabezado
-
-                for (int pageNum = 1; pageNum <= document.NumberOfPages; pageNum++)
-                {
-                    var page = document.GetPage(pageNum);
-                    var words = page.GetWords().ToList();
-
-                    if (!words.Any())
-                        continue;
-
-                    var sortedWords = words
-                        .OrderByDescending(w => w.BoundingBox.Top)
-                        .ThenBy(w => w.BoundingBox.Left)
-                        .ToList();
-
-                    var lines = sortedWords
-                        .GroupBy(w => w.BoundingBox.Top, new DoubleToleranceComparer(toleranciaY))
-                        .ToList();
-
-
-                    for (int i = 0; i < sortedWords.Count - 3; i++)
-                    {
-                        string w0 = sortedWords[i].Text.Trim();
-                        string w1 = sortedWords[i + 1].Text.Trim();
-                        string w2 = sortedWords[i + 2].Text.Trim();
-                        string w3 = sortedWords[i + 3].Text.Trim();
-
-                        if (w0.Equals("PO", StringComparison.OrdinalIgnoreCase) &&
-                            w1.Equals("Details", StringComparison.OrdinalIgnoreCase) &&
-                            w2.Equals("As", StringComparison.OrdinalIgnoreCase) &&
-                            w3.Equals("Below:", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return;
-                        }
-                    }
-
-
-                    if (sortedWords.Any(w => w.Text.Trim().Equals("Customer", StringComparison.OrdinalIgnoreCase)))
-                    {
-                        int index = sortedWords.FindIndex(w => w.Text.Trim().Equals("Customer", StringComparison.OrdinalIgnoreCase));
-                        if (index > 0)
-                        {
-                            poPETER = sortedWords[index - 1].Text.Trim();
-                        }
-                    }
-
-
-                    foreach (var line in lines)
-                    {
-                        var lineWords = line.OrderBy(w => w.BoundingBox.Left).ToList();
-
-
-                        // Detectar línea encabezado tabla
-                        if (!tablaIniciada && lineWords.Any(w => w.Text.Equals("MSRP", StringComparison.OrdinalIgnoreCase)))
-                        {
-                            tablaIniciada = true;
-
-                            // Crear diccionario con posiciones de columnas basadas en encabezado
-                            posicionesColumnas = new Dictionary<string, float>();
-
-                            foreach (var w in lineWords)
-                            {
-                                // Usar el texto como clave, y posición Left como valor                                
-                                posicionesColumnas[w.Text] = (float)w.BoundingBox.Left;
-                            }
-
-                            // Por ejemplo, si quieres renombrar claves para que coincidan con tus propiedades
-                            // Puedes hacer un mapeo aquí, si el encabezado es diferente
-
-                            continue; // saltar línea encabezado
-                        }
-
-                        if (!tablaIniciada)
-                            continue;
-
-                        // Detectar fin tabla
-                        if (lineWords.Any(w => w.Text.Equals("PO", StringComparison.OrdinalIgnoreCase)))
-                            break;
-
-                        if (posicionesColumnas == null)
-                            continue; // seguridad
-
-                        // Ahora asignar las palabras de la fila a cada columna según proximidad en X
-                        Dictionary<string, string> fila = new Dictionary<string, string>();
-
-                        foreach (var col in posicionesColumnas)
-                        {
-                            // Buscar la palabra más cercana a la posición X de la columna
-                            var palabraColumna = lineWords
-                                .Where(w => Math.Abs(w.BoundingBox.Left - col.Value) < toleranciaX)
-                                .OrderBy(w => Math.Abs(w.BoundingBox.Left - col.Value))
-                                .FirstOrDefault();
-
-                            fila[col.Key] = palabraColumna?.Text ?? "";
-                        }
-
-                        try
-                        {
-                          
-                            ItemNumber = fila.ContainsKey("Item#") ? fila["Item#"] : "";
-                            Barcode = fila.ContainsKey("Barcode") ? fila["Barcode"] : "";
-                            Style = fila.ContainsKey("STYLE") ? fila["STYLE"] : "";
-                            Color = fila.ContainsKey("COLOR") ? fila["COLOR"] : "";
-                            Size = fila.ContainsKey("SIZE") ? fila["SIZE"] : "";
-
-                            oDT_Datos_Finales.Rows.Add(poPETER, Size, Color, "", Style, Barcode, Color, "", "", "");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error procesando fila: {ex.Message}");
-                        }
-                    }
-                }
-            }
-        }
-
-
         public void ExtractTableData2(string pdfFilePath)
         {
             using (PdfDocument document = PdfDocument.Open(pdfFilePath))
@@ -589,242 +456,18 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        public void ExtractTableDataSTITCH_v2(string pdfFilePath)
-        {
-            string po = "";
-
-            using (PdfDocument document = PdfDocument.Open(pdfFilePath))
-            {
-                float toleranciaY = 2f;
-
-                for (int pageNum = 1; pageNum <= document.NumberOfPages; pageNum++)
-                {
-                    var page = document.GetPage(pageNum);
-                    var words = page.GetWords().ToList();
-                    
-
-                    if (!words.Any())
-                        continue;
-
-                    // Agrupar por línea visual (tolerancia en Y)
-                    var lines = words
-                        .GroupBy(w => w.BoundingBox.Top, new DoubleToleranceComparer(toleranciaY))
-                        .Select(g => g.OrderBy(w => w.BoundingBox.Left).ToList()) // Ordenar por X cada línea
-                        .OrderByDescending(l => l.First().BoundingBox.Top) // Ordenar líneas de arriba hacia abajo
-                        .ToList();
-
-                    for (int i = 0; i < lines.Count; i++)
-                    {
-                        var texto1 = words[i].Text;
-                        var texto2 = words[i + 1].Text;
-                        var texto3 = words[i + 2].Text;
-                        
-                        if (po == "")
-                        {
-                            if (texto1.Equals("Purchase", StringComparison.OrdinalIgnoreCase) &&
-                            (texto2.Equals("Order", StringComparison.OrdinalIgnoreCase)) &&
-                            (texto3.Equals("ID", StringComparison.OrdinalIgnoreCase)))
-                            {
-                                po = words[i + 3].Text;
-                            }
-                        }
-                        
-
-                        var line = lines[i];                                                                        
-                        if (line.Count < 3) continue;
-
-                        if (line.Any(w => w.Text.Equals("Shipping", StringComparison.OrdinalIgnoreCase)))
-                            return;
-
-                        //if (line.Any(w => w.Text.Equals("PurchaseOrder", StringComparison.OrdinalIgnoreCase)))
-                          //  po = GetWordAt(lines[i], i + 1);
-
-
-                        // Detectar la línea de información general por ciertos patrones
-                        bool isGeneralInfoLine = line.Any(w => w.Text.Length == 9 && w.Text.All(char.IsLetterOrDigit) ||
-                                                                            (w.Text.All(char.IsDigit) && w.Text.Length >= 5));
-                        //////////bool isGeneralInfoLine = line.Any(w => w.Text.StartsWith("000SA") ||
-                        //////////                                       (w.Text.All(char.IsDigit) && w.Text.Length >= 5));
-
-                        if (!isGeneralInfoLine)
-                            continue;
-
-                        // Validar que hay suficientes líneas para un bloque
-                        if (i + 5 >= lines.Count)
-                            break;
-
-                        var generalInfo = lines[i];
-                        var sizeLine = lines[i + 1];
-                        var qtyLine = lines[i + 2];
-                        var upcLine = lines[i + 3];
-                        var styleLine = lines[i + 4];
-                        var priceLine = lines[i + 5];
-
-                        List<string> frases = GroupWordsByProximity(generalInfo);
-                        string color = frases.ElementAtOrDefault(1);
-                        string ec_des = frases.ElementAtOrDefault(2);
-                        ///////////////////////////////////
-
-                        foreach (var sizeWord in sizeLine)                        
-                        {                            
-                            double x = sizeWord.BoundingBox.Left;
-                            string size = sizeWord.Text;
-
-                            
-
-
-                            string qty = FindNearestTextSafe(qtyLine, x);
-                            string upc = FindNearestTextSafe(upcLine,x);
-                            string style = FindNearestTextSafe(styleLine, x);
-                            string price = FindNearestTextSafe(priceLine,x);
-
-                            if (!int.TryParse(qty.Replace(",", ""), out int cantidad))
-                                continue;
-
-                            string fullUpc = (!string.IsNullOrWhiteSpace(upc) ? upc : "") +
-                                             (!string.IsNullOrWhiteSpace(style) ? style : "");
-
-                            // Agregar a DataTable
-                            oDT_Datos_Finales.Rows.Add(po, size, color, price, GetWordAt(generalInfo, 0), fullUpc, color, ec_des, "", "");
-
-                        }
-
-                        i += 5; // Saltar líneas ya procesadas
-                    }
-                }
-            }
-        }
-
-
-
-        public void ExtractTableDataSTITCH_v3(string pdfFilePath)
-        {
-            string po = "";
-
-            using (PdfDocument document = PdfDocument.Open(pdfFilePath))
-            {
-                float toleranciaY = 2f;
-
-                for (int pageNum = 1; pageNum <= document.NumberOfPages; pageNum++)
-                {
-                    var page = document.GetPage(pageNum);
-                    var words = page.GetWords().ToList();
-
-
-                    if (!words.Any())
-                        continue;
-
-                    // Agrupar por línea visual (tolerancia en Y)
-                    var lines = words
-                        .GroupBy(w => w.BoundingBox.Top, new DoubleToleranceComparer(toleranciaY))
-                        .Select(g => g.OrderBy(w => w.BoundingBox.Left).ToList()) // Ordenar por X cada línea
-                        .OrderByDescending(l => l.First().BoundingBox.Top) // Ordenar líneas de arriba hacia abajo
-                        .ToList();
-
-                    for (int i = 0; i < lines.Count; i++)
-                    {
-                        var texto1 = words[i].Text;
-                        var texto2 = words[i + 1].Text;
-                        var texto3 = words[i + 2].Text;
-
-                        if (po == "")
-                        {
-                            if (texto1.Equals("Purchase", StringComparison.OrdinalIgnoreCase) &&
-                            (texto2.Equals("Order", StringComparison.OrdinalIgnoreCase)) &&
-                            (texto3.Equals("ID", StringComparison.OrdinalIgnoreCase)))
-                            {
-                                po = words[i + 3].Text;
-                            }
-                        }
-
-
-                        var line = lines[i];
-                        if (line.Count < 3) continue;
-
-                        if (line.Any(w => w.Text.Equals("Shipping", StringComparison.OrdinalIgnoreCase)))
-                            return;
-
-                        //if (line.Any(w => w.Text.Equals("PurchaseOrder", StringComparison.OrdinalIgnoreCase)))
-                        //  po = GetWordAt(lines[i], i + 1);
-
-
-                        // Detectar la línea de información general por ciertos patrones
-                        bool isGeneralInfoLine = line.Any(w => w.Text.Length == 9 && w.Text.All(char.IsLetterOrDigit) ||
-                                                                            (w.Text.All(char.IsDigit) && w.Text.Length >= 5));
-                        //////////bool isGeneralInfoLine = line.Any(w => w.Text.StartsWith("000SA") ||
-                        //////////                                       (w.Text.All(char.IsDigit) && w.Text.Length >= 5));
-
-                        if (!isGeneralInfoLine)
-                            continue;
-
-                        // Validar que hay suficientes líneas para un bloque
-                        if (i + 5 >= lines.Count)
-                            break;
-
-                        var generalInfo = lines[i];
-                        var sizeLine = lines[i + 1];
-                        var qtyLine = lines[i + 2];
-                        var upcLine = lines[i + 3];
-
-                        var styleLine = lines[i + 4];
-
-                        var priceLine = lines[i + 5];
-
-                        List<string> frases = GroupWordsByProximity(generalInfo);
-                        string color = frases.ElementAtOrDefault(1);
-                        string ec_des = frases.ElementAtOrDefault(2);
-                        ///////////////////////////////////
-
-                        //foreach (var sizeWord in sizeLine)
-                        for (int s = 0; s < sizeLine.Count; s++)
-                        {
-                            var sizeWord = sizeLine[s];
-                            double x = sizeWord.BoundingBox.Left;
-                            string size = sizeWord.Text;
-
-                            // Calcular distancia con la siguiente talla (si existe)
-                            float maxDist = 20f; // Valor por defecto si no hay siguiente
-                            if (s + 1 < sizeLine.Count)
-                            {
-                                var nextSizeWord = sizeLine[s + 1];
-                                double nextX = nextSizeWord.BoundingBox.Left;
-                                maxDist = (float)Math.Abs(nextX - x) * 0.7f; // o 0.5f según tus pruebas
-                            }
-
-
-                            string qty = FindNearestTextSafe_v3(qtyLine, x, maxDist);
-                            string upc = FindNearestTextSafe_v3(upcLine, x, maxDist);
-                            string style = FindNearestTextSafe_v3(styleLine, x, maxDist);
-                            string price = FindNearestTextSafe_v3(priceLine, x, maxDist);
-
-                            if (!int.TryParse(qty.Replace(",", ""), out int cantidad))
-                                continue;
-
-                            string fullUpc = (!string.IsNullOrWhiteSpace(upc) ? upc : "") +
-                                             (!string.IsNullOrWhiteSpace(style) ? style : "");
-
-                            // Agregar a DataTable
-                            oDT_Datos_Finales.Rows.Add(po, size, color, price, GetWordAt(generalInfo, 0), fullUpc, color, ec_des, "", "");
-
-                        }
-
-                        i += 5; // Saltar líneas ya procesadas
-                    }
-                }
-            }
-        }
-
-
-        public void ExtractTableDataSTITCH_v4(string pdfFilePath)
+        public void ExtractTableDataSTITCH(string pdfFilePath)
         {
             string po = "";
             List<Word> headerLine = null;
-            double xStyle=0;
+            //double xStyle = 0;
             double xColor = 0;
             double xProduct = 0;
             double xDesc = 0;
             double xQty = 0;
-            double xAmount = 0;
+            //double xAmount = 0;
+            int indexTabla = 0;
+            int nroLineasTabla = 5;
 
             using (PdfDocument document = PdfDocument.Open(pdfFilePath))
             {
@@ -835,7 +478,6 @@ namespace Estilo_Propio_Csharp
                     var page = document.GetPage(pageNum);
                     var words = page.GetWords().ToList();
 
-
                     if (!words.Any())
                         continue;
 
@@ -845,103 +487,81 @@ namespace Estilo_Propio_Csharp
                         .Select(g => g.OrderBy(w => w.BoundingBox.Left).ToList()) // Ordenar por X cada línea
                         .OrderByDescending(l => l.First().BoundingBox.Top) // Ordenar líneas de arriba hacia abajo
                         .ToList();
-
-                    ////////////////////////////////////////////////
                     
-
-                    if (headerLine == null || headerLine.Count == 0)
+                    //obtenemos ubicacion de las cabeceras de la tabla
+                    if (headerLine == null || !headerLine.Any())
                     {
-                        foreach (var line in lines)
+                        for (int i = 0; i < lines.Count; i++)
                         {
+                            List<Word> line = lines[i];
                             if (line.Any(w => w.Text.Equals("Style", StringComparison.OrdinalIgnoreCase)) &&
                                 line.Any(w => w.Text.Equals("Color", StringComparison.OrdinalIgnoreCase)))
                             {
                                 headerLine = line;
-                                /// break;
+                                indexTabla = i;
+                                break;
                             }
                         }
 
-
-                        xStyle = headerLine.First(w => w.Text.Equals("Style", StringComparison.OrdinalIgnoreCase)).BoundingBox.Left;
+                        //xStyle = headerLine.First(w => w.Text.Equals("Style", StringComparison.OrdinalIgnoreCase)).BoundingBox.Left;
                         xColor = headerLine.First(w => w.Text.Equals("Color", StringComparison.OrdinalIgnoreCase)).BoundingBox.Left;
                         xProduct = headerLine.First(w => w.Text.Equals("ProductType", StringComparison.OrdinalIgnoreCase)).BoundingBox.Left;
                         xDesc = headerLine.First(w => w.Text.Equals("Description", StringComparison.OrdinalIgnoreCase)).BoundingBox.Left;
                         xQty = headerLine.First(w => w.Text.Equals("Qty", StringComparison.OrdinalIgnoreCase)).BoundingBox.Left;
-                        xAmount = headerLine.FirstOrDefault(w => w.Text.Equals("Amount", StringComparison.OrdinalIgnoreCase))?.BoundingBox.Left ?? xQty + 50;
+                        //xAmount = headerLine.FirstOrDefault(w => w.Text.Equals("Amount", StringComparison.OrdinalIgnoreCase))?.BoundingBox.Left ?? xQty + 50;
                     }
-                    /////////////////////////////////////
-
 
                     for (int i = 0; i < lines.Count; i++)
                     {
-                        var texto1 = words[i].Text;
-                        var texto2 = words[i + 1].Text;
-                        var texto3 = words[i + 2].Text;
+                        List<Word> line = lines[i];
 
-                        if (po == "")
+                        //obtenemos PO (purcharse order)
+                        if (po.Equals(""))
                         {
-                            if (texto1.Equals("Purchase", StringComparison.OrdinalIgnoreCase) &&
-                            (texto2.Equals("Order", StringComparison.OrdinalIgnoreCase)) &&
-                            (texto3.Equals("ID", StringComparison.OrdinalIgnoreCase)))
+                            if (words[i].Text.Equals("Purchase", StringComparison.OrdinalIgnoreCase) &&
+                            (words[i + 1].Text.Equals("Order", StringComparison.OrdinalIgnoreCase)) &&
+                            (words[i + 2].Text.Equals("ID", StringComparison.OrdinalIgnoreCase)))
                             {
                                 po = words[i + 3].Text;
+                                continue;
                             }
                         }
 
+                        if (i < indexTabla && pageNum == 1) continue;
 
-                        var line = lines[i];
                         if (line.Count < 3) continue;
 
                         if (line.Any(w => w.Text.Equals("Shipping", StringComparison.OrdinalIgnoreCase)))
                             return;
 
-                        //if (line.Any(w => w.Text.Equals("PurchaseOrder", StringComparison.OrdinalIgnoreCase)))
-                        //  po = GetWordAt(lines[i], i + 1);
-
+                        // Validar que hay suficientes líneas para un bloque
+                        if (i + nroLineasTabla >= lines.Count)
+                            break;
 
                         // Detectar la línea de información general por ciertos patrones
                         bool isGeneralInfoLine = line.Any(w => w.Text.Length == 9 && w.Text.All(char.IsLetterOrDigit) ||
                                                                             (w.Text.All(char.IsDigit) && w.Text.Length >= 5));
-                        //////////bool isGeneralInfoLine = line.Any(w => w.Text.StartsWith("000SA") ||
-                        //////////                                       (w.Text.All(char.IsDigit) && w.Text.Length >= 5));
-
                         if (!isGeneralInfoLine)
                             continue;
 
-                        // Validar que hay suficientes líneas para un bloque
-                        if (i + 5 >= lines.Count)
-                            break;
+                        List<Word> generalInfo = lines[i];
+                        List<Word> sizeLine = lines[i + 1];
+                        List<Word> qtyLine = lines[i + 2];
+                        List<Word> upcLine = lines[i + 3];
+                        List<Word> upcLine_2 = null;
+                        List<Word> priceLine = null;
 
-                        var generalInfo = lines[i];
-                        var sizeLine = lines[i + 1];
-                        var qtyLine = lines[i + 2];
-                        var upcLine = lines[i + 3];
-
-                        var styleLine = lines[i + 4];
-
-                        var priceLine = lines[i + 5];
-
-
-                        ////////////////////////////////////////////////                        
-                        // Obtener rango de palabras para COLOR (entre "Color" y "ProductType")
-
-                        /*
-                        var wordColor = generalInfo.FirstOrDefault(w => w.Text.Equals("Color", StringComparison.OrdinalIgnoreCase));
-                        var wordProdType = generalInfo.FirstOrDefault(w => w.Text.Equals("ProductType", StringComparison.OrdinalIgnoreCase));
-
-                        double xColorStart = wordColor?.BoundingBox.Left ?? 0;
-                        double xColorEnd = wordProdType?.BoundingBox.Left ?? double.MaxValue;
-
-                        var wordsColor = generalInfo
-                            .Where(w => w.BoundingBox.Left >= xColorStart && w.BoundingBox.Left < xColorEnd)
-                            .ToList();                        
-                        float maxDistanceColor = 10f; // Ajustable
-                        List<string> grupoColor = GroupWordsByProximity_v4(wordsColor, maxDistanceColor);
-                        string color = grupoColor.ElementAtOrDefault(1);
-                        */
-
-
-
+                        if (upcLine.Any(w => w.Text.Length == 12 && w.Text.All(char.IsLetterOrDigit)))
+                        {    
+                            priceLine = lines[i + 4];
+                            nroLineasTabla = 4;
+                        }
+                        else
+                        {
+                            upcLine_2 = lines[i + 4];
+                            priceLine = lines[i + 5];
+                            nroLineasTabla = 5;
+                        }
 
                         double xColorStart = xColor;
                         double xColorEnd = xProduct;
@@ -959,9 +579,6 @@ namespace Estilo_Propio_Csharp
                         if (color != null )
                         {
 
-                            //double xDescStart = wordDesc?.BoundingBox.Left ?? 0;
-                            //double xDescEnd = wordQty?.BoundingBox.Left ?? double.MaxValue;
-
                             double xDescStart = xDesc;
                             double xDescEnd = xQty;
 
@@ -969,25 +586,10 @@ namespace Estilo_Propio_Csharp
                                 .Where(w => w.BoundingBox.Left >= xDescStart && w.BoundingBox.Left < xDescEnd)
                                 .ToList();
 
-                           // xDescStart = xDesc;
-                            //xDescEnd = xQty;
-
                             float maxDistance = (float)Math.Abs(xDescEnd - xDescStart) * 0.7f; // Ajustable
-                            //float maxDistance = (float)Math.Abs(xDescEnd - xDescStart);
-                            //List<string> grupoDesc = GroupWordsByProximity_v4(wordsDesc, maxDistance);
-
-                            //int cantidadPalabras = color.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length;
-                            //ec_des = grupoDesc.ElementAtOrDefault(cantidadPalabras + 1);
-
-
                             ec_des = FindNearbyTextJoined(wordsDesc, xDescStart, maxDistance);
-
                         }
                        
-
-                        ///////////////////////////////////
-
-                        //foreach (var sizeWord in sizeLine)
                         for (int s = 0; s < sizeLine.Count; s++)
                         {
                             var sizeWord = sizeLine[s];
@@ -1003,96 +605,35 @@ namespace Estilo_Propio_Csharp
                                 maxDist = (float)Math.Abs(nextX - x) * 0.7f; // o 0.5f según tus pruebas
                             }
 
-
                             string qty = FindNearestTextSafe_v3(qtyLine, x, maxDist);
                             string upc = FindNearestTextSafe_v3(upcLine, x, maxDist);
-                            string style = FindNearestTextSafe_v3(styleLine, x, maxDist);
+                            string upc_2 = "";
+                            if (upcLine_2 != null)
+                            {
+                                if (upcLine_2.Any())
+                                {
+                                    upc_2 = FindNearestTextSafe_v3(upcLine_2, x, maxDist);
+                                }
+                            }
+                                
                             string price = FindNearestTextSafe_v3(priceLine, x, maxDist);
 
                             if (!int.TryParse(qty.Replace(",", ""), out int cantidad))
                                 continue;
 
                             string fullUpc = (!string.IsNullOrWhiteSpace(upc) ? upc : "") +
-                                             (!string.IsNullOrWhiteSpace(style) ? style : "");
+                                             (!string.IsNullOrWhiteSpace(upc_2) ? upc_2 : "");
 
                             // Agregar a DataTable
                             oDT_Datos_Finales.Rows.Add(po, size, color, price, GetWordAt(generalInfo, 0), fullUpc, color, ec_des, "", "");
 
                         }
 
-                        i += 5; // Saltar líneas ya procesadas
+                        i += nroLineasTabla; // Saltar líneas ya procesadas
                     }
                 }
             }
         }
-
-
-        public static List<string> GroupWordsByProximity_v4(List<Word> words, float maxDistance)
-        {
-            var phrases = new List<string>();
-            if (words == null || words.Count == 0)
-                return phrases;
-
-            string currentPhrase = words[0].Text;
-
-            for (int i = 1; i < words.Count; i++)
-            {
-                var previousWord = words[i - 1];
-                var currentWord = words[i];
-                double distancia = currentWord.BoundingBox.Left - previousWord.BoundingBox.Right;
-
-                if (distancia <= maxDistance)
-                {
-                    currentPhrase += " " + currentWord.Text;
-                }
-                else
-                {
-                    phrases.Add(currentPhrase);
-                    currentPhrase = currentWord.Text;
-                }
-            }
-
-            // Agrega la última frase pendiente
-            if (!string.IsNullOrWhiteSpace(currentPhrase))
-                phrases.Add(currentPhrase);
-
-            return phrases;
-        }
-
-
-
-        public static List<string> GroupWordsByProximity(List<Word> words)
-    {
-        float espacioMaximo = 10f; // Ajusta según pruebas
-        string frase = "";
-        var phrases = new List<string>();
-        for (int i = 1; i < words.Count; i++)
-        {
-            var previousWord = words[i - 1];
-            var currentWord = words[i];
-            double distancia = currentWord.BoundingBox.Left - previousWord.BoundingBox.Right;
-            if (distancia <= espacioMaximo)
-                frase = $"{previousWord.Text} {currentWord.Text}";
-            else
-                frase = previousWord.Text;
-                phrases.Add(frase);
-        }
-        return phrases;
-    }
-
-
-        public string FindNearestTextSafe(List<Word> line, double x, float maxDist = 20f)
-        {
-            var nearest = line
-                .OrderBy(w => Math.Abs(w.BoundingBox.Left - x))
-                .FirstOrDefault();
-
-            if (nearest != null && Math.Abs(nearest.BoundingBox.Left - x) <= maxDist)
-                return nearest.Text.Trim();
-
-            return ""; // vacío si no hay valor cercano
-        }
-
 
         public string FindNearbyTextJoined(List<Word> line, double x, float maxDist)
         {
@@ -1121,28 +662,6 @@ namespace Estilo_Propio_Csharp
             if (index >= 0 && index < words.Count)
                 return words[index].Text.Trim();
             return "";
-        }
-
-        public string GetWordsBetween(List<Word> words, int startIndex, int endIndex)
-        {
-            var sb = new StringBuilder();
-            for (int i = startIndex; i <= endIndex && i < words.Count; i++)
-            {
-                sb.Append(words[i].Text.Trim());
-                if (i < endIndex) sb.Append(" ");
-            }
-            return sb.ToString();
-        }
-
-        private string FindNearestText(List<Word> line, float x)
-        {
-            return line
-                .OrderBy(w => Math.Abs(w.BoundingBox.Left - x))
-                .FirstOrDefault()?.Text ?? "";
-        }
-        string GetValueOrEmpty(Dictionary<string, string> dict, string key)
-        {
-            return dict.ContainsKey(key) ? dict[key] : "";
         }
 
         // Comparador con tolerancia para agrupar líneas con Y similar
