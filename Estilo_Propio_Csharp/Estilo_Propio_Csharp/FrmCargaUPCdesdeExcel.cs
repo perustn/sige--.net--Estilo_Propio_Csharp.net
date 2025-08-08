@@ -30,6 +30,7 @@ namespace Estilo_Propio_Csharp
         string sFormato = "";
         bool IsArchivoProcesado = false;
         IWorkbook workbook;
+        ClsHelper oHp = new ClsHelper();
 
         enum FormatoDocumento
         {
@@ -790,6 +791,25 @@ namespace Estilo_Propio_Csharp
                 return;
             }
 
+            string strSQL = string.Empty;
+            foreach (DataRow row in oDT_Datos_Finales.Rows)
+            {
+                strSQL = string.Empty;
+                strSQL += "\n" + "EXEC UP_ACTUALIZA_TG_LOTCOLTAL_BITACORA_UPC";
+                strSQL += "\n" + string.Format(" @COD_CLIENTE    ='{0}'", codCliente);
+                strSQL += "\n" + string.Format(",@COD_PURORD     ='{0}'", row["PO"].ToString());
+                strSQL += "\n" + string.Format(",@COD_LOTPURORD  ='{0}'", "");
+                strSQL += "\n" + string.Format(",@COD_ESTCLI     ='{0}'", row["Estilo_Cliente"].ToString());
+                strSQL += "\n" + string.Format(",@COD_COLCLI     ='{0}'", row["Cod_Color"].ToString());
+                strSQL += "\n" + string.Format(",@COD_TALLA      ='{0}'", row["Talla"].ToString());
+                strSQL += "\n" + string.Format(",@UPC            ='{0}'", row["UPC"].ToString());
+                strSQL += "\n" + string.Format(",@Cod_Usuario    ='{0}'", VariablesGenerales.pUsuario);
+                strSQL += "\n" + string.Format(",@Cod_Estacion   ='{0}'", SystemInformation.ComputerName);
+
+                oHp.EjecutarOperacion(strSQL);
+            }
+
+            /*
             using (SqlConnection connection = new SqlConnection(VariablesGenerales.pConnect))
             {
                 connection.Open();
@@ -839,6 +859,7 @@ namespace Estilo_Propio_Csharp
                     }
                 }
             }
+            */
         }
     }
 }
