@@ -809,6 +809,8 @@ namespace Estilo_Propio_Csharp
                 oHp.EjecutarOperacion(strSQL);
             }
 
+            MessageBox.Show("Se ejecuto el guardad", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             /*
             using (SqlConnection connection = new SqlConnection(VariablesGenerales.pConnect))
             {
