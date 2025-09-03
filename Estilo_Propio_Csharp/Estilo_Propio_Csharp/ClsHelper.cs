@@ -522,6 +522,11 @@ namespace Estilo_Propio_Csharp
 			}
 		}
 
+		public string RellenaDeCerosEnIzquierda(string strValor, int intCantidadDeCeros)
+		{
+			return new string('0', intCantidadDeCeros - strValor.Length) + strValor;
+		}
+
 	}
 
 }

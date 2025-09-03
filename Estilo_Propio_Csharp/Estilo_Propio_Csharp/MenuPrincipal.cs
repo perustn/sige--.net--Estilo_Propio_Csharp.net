@@ -24,7 +24,7 @@ namespace Estilo_Propio_Csharp
 
         private void BtnBuscar_Click(object sender, EventArgs e)
         {
-            FrmBandejaBibliotecaGraficos FRM = new FrmBandejaBibliotecaGraficos();
+            FrmBandejaControlFTPublicaciones FRM = new FrmBandejaControlFTPublicaciones();
             FRM.ShowDialog();
         }
 

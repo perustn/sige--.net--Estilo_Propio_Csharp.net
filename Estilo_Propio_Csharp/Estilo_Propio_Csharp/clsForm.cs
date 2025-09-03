@@ -103,6 +103,10 @@ namespace Estilo_Propio_Csharp
                 case "FRMCARGAUPCDESDEEXCEL_MAIN":
                     MyForm = new FrmCargaUPCdesdeExcel_Main();
                     break;
+
+                case "FRMBANDEJACONTROLFTPUBLICACIONES":
+                    MyForm = new FrmBandejaControlFTPublicaciones();
+                    break;
             }
             return MyForm;
         }

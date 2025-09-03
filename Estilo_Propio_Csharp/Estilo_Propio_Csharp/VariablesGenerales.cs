@@ -16,7 +16,7 @@ namespace Estilo_Propio_Csharp
         public static string pConnectVB6 = ("Provider=SQLOLEDB.1; Persist Security Info=True; Initial Catalog=SIGE_STN_QA_5; Data Source=192.168.30.22;Integrated Security=SSPI");
         public static string pCodEmpresa = "01";
         public static string pUsuario = "vluna";
-        public static string pRuta = @"C:\_SIGEDebug";
+        public static string pRuta = @"C:\SIGE\_SIGEDebug";
         public static string pCodPerfil = "0001";
         
     }
