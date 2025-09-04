@@ -10,6 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Estilo_Propio_Csharp.FormularioProgreso;
+using Microsoft.Office.Interop.Excel;
+using Application = Microsoft.Office.Interop.Excel.Application;
 
 namespace Estilo_Propio_Csharp
 {
@@ -59,7 +61,7 @@ namespace Estilo_Propio_Csharp
             strSQL += string.Format(",@COD_USUARIO      = '{0}'", VariablesGenerales.pUsuario) + Environment.NewLine;
             strSQL += string.Format(",@PC_CREACION      = '{0}'", Environment.MachineName) + Environment.NewLine;
             strSQL += string.Format(",@ID_Publicacion_Tx=  {0} ", IdPublicacion) + Environment.NewLine;
-            if (oHp.EjecutarOperacion(strSQL))
+            if (!oHp.EjecutarOperacion(strSQL))
             {
                 executionOk = "Error en ejecucion de SP ES_MANT_ESTPROVER_FICHA_TECNICA";
             };
@@ -117,20 +119,52 @@ namespace Estilo_Propio_Csharp
             return ArchivoDestino;
         }
 
+        private async Task<ResultadoEjecucion> GenerarPDFAsync_V2(string codEstpro, string codVersion, int IDFichaTecnica, string vCarpetaFichaTecnicaCliente, string RutaArchivoCompleto)
+        {
+            string RouteFileXLT = VariablesGenerales.pRuta;
+            string RouteLogo = oHp.DevuelveDato("SELECT Ruta_Logo = ISNULL(Ruta_Logo, '') From SEGURIDAD..SEG_EMPRESAS WHERE Cod_Empresa = '" +
+                VariablesGenerales.pCodEmpresa + "'", VariablesGenerales.pConnect).ToString();
+
+            string MethodVBA = "App.RunSave";
+            RouteFileXLT = Path.Combine(RouteFileXLT, "RptFichaTecnicaPrendaV2.xltm");
+
+            var executor = new ExcelMacroExecutor();
+
+            ResultadoEjecucion resultado = await executor.EjecutarMacroAsync(
+            rutaArchivo: RouteFileXLT,
+            nombreMacro: MethodVBA,
+            parametros: new object[] {VariablesGenerales.pConnectVB6,
+                        RouteLogo,
+                        codEstpro,
+                        codVersion,
+                        IDFichaTecnica,
+                        true,
+                        vCarpetaFichaTecnicaCliente,
+                        RutaArchivoCompleto,
+                        "PDF" },
+            timeoutSegundos: 300,
+            celdaControl: null,
+            mostrarExcel: false
+            );
+
+         return resultado;
+
+        }
+
         public string GenerarPDF(string codEstpro, string codVersion, int IDFichaTecnica, string vCarpetaFichaTecnicaCliente, string RutaArchivoCompleto)
         {
             dynamic oXL = null;
             Process xproc = null;
-            var resultado = new ResultadoEjecucion();
             string executionOk  = "";
+            object ResultadoMacro;
             try
             {                
                 string RouteFileXLT = VariablesGenerales.pRuta;
                 string RouteLogo = oHp.DevuelveDato("SELECT Ruta_Logo = ISNULL(Ruta_Logo, '') From SEGURIDAD..SEG_EMPRESAS WHERE Cod_Empresa = '" +
                     VariablesGenerales.pCodEmpresa + "'", VariablesGenerales.pConnect).ToString();
 
-                string MethodVBA = "App.Run";
-                RouteFileXLT = Path.Combine(RouteFileXLT, "RptFichaTecnicaPrendaV2.xltm");
+                string MethodVBA = "Run";
+                RouteFileXLT = Path.Combine(RouteFileXLT, "RptFichaTecnicaPrendaV2_2.xltm");
                 oXL = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application"));
                 int xlHWND = oXL.Hwnd;
                 GetWindowThreadProcessId((IntPtr)xlHWND, out int procIdXL);
@@ -142,8 +176,9 @@ namespace Estilo_Propio_Csharp
                 oXL.Visible = false;
                 oXL.EnableEvents = false;
 
+
                 // Ejecutar macro con parámetros
-                resultado.ResultadoMacro = oXL.Run(MethodVBA,
+                ResultadoMacro = oXL.Run(MethodVBA,
                     VariablesGenerales.pConnectVB6,
                     RouteLogo,
                     codEstpro,
@@ -178,16 +213,6 @@ namespace Estilo_Propio_Csharp
             //}
             catch (Exception ex)
             {
-
-                if (ex is COMException comEx)
-                {
-                    ManejarErrorCOM(comEx, resultado);
-                }
-                else
-                {
-                    resultado.MensajeError = $"Error general: {ex.Message}";
-                    resultado.CodigoError = ex.GetType().Name;
-                }
                 executionOk = ex.Message;
 
                 //MessageBox.Show(ex.Message, "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -208,135 +233,7 @@ namespace Estilo_Propio_Csharp
             return executionOk;
         }
 
-        public class ResultadoEjecucion
-        {
-            public bool Exitoso { get; set; }
-            public string MensajeError { get; set; }
-            public string CodigoError { get; set; }
-            public object ResultadoMacro { get; set; }
-            public TimeSpan TiempoEjecucion { get; set; }
-        }
-
-        private void ManejarErrorCOM(COMException comEx, ResultadoEjecucion resultado)
-        {
-            resultado.CodigoError = $"{comEx.HResult:X}";
-
-            Console.WriteLine("=== ERROR COM DETALLADO ===");
-            Console.WriteLine($"HRESULT: {comEx.HResult:X} ({comEx.HResult})");
-            Console.WriteLine($"Mensaje original: {comEx.Message}");
-
-            // Intentar obtener descripción más detallada
-            try
-            {
-                Exception detalleEx = Marshal.GetExceptionForHR(comEx.HResult);
-                if (detalleEx != null && detalleEx.Message != comEx.Message)
-                {
-                    Console.WriteLine($"Descripción detallada: {detalleEx.Message}");
-                }
-            }
-            catch { }
-
-            // Intentar descripción Win32
-            try
-            {
-                var win32Ex = new Win32Exception(comEx.HResult);
-                if (!string.IsNullOrEmpty(win32Ex.Message) && win32Ex.Message != comEx.Message)
-                {
-                    Console.WriteLine($"Descripción Win32: {win32Ex.Message}");
-                }
-            }
-            catch { }
-
-            // Descripción personalizada según código de error
-            string descripcionPersonalizada = ObtenerDescripcionErrorExcel(comEx.HResult);
-            Console.WriteLine($"Descripción: {descripcionPersonalizada}");
-
-            if (!string.IsNullOrEmpty(comEx.Source))
-                Console.WriteLine($"Fuente: {comEx.Source}");
-
-            Console.WriteLine("==========================");
-
-            resultado.MensajeError = $"{descripcionPersonalizada} (Código: {comEx.HResult:X})";
-
-            // Sugerencias específicas
-            AgregarSugerenciasError(comEx.HResult, resultado);
-        }
-
-        private string ObtenerDescripcionErrorExcel(int hresult)
-        {
-            switch ((uint)hresult)
-            {
-                case 0x800A03EC: // -2146827284
-                    return "No se puede ejecutar la macro. Puede estar deshabilitada o no existir";
-                case 0x800A01A8: // -2146827864
-                    return "El objeto no admite esta propiedad o método";
-                case 0x800A0009: // -2146828279
-                    return "El subíndice está fuera del intervalo";
-                case 0x800A000D: // -2146828275
-                    return "No coinciden los tipos de datos";
-                case 0x800A0414: // -2146827244
-                    return "Error en tiempo de ejecución de la aplicación";
-                case 0x800A03E4: // -2146827292
-                    return "Error de automatización. El objeto se ha desconectado";
-                case 0x80020009: // -2147352567
-                    return "Excepción durante la ejecución de la macro VBA";
-                case 0x800A01B6: // -2146827850
-                    return "El objeto no admite esta acción";
-                case 0x800A01E2: // -2146827806
-                    return "Archivo no válido o dañado";
-                case 0x800A03EA: // -2146827286
-                    return "Error de sintaxis en la macro";
-                case 0x800A0005: // -2146828283
-                    return "Llamada a procedimiento no válida o argumento incorrecto";
-                case 0x800A000E: // -2146828274
-                    return "Sin memoria suficiente";
-                case 0x800A0011: // -2146828271
-                    return "División por cero";
-                case 0x800A001C: // -2146828260
-                    return "Argumento o llamada a procedimiento no válida";
-                case 0x800A002F: // -2146828241
-                    return "Error en tiempo de ejecución DLL";
-                case 0x80004005: // -2147467259
-                    return "Error no especificado";
-                case 0x80070005: // -2147024891
-                    return "Acceso denegado";
-                default:
-                    return $"Error COM no identificado (HRESULT: {hresult:X})";
-            }
-        }
-
-        private void AgregarSugerenciasError(int hresult, ResultadoEjecucion resultado)
-        {
-            string sugerencia = "";
-
-            switch ((uint)hresult)
-            {
-                case 0x800A03EC:
-                    sugerencia = "Verifica que las macros estén habilitadas en Excel y que el nombre de la macro sea exacto.";
-                    break;
-                case 0x800A01A8:
-                    sugerencia = "Revisa que el método o propiedad exista en la versión de Excel instalada.";
-                    break;
-                case 0x80020009:
-                    sugerencia = "Error dentro del código VBA de la macro. Revisa el código de la macro en Excel.";
-                    break;
-                case 0x800A0009:
-                    sugerencia = "Verifica que los índices de arrays y rangos estén dentro de los límites válidos.";
-                    break;
-                case 0x800A000D:
-                    sugerencia = "Verifica que los tipos de datos de los parámetros sean correctos.";
-                    break;
-                case 0x80070005:
-                    sugerencia = "El archivo puede estar protegido o abierto por otra aplicación.";
-                    break;
-            }
-
-            if (!string.IsNullOrEmpty(sugerencia))
-            {
-                resultado.MensajeError += $"\n\nSugerencia: {sugerencia}";
-            }
-        }
-
+  
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern int GetWindowThreadProcessId(IntPtr hwnd, out int lpdwProcessId);
 
@@ -435,17 +332,21 @@ namespace Estilo_Propio_Csharp
                 });
 
                 string mensajePDF = "";
+                ResultadoEjecucion resultado = await GenerarPDFAsync_V2(codEstpro, codVersion, IDFichaTecnica, vCarpetaFichaTecnicaCliente, RutaArchivoCompleto);
 
-                var task = Task.Run(() =>
+                if (resultado.Exitoso)
                 {
-                    return GenerarPDF(codEstpro, codVersion, IDFichaTecnica, vCarpetaFichaTecnicaCliente, RutaArchivoCompleto);
-                }, cancellationToken);
-
-                // *** ESPERAR Y RECIBIR EL RESULTADO ***
-                mensajePDF = await task;
-                if (!mensajePDF.Equals(""))
+                    porcentaje = 79;
+                    progress?.Report(new ProgresoInfo
+                    {
+                        Porcentaje = porcentaje,
+                        Mensaje = "Generando PDF",
+                        Detalle = ($"✓ Macro ejecutada exitosamente en {resultado.TiempoEjecucion.TotalSeconds:F2}s")
+                    });
+                }
+                else
                 {
-                    throw new ProcessingException($"Error al generar PDF: {mensajePDF}");
+                    throw new ProcessingException($"Error al Generar PDF: {resultado.MensajeError}");
                 }
 
                 porcentaje = 80;
@@ -470,7 +371,7 @@ namespace Estilo_Propio_Csharp
                     Detalle = "Copiando a ruta compartida"
                 });
 
-                task = Task.Run(() =>
+                var task = Task.Run(() =>
                 {
                     return CopiaPDFLocalCompartido(CodigoClienteSel, RutaArchivoCompleto, NombreArchivo);
                 }, cancellationToken);

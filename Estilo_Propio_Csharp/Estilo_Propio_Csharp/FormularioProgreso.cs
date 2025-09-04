@@ -86,13 +86,66 @@ namespace Estilo_Propio_Csharp
             // Calcular tiempo estimado si hay progreso
             if (progressBar.Value > 0 && progressBar.Value < 100)
             {
-                var tiempoEstimadoTotal = TimeSpan.FromMilliseconds(
-                    transcurrido.TotalMilliseconds * 100 / progressBar.Value);
-                var tiempoRestante = tiempoEstimadoTotal - transcurrido;
+                //var tiempoEstimadoTotal = TimeSpan.FromMilliseconds(
+                //    transcurrido.TotalMilliseconds * 100 / progressBar.Value);
+                //var tiempoRestante = tiempoEstimadoTotal - transcurrido;
 
-                if (tiempoRestante.TotalSeconds > 0)
+                //if (tiempoRestante.TotalSeconds > 0)
+                //{
+                //    lblTiempo.Text += $" | Restante: {tiempoRestante:mm\\:ss}";
+                //}
+
+                //ActualizarTiempoRestante(transcurrido);
+            }
+        }
+
+        private DateTime _inicioProgreso = DateTime.Now;
+        private TimeSpan? _ultimoTiempoRestante = null;
+        private void ActualizarTiempoRestante(TimeSpan transcurrido)
+        {
+            if (progressBar.Value <= 0 || progressBar.Value > 100)
+                return;
+
+            // Velocidad promedio desde el inicio
+            double velocidadPromedio = progressBar.Value / transcurrido.TotalSeconds;
+
+            if (velocidadPromedio > 0)
+            {
+                double progresoRestante = 100 - progressBar.Value;
+                double segundosRestantes = progresoRestante / velocidadPromedio;
+
+                var tiempoRestanteNuevo = TimeSpan.FromSeconds(segundosRestantes);
+
+                // Aplicar suavizado si tenemos estimación previa
+                if (_ultimoTiempoRestante.HasValue)
                 {
-                    lblTiempo.Text += $" | Restante: {tiempoRestante:mm\\:ss}";
+                    // Evitar cambios bruscos (más del 50%)
+                    double cambioRelativo = Math.Abs(tiempoRestanteNuevo.TotalSeconds - _ultimoTiempoRestante.Value.TotalSeconds)
+                                          / _ultimoTiempoRestante.Value.TotalSeconds;
+
+                    if (cambioRelativo > 0.5) // Si el cambio es mayor al 50%
+                    {
+                        // Usar promedio ponderado (70% anterior, 30% nuevo)
+                        double segundosPromedio = (_ultimoTiempoRestante.Value.TotalSeconds * 0.7) +
+                                                (tiempoRestanteNuevo.TotalSeconds * 0.3);
+                        tiempoRestanteNuevo = TimeSpan.FromSeconds(segundosPromedio);
+                    }
+                }
+
+                _ultimoTiempoRestante = tiempoRestanteNuevo;
+
+                // Validar que el tiempo sea razonable
+                if (tiempoRestanteNuevo.TotalSeconds > 0 && tiempoRestanteNuevo.TotalHours < 12)
+                {
+                    string formato = tiempoRestanteNuevo.TotalHours >= 1
+                        ? $"{tiempoRestanteNuevo:h\\:mm\\:ss}"
+                        : $"{tiempoRestanteNuevo:mm\\:ss}";
+
+                    lblTiempo.Text += $" | Restante: {formato}";
+                }
+                else if (progressBar.Value > 95)
+                {
+                    lblTiempo.Text += " | Finalizando...";
                 }
             }
         }

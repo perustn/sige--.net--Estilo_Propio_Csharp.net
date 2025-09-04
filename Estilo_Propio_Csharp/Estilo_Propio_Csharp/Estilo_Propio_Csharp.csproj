@@ -135,6 +135,11 @@
     <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.3.0.0\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\..\..\..\Sige\_SIGEUserControls\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
     <Reference Include="NPOI.Core, Version=2.7.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.7.3\lib\netstandard2.0\NPOI.Core.dll</HintPath>
     </Reference>
@@ -265,6 +270,7 @@
     <Compile Include="ClsForm.cs" />
     <Compile Include="ClsHelper.cs" />
     <Compile Include="clsBtnSeguridadJanus.cs" />
+    <Compile Include="ExcelMacroExecutor.cs" />
     <Compile Include="FormularioProgreso.cs">
       <SubType>Form</SubType>
     </Compile>
