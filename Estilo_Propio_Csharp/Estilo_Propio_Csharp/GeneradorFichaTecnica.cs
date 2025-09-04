@@ -6,8 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Estilo_Propio_Csharp.FormularioProgreso;
 
 namespace Estilo_Propio_Csharp
 {
@@ -19,42 +21,7 @@ namespace Estilo_Propio_Csharp
         public async Task<bool> GenerarFtPDFAsync(string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel)
         {
             bool isGeneroOK = false;
-            string vCarpetaFichaTecnicaCliente;
-            vCarpetaFichaTecnicaCliente = CreaCarpetaLocal();
-
-            string RutaArchivoCompleto = string.Format("FT[{2}]EP{0}-{1}", codEstpro, codVersion, IDFichaTecnica);
-            string NombreArchivo = string.Format("{0}FT[{3}]EP{1}-{2}{4}", vCarpetaFichaTecnicaCliente, codEstpro, codVersion, IDFichaTecnica, ".PDF");
-
-            try
-            {
-                EliminaPDF(NombreArchivo);
-
-                if (GenerarPDF(codEstpro, codVersion, IDFichaTecnica, vCarpetaFichaTecnicaCliente, RutaArchivoCompleto))
-                {
-                    if (await ProtegerPdf(vCarpetaFichaTecnicaCliente + RutaArchivoCompleto + ".PDF"))
-                    {
-                        string ArchivoDestino;
-                        ArchivoDestino = CopiaPDFLocalCompartido(CodigoClienteSel, RutaArchivoCompleto, NombreArchivo);
-
-                        if (!ArchivoDestino.Equals(""))
-                        {
-                            GuardarRutaPDFenBD(codEstpro, codVersion, IDFichaTecnica, ArchivoDestino, IdPublicacion);
-
-                            isGeneroOK = true;
-                        }
-                    }           
-                }
-                else
-                {
-                    SetPendienteGenerarFT(codEstpro, codVersion, IDFichaTecnica, IdPublicacion);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                SetPendienteGenerarFT(codEstpro, codVersion, IDFichaTecnica, IdPublicacion);
-                isGeneroOK = false;
-            }
+           
             return isGeneroOK;
         }
 
@@ -74,9 +41,11 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        private void GuardarRutaPDFenBD(string codEstpro, string codVersion, int IDFichaTecnica, string ArchivoDestino, int IdPublicacion)
+        private string GuardarRutaPDFenBD(string codEstpro, string codVersion, int IDFichaTecnica, string ArchivoDestino, int IdPublicacion)
         {
+            string executionOk = "";
             // Guardar en base de datos
+     
             string strSQL = string.Empty;
             strSQL += Environment.NewLine + "EXEC ES_MANT_ESTPROVER_FICHA_TECNICA" + Environment.NewLine;
             strSQL += string.Format(" @OPCION           = '{0}'", "V") + Environment.NewLine;
@@ -90,7 +59,11 @@ namespace Estilo_Propio_Csharp
             strSQL += string.Format(",@COD_USUARIO      = '{0}'", VariablesGenerales.pUsuario) + Environment.NewLine;
             strSQL += string.Format(",@PC_CREACION      = '{0}'", Environment.MachineName) + Environment.NewLine;
             strSQL += string.Format(",@ID_Publicacion_Tx=  {0} ", IdPublicacion) + Environment.NewLine;
-            oHp.EjecutarOperacion(strSQL);
+            if (oHp.EjecutarOperacion(strSQL))
+            {
+                executionOk = "Error en ejecucion de SP ES_MANT_ESTPROVER_FICHA_TECNICA";
+            };
+            return executionOk;
         }
 
         public string CreaCarpetaLocal()
@@ -131,35 +104,25 @@ namespace Estilo_Propio_Csharp
 
             if (System.IO.File.Exists(ArchivoDestino))
             {
-                try
-                {
-                    File.Delete(ArchivoDestino);
-                    File.Copy(NombreArchivo, ArchivoDestino);
-                    // ✅ Ahora proteger el PDF que Excel acaba de crear
-                    Process.Start(NombreArchivo);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return "";
-                }
+                File.Delete(ArchivoDestino);
+                File.Copy(NombreArchivo, ArchivoDestino);
+                Process.Start(NombreArchivo);
             }
             else
             {
                 File.Copy(NombreArchivo, ArchivoDestino);
-                // ✅ Ahora proteger el PDF que Excel acaba de crear
                 Process.Start(NombreArchivo);
             }
 
             return ArchivoDestino;
         }
 
-        public bool GenerarPDF(string codEstpro, string codVersion, int IDFichaTecnica, string vCarpetaFichaTecnicaCliente, string RutaArchivoCompleto)
+        public string GenerarPDF(string codEstpro, string codVersion, int IDFichaTecnica, string vCarpetaFichaTecnicaCliente, string RutaArchivoCompleto)
         {
             dynamic oXL = null;
             Process xproc = null;
             var resultado = new ResultadoEjecucion();
-            bool executionOk  = false;
+            string executionOk  = "";
             try
             {                
                 string RouteFileXLT = VariablesGenerales.pRuta;
@@ -207,7 +170,6 @@ namespace Estilo_Propio_Csharp
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                executionOk = true;
             }
             //catch (System.Runtime.InteropServices.COMException comEx)
             //{
@@ -216,7 +178,6 @@ namespace Estilo_Propio_Csharp
             //}
             catch (Exception ex)
             {
-                executionOk = false;
 
                 if (ex is COMException comEx)
                 {
@@ -227,7 +188,9 @@ namespace Estilo_Propio_Csharp
                     resultado.MensajeError = $"Error general: {ex.Message}";
                     resultado.CodigoError = ex.GetType().Name;
                 }
-                MessageBox.Show(ex.Message, "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                executionOk = ex.Message;
+
+                //MessageBox.Show(ex.Message, "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             finally
             {
@@ -397,9 +360,9 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        private async Task<bool> ProtegerPdf(string carpetaDestino)
+        private async Task<string> ProtegerPdf(string carpetaDestino)
         {
-            bool isProtectionOK = false;
+            string executionOk = "";
             using var pdfService = new PDFProtectionPdfSharp.PdfProtectionService();
 
             var config = new PDFProtectionPdfSharp.PdfProtectionConfig
@@ -424,17 +387,158 @@ namespace Estilo_Propio_Csharp
 
             var result = await pdfService.ProtectPdfAsync(config);
 
-            if (result.Success)
+            if (!result.Success)
             {
-                isProtectionOK = true;
-            }
-            else
-            {
-                isProtectionOK = false;
-                MessageBox.Show($"❌ Error: {result.Message}", "Error");
+                executionOk = result.Message;
             }
 
-            return isProtectionOK;
+            return executionOk;
+        }
+
+        // Método público que permite llevar el control del proceso
+        public async Task<bool> GenerarPDFAsync(string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel,
+            IProgress<ProgresoInfo> progress, CancellationToken cancellationToken)
+        {
+            int porcentaje = 0;
+            progress?.Report(new ProgresoInfo
+            {
+                Porcentaje = 0,
+                Mensaje = "Inicializando proceso...",
+                Detalle = "Preparando recursos y validando parámetros"
+            });
+
+            bool isGeneroOK = false;
+            string vCarpetaFichaTecnicaCliente;
+            vCarpetaFichaTecnicaCliente = CreaCarpetaLocal();
+
+            string RutaArchivoCompleto = string.Format("FT[{2}]EP{0}-{1}", codEstpro, codVersion, IDFichaTecnica);
+            string NombreArchivo = string.Format("{0}FT[{3}]EP{1}-{2}{4}", vCarpetaFichaTecnicaCliente, codEstpro, codVersion, IDFichaTecnica, ".PDF");
+
+            try
+            {
+                porcentaje = 5;
+                progress?.Report(new ProgresoInfo
+                {
+                    Porcentaje = porcentaje,
+                    Mensaje = "Generando PDF",
+                    Detalle = "Eliminando PDF existente"
+                });
+
+                EliminaPDF(NombreArchivo);
+
+                porcentaje = 10;
+                progress?.Report(new ProgresoInfo
+                {
+                    Porcentaje = porcentaje,
+                    Mensaje = "Generando PDF",
+                    Detalle = "Inicio de Extraccion informacion de base de datos y construyendo PDF"
+                });
+
+                string mensajePDF = "";
+
+                var task = Task.Run(() =>
+                {
+                    return GenerarPDF(codEstpro, codVersion, IDFichaTecnica, vCarpetaFichaTecnicaCliente, RutaArchivoCompleto);
+                }, cancellationToken);
+
+                // *** ESPERAR Y RECIBIR EL RESULTADO ***
+                mensajePDF = await task;
+                if (!mensajePDF.Equals(""))
+                {
+                    throw new ProcessingException($"Error al generar PDF: {mensajePDF}");
+                }
+
+                porcentaje = 80;
+                progress?.Report(new ProgresoInfo
+                {
+                    Porcentaje = porcentaje,
+                    Mensaje = "Generando PDF",
+                    Detalle = "Protegiendo PDF"
+                });
+
+                mensajePDF = await ProtegerPdf(vCarpetaFichaTecnicaCliente + RutaArchivoCompleto + ".PDF");
+                if (!mensajePDF.Equals(""))
+                {
+                    throw new ProcessingException($"Error al Proteger PDF: {mensajePDF}");
+                }
+
+                porcentaje = 90;
+                progress?.Report(new ProgresoInfo
+                {
+                    Porcentaje = porcentaje,
+                    Mensaje = "Generando PDF",
+                    Detalle = "Copiando a ruta compartida"
+                });
+
+                task = Task.Run(() =>
+                {
+                    return CopiaPDFLocalCompartido(CodigoClienteSel, RutaArchivoCompleto, NombreArchivo);
+                }, cancellationToken);
+
+                string ArchivoDestino;
+                ArchivoDestino = await task;
+
+                porcentaje = 95;
+                progress?.Report(new ProgresoInfo
+                {
+                    Porcentaje = porcentaje,
+                    Mensaje = "Generando PDF",
+                    Detalle = "Guardando Ruta de PDF en base de datos"
+                });
+
+                task = Task.Run(() =>
+                {
+                    return GuardarRutaPDFenBD(codEstpro, codVersion, IDFichaTecnica, ArchivoDestino, IdPublicacion);
+                }, cancellationToken);
+
+                mensajePDF = await task;
+                if (!mensajePDF.Equals(""))
+                {
+                    throw new ProcessingException($"Error al guardar PDF en BD: {mensajePDF}");
+                }
+
+                // Finalización
+                porcentaje = 100;
+                progress?.Report(new ProgresoInfo
+                {
+                    Porcentaje = porcentaje,
+                    Mensaje = "Proceso completado",
+                    Detalle = "Todos los pasos ejecutados correctamente"
+                });
+
+                isGeneroOK = true;
+            }
+            catch (OperationCanceledException)
+            {
+                progress?.Report(new ProgresoInfo
+                {
+                    Porcentaje = porcentaje,
+                    Mensaje = "Proceso cancelado",
+                    Detalle = "La operación fue cancelada por el usuario",
+                    EsError = true
+                });
+
+                SetPendienteGenerarFT(codEstpro, codVersion, IDFichaTecnica, IdPublicacion);
+                isGeneroOK = false;
+            }
+            catch (Exception ex)
+            {
+               
+                // Esto captura cualquier error no manejado
+                progress?.Report(new ProgresoInfo
+                {
+                    Porcentaje = porcentaje,
+                    Mensaje = "💥 Error crítico",
+                    Detalle = ex.Message,
+                    EsError = true
+                });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                SetPendienteGenerarFT(codEstpro, codVersion, IDFichaTecnica, IdPublicacion);
+                isGeneroOK = false;
+
+                //throw; // Re-lanza para que el formulario lo maneje
+            }
+            return isGeneroOK;
         }
     }
 }

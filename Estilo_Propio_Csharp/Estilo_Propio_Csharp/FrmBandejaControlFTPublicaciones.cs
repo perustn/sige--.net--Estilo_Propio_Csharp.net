@@ -7,9 +7,11 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Janus.Windows.GridEX;
+using static Estilo_Propio_Csharp.FormularioProgreso;
 
 namespace Estilo_Propio_Csharp
 {
@@ -41,6 +43,7 @@ namespace Estilo_Propio_Csharp
 
         public DataTable oDtEstructuraFTecnica;
         public string ListaOpsSel;
+        private bool isExecutionGeneracionFT = false;
         #endregion
 
         public FrmBandejaControlFTPublicaciones()
@@ -1137,11 +1140,72 @@ namespace Estilo_Propio_Csharp
 
         public async Task GeneraFTPDFAsync(string EstiloPropioSel,string Versionsel,int IdFichaTecnicaSel, int IDPublicacion, string CodigoClienteSel)
         {
-            if (await GenFT.GenerarFtPDFAsync(EstiloPropioSel, Versionsel, IdFichaTecnicaSel, IDPublicacion, CodigoClienteSel))
-            {
-                MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (isExecutionGeneracionFT) {
+                MessageBox.Show("Ya se esta procesando una FT", "Incormacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
+
+            isExecutionGeneracionFT = true;
+
+            var cancellationTokenSource = new CancellationTokenSource();
+            var formProgreso = new FormularioProgreso();
+
+            // Configurar eventos del formulario de progreso
+            formProgreso.ConfigurarCancelacion(cancellationTokenSource);
+            formProgreso.ProcesoCompletado += (s, e) => AgregarLog("✓ Proceso completado exitosamente");
+            formProgreso.ProcesoCancelado += (s, e) => AgregarLog("⚠ Proceso cancelado por el usuario");
+            formProgreso.ProcesoError += (s, ex) => AgregarLog($"✗ Error en proceso: {ex.Message}");
+
+            try
+            {
+                // Mostrar formulario de progreso
+                formProgreso.Show();
+                AgregarLog("Iniciando proceso...");
+
+                // Crear progress reporter
+                var progress = new Progress<ProgresoInfo>(formProgreso.ActualizarProgreso);
+
+                // Ejecutar tu método asíncrono
+                //var resultado = await TuMetodoAsincrono(progress, cancellationTokenSource.Token);
+                bool resultado = await GenFT.GenerarPDFAsync(EstiloPropioSel, Versionsel, IdFichaTecnicaSel, IDPublicacion, CodigoClienteSel,
+                    progress, cancellationTokenSource.Token);
+
+                if (resultado)
+                {
+                    // Mostrar completado
+                    formProgreso.MostrarCompletado(
+                        "Proceso finalizado",
+                        $"Resultado: {resultado}"
+                    );
+                }
+                AgregarLog($"Resultado del proceso: {resultado}");
+            }
+            catch (OperationCanceledException)
+            {
+                AgregarLog("Proceso cancelado");
+                formProgreso.Close();
+            }
+            catch (Exception ex)
+            {
+                AgregarLog($"Error: {ex.Message}");
+                formProgreso.MostrarError("Error en el proceso", ex.Message);
+            }
+            isExecutionGeneracionFT = false;
+
         }
-       
+
+        private void AgregarLog(string mensaje)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string>(AgregarLog), mensaje);
+                return;
+            }
+            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {mensaje}\r\n");
+            //txtLog.AppendText($"[{DateTime.Now:HH:mm:ss}] {mensaje}\r\n");
+            //txtLog.SelectionStart = txtLog.Text.Length;
+            //txtLog.ScrollToCaret();
+        }
+
     }
 }

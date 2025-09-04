@@ -9,8 +9,10 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Estilo_Propio_Csharp.FormularioProgreso;
 
 namespace Estilo_Propio_Csharp
 {
@@ -39,6 +41,9 @@ namespace Estilo_Propio_Csharp
         public string TemporadaSel;
 
         public DataTable oDtEstructuraFTProcesos;
+
+        private bool isExecutionGeneracionFT = false;
+
         #endregion
 
         public FrmBandejaControlFTPublicaciones_CrearFT()
@@ -458,15 +463,15 @@ namespace Estilo_Propio_Csharp
                 }
 
                 bool FichaGenerada;
-                FichaGenerada = await GenFT.GenerarFtPDFAsync(TxtEstiloPropio.Text, TxtVersion.Text, IDFichaTecnica, IDPublicacion, ClienteSel);
-
-                //Genera Excel y convierte a PDF
+                //FichaGenerada = await GenFT.GenerarFtPDFAsync(TxtEstiloPropio.Text, TxtVersion.Text, IDFichaTecnica, IDPublicacion, ClienteSel);
+                FichaGenerada = await GeneraFTAsync(TxtEstiloPropio.Text, TxtVersion.Text, IDFichaTecnica, IDPublicacion, ClienteSel);
+                ////Genera Excel y convierte a PDF
                 if (FichaGenerada)
                 {
                     IsCambioOK = true;
                     MessageBox.Show("La Ficha Tecnica Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     DialogResult = DialogResult.OK;
-                }               
+                }
             }
             catch (Exception ex)
             {
@@ -474,6 +479,68 @@ namespace Estilo_Propio_Csharp
             }
         }
 
+        private async Task<bool> GeneraFTAsync (string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel)
+        {
+
+            bool returnOK = false;
+            var cancellationTokenSource = new CancellationTokenSource();
+            var formProgreso = new FormularioProgreso();
+
+            // Configurar eventos del formulario de progreso
+            formProgreso.ConfigurarCancelacion(cancellationTokenSource);
+            formProgreso.ProcesoCompletado += (s, e) => AgregarLog("✓ Proceso completado exitosamente");
+            formProgreso.ProcesoCancelado += (s, e) => AgregarLog("⚠ Proceso cancelado por el usuario");
+            formProgreso.ProcesoError += (s, ex) => AgregarLog($"✗ Error en proceso: {ex.Message}");
+
+            try
+            {
+                // Mostrar formulario de progreso
+                formProgreso.Show();
+                AgregarLog("Iniciando proceso...");
+
+                // Crear progress reporter
+                var progress = new Progress<ProgresoInfo>(formProgreso.ActualizarProgreso);
+
+                // Ejecutar tu método asíncrono
+                //var resultado = await TuMetodoAsincrono(progress, cancellationTokenSource.Token);
+                bool resultado = await GenFT.GenerarPDFAsync(codEstpro, codVersion, IDFichaTecnica, IDPublicacion, CodigoClienteSel,
+                    progress, cancellationTokenSource.Token);
+
+                if (resultado)
+                {
+                    // Mostrar completado
+                    formProgreso.MostrarCompletado(
+                        "Proceso finalizado",
+                        $"Resultado: {resultado}"
+                    );
+                    returnOK = true;
+                }
+                AgregarLog($"Resultado del proceso: {resultado}");
+            }
+            catch (OperationCanceledException)
+            {
+                AgregarLog("Proceso cancelado");
+                formProgreso.Close();
+            }
+            catch (Exception ex)
+            {
+                AgregarLog($"Error: {ex.Message}");
+                formProgreso.MostrarError("Error en el proceso", ex.Message);
+            }
+            return returnOK;
+        }
+        private void AgregarLog(string mensaje)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string>(AgregarLog), mensaje);
+                return;
+            }
+            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {mensaje}\r\n");
+            //txtLog.AppendText($"[{DateTime.Now:HH:mm:ss}] {mensaje}\r\n");
+            //txtLog.SelectionStart = txtLog.Text.Length;
+            //txtLog.ScrollToCaret();
+        }
         private void BtnCancelar_Click(object sender, EventArgs e)
         {
             IsCambioOK = false;
