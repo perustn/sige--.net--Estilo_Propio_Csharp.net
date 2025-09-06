@@ -257,7 +257,7 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        private async Task<string> ProtegerPdf(string carpetaDestino)
+        public async Task<string> ProtegerPdf(string carpetaDestino)
         {
             string executionOk = "";
             using var pdfService = new PDFProtectionPdfSharp.PdfProtectionService();
@@ -357,11 +357,20 @@ namespace Estilo_Propio_Csharp
                     Detalle = "Protegiendo PDF"
                 });
 
+                /*
                 mensajePDF = await ProtegerPdf(vCarpetaFichaTecnicaCliente + RutaArchivoCompleto + ".PDF");
                 if (!mensajePDF.Equals(""))
                 {
                     throw new ProcessingException($"Error al Proteger PDF: {mensajePDF}");
                 }
+                */
+                /* ********************************************************** */
+
+                if (!await ProtegerPdfExe(vCarpetaFichaTecnicaCliente + RutaArchivoCompleto + ".PDF"))
+                {
+                    throw new ProcessingException($"Error al Proteger PDF");
+                };
+
 
                 porcentaje = 90;
                 progress?.Report(new ProgresoInfo
@@ -438,6 +447,55 @@ namespace Estilo_Propio_Csharp
                 isGeneroOK = false;
 
                 //throw; // Re-lanza para que el formulario lo maneje
+            }
+            return isGeneroOK;
+        }
+        private async Task<bool> ProtegerPdfExe(string carpetaDestino)
+        {
+            bool isGeneroOK = false;
+            string nameProy = "Estilo_Propio_Csharp";
+            string tipo = ".exe";
+            string sPath = AppDomain.CurrentDomain.BaseDirectory;
+            string sDllName = sPath + @"\" + nameProy + tipo;
+            string executablePath = sDllName;
+
+            // Define tus parámetros en una lista
+            List<string> parameters = new List<string>
+            {
+                "PROTECCIONPDF",
+                VariablesGenerales.pConnect,
+                VariablesGenerales.pConnectSeguridad,
+                VariablesGenerales.pConnectVB6,
+                VariablesGenerales.pCodEmpresa,
+                VariablesGenerales.pUsuario,
+                VariablesGenerales.pRuta,
+                VariablesGenerales.pCodPerfil,
+                carpetaDestino
+            };
+
+            // Prepara los argumentos: Si un parámetro contiene espacios, lo encierra en comillas.
+            // string.Join une todos los elementos con un espacio entre ellos.
+            string allArguments = string.Join(" ", parameters.Select(p => p.Contains(" ") ? $"\"{p}\"" : p));
+
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = executablePath;
+                process.StartInfo.Arguments = allArguments;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.CreateNoWindow = true;
+
+                process.Start();
+
+                // Esperar a que termine el proceso
+                await Task.Run(() => process.WaitForExit());
+
+                // Obtener código de salida
+                if (process.ExitCode == 0)
+                {
+                    isGeneroOK = true;
+                }
             }
             return isGeneroOK;
         }
