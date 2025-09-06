@@ -29,6 +29,8 @@ namespace Estilo_Propio_Csharp
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmBandejaControlFTPublicaciones));
             Janus.Windows.ButtonBar.ButtonBarGroup buttonBar1_Group_0 = new Janus.Windows.ButtonBar.ButtonBarGroup();
             Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_0 = new Janus.Windows.ButtonBar.ButtonBarItem();
             Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_1 = new Janus.Windows.ButtonBar.ButtonBarItem();
@@ -44,8 +46,8 @@ namespace Estilo_Propio_Csharp
             Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_11 = new Janus.Windows.ButtonBar.ButtonBarItem();
             Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_12 = new Janus.Windows.ButtonBar.ButtonBarItem();
             Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_13 = new Janus.Windows.ButtonBar.ButtonBarItem();
+            Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_14 = new Janus.Windows.ButtonBar.ButtonBarItem();
             Janus.Windows.GridEX.GridEXLayout gridEX1_DesignTimeLayout = new Janus.Windows.GridEX.GridEXLayout();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmBandejaControlFTPublicaciones));
             this.panel1 = new System.Windows.Forms.Panel();
             this.Panel2 = new System.Windows.Forms.Panel();
             this.cboStatusFT = new Janus.Windows.EditControls.UIComboBox();
@@ -73,14 +75,15 @@ namespace Estilo_Propio_Csharp
             this.label10 = new System.Windows.Forms.Label();
             this.BtnBuscar = new Janus.Windows.EditControls.UIButton();
             this.uiGroupBox1 = new Janus.Windows.EditControls.UIGroupBox();
-            this.buttonBar1 = new Janus.Windows.ButtonBar.ButtonBar();
-            this.gridEX1 = new Janus.Windows.GridEX.GridEX();
             this.OptGenerarPDF = new System.Windows.Forms.RadioButton();
             this.OptEstiloVersion = new System.Windows.Forms.RadioButton();
             this.OptIDPublicacion = new System.Windows.Forms.RadioButton();
             this.OptRangoFecha = new System.Windows.Forms.RadioButton();
             this.OptOP = new System.Windows.Forms.RadioButton();
             this.OptClienteTemporada = new System.Windows.Forms.RadioButton();
+            this.buttonBar1 = new Janus.Windows.ButtonBar.ButtonBar();
+            this.gridEX1 = new Janus.Windows.GridEX.GridEX();
+            this.gridEXExporter1 = new Janus.Windows.GridEX.Export.GridEXExporter(this.components);
             this.panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grpEstiloVersion)).BeginInit();
@@ -450,115 +453,6 @@ namespace Estilo_Propio_Csharp
             this.uiGroupBox1.Text = "Filtros de Búsqueda";
             this.uiGroupBox1.VisualStyle = Janus.Windows.UI.Dock.PanelVisualStyle.Office2010;
             // 
-            // buttonBar1
-            // 
-            this.buttonBar1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonBar1.DragStyle = Janus.Windows.ButtonBar.DragStyle.InvertedRect;
-            buttonBar1_Item_0_0.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_0.Image")));
-            buttonBar1_Item_0_0.Key = "CREARFT";
-            buttonBar1_Item_0_0.Text = "Crear FT";
-            buttonBar1_Item_0_1.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_1.Image")));
-            buttonBar1_Item_0_1.Key = "VEROPS";
-            buttonBar1_Item_0_1.Text = "Ver OPs";
-            buttonBar1_Item_0_2.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_2.Image")));
-            buttonBar1_Item_0_2.Key = "PREPUBLICAR";
-            buttonBar1_Item_0_2.Text = "Pre Publicar";
-            buttonBar1_Item_0_3.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_3.Image")));
-            buttonBar1_Item_0_3.Key = "MODPREPUBLICAR";
-            buttonBar1_Item_0_3.Text = "Modificar por Pre Publicar";
-            buttonBar1_Item_0_4.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_4.Image")));
-            buttonBar1_Item_0_4.Key = "PUBLICAR";
-            buttonBar1_Item_0_4.Text = "Publicar";
-            buttonBar1_Item_0_5.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_5.Image")));
-            buttonBar1_Item_0_5.Key = "RECHAZARPREP";
-            buttonBar1_Item_0_5.Text = "Rechazar Pre Publicacion";
-            buttonBar1_Item_0_6.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_6.Image")));
-            buttonBar1_Item_0_6.Key = "CREADOPREP";
-            buttonBar1_Item_0_6.Text = "Pasar a Creado x PrePublicar";
-            buttonBar1_Item_0_6.Visible = false;
-            buttonBar1_Item_0_7.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_7.Image")));
-            buttonBar1_Item_0_7.Key = "GENERARFT";
-            buttonBar1_Item_0_7.Text = "Generar FT PDF";
-            buttonBar1_Item_0_8.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_8.Image")));
-            buttonBar1_Item_0_8.Key = "VERFT";
-            buttonBar1_Item_0_8.Text = "Ver FT";
-            buttonBar1_Item_0_9.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_9.Image")));
-            buttonBar1_Item_0_9.Key = "AUTORIZAPUBLI";
-            buttonBar1_Item_0_9.Text = "Autorizacion Publicacion";
-            buttonBar1_Item_0_10.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_10.Image")));
-            buttonBar1_Item_0_10.Key = "VERMODIFICACION";
-            buttonBar1_Item_0_10.Text = "Ver Modificaciones respecto a Publc.Ant";
-            buttonBar1_Item_0_11.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_11.Image")));
-            buttonBar1_Item_0_11.Key = "VERPUBLICACIONES";
-            buttonBar1_Item_0_11.Text = "Ver Todas las Publicaciones";
-            buttonBar1_Item_0_12.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_12.Image")));
-            buttonBar1_Item_0_12.Key = "VERDETRECHAZO";
-            buttonBar1_Item_0_12.Text = "Ver Detalle Rechazo";
-            buttonBar1_Item_0_13.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_13.Image")));
-            buttonBar1_Item_0_13.Key = "USUARIOPUBLI";
-            buttonBar1_Item_0_13.Text = "Usuarios que vieron Publicación";
-            buttonBar1_Group_0.Items.AddRange(new Janus.Windows.ButtonBar.ButtonBarItem[] {
-            buttonBar1_Item_0_0,
-            buttonBar1_Item_0_1,
-            buttonBar1_Item_0_2,
-            buttonBar1_Item_0_3,
-            buttonBar1_Item_0_4,
-            buttonBar1_Item_0_5,
-            buttonBar1_Item_0_6,
-            buttonBar1_Item_0_7,
-            buttonBar1_Item_0_8,
-            buttonBar1_Item_0_9,
-            buttonBar1_Item_0_10,
-            buttonBar1_Item_0_11,
-            buttonBar1_Item_0_12,
-            buttonBar1_Item_0_13});
-            buttonBar1_Group_0.Key = "Group1";
-            buttonBar1_Group_0.Text = "New Group";
-            buttonBar1_Group_0.TextAlignment = Janus.Windows.ButtonBar.Alignment.Near;
-            buttonBar1_Group_0.View = Janus.Windows.ButtonBar.ButtonBarView.SmallIcons;
-            this.buttonBar1.Groups.AddRange(new Janus.Windows.ButtonBar.ButtonBarGroup[] {
-            buttonBar1_Group_0});
-            this.buttonBar1.HeaderGroupVisible = false;
-            this.buttonBar1.Location = new System.Drawing.Point(0, 98);
-            this.buttonBar1.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonBar1.Name = "buttonBar1";
-            this.buttonBar1.OfficeColorScheme = Janus.Windows.ButtonBar.OfficeColorScheme.Blue;
-            this.buttonBar1.Orientation = Janus.Windows.ButtonBar.ButtonBarOrientation.Horizontal;
-            this.buttonBar1.SelectionArea = Janus.Windows.ButtonBar.SelectionArea.FullItem;
-            this.buttonBar1.Size = new System.Drawing.Size(1133, 25);
-            this.buttonBar1.SmallImageSize = new System.Drawing.Size(18, 18);
-            this.buttonBar1.TabIndex = 29;
-            this.buttonBar1.Text = "buttonBar1";
-            this.buttonBar1.VisualStyle = Janus.Windows.ButtonBar.VisualStyle.Office2010;
-            this.buttonBar1.ItemClick += new Janus.Windows.ButtonBar.ItemEventHandler(this.buttonBar1_ItemClick);
-            // 
-            // gridEX1
-            // 
-            this.gridEX1.AllowEdit = Janus.Windows.GridEX.InheritableBoolean.False;
-            this.gridEX1.AlternatingColors = true;
-            this.gridEX1.DefaultFilterRowComparison = Janus.Windows.GridEX.FilterConditionOperator.Contains;
-            gridEX1_DesignTimeLayout.LayoutString = "<GridEXLayoutData><RootTable><GroupCondition /><HeaderLines>2</HeaderLines></Root" +
-    "Table></GridEXLayoutData>";
-            this.gridEX1.DesignTimeLayout = gridEX1_DesignTimeLayout;
-            this.gridEX1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridEX1.EnterKeyBehavior = Janus.Windows.GridEX.EnterKeyBehavior.None;
-            this.gridEX1.FilterMode = Janus.Windows.GridEX.FilterMode.Automatic;
-            this.gridEX1.FilterRowButtonStyle = Janus.Windows.GridEX.FilterRowButtonStyle.ConditionOperatorDropDown;
-            this.gridEX1.FilterRowUpdateMode = Janus.Windows.GridEX.FilterRowUpdateMode.WhenValueChanges;
-            this.gridEX1.GroupByBoxVisible = false;
-            this.gridEX1.Location = new System.Drawing.Point(0, 123);
-            this.gridEX1.Margin = new System.Windows.Forms.Padding(2);
-            this.gridEX1.Name = "gridEX1";
-            this.gridEX1.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
-            this.gridEX1.RecordNavigator = true;
-            this.gridEX1.Size = new System.Drawing.Size(1133, 327);
-            this.gridEX1.TabIndex = 30;
-            this.gridEX1.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
-            this.gridEX1.FormattingRow += new Janus.Windows.GridEX.RowLoadEventHandler(this.gridEX1_FormattingRow);
-            this.gridEX1.EditingCell += new Janus.Windows.GridEX.EditingCellEventHandler(this.gridEX1_EditingCell);
-            this.gridEX1.ColumnHeaderClick += new Janus.Windows.GridEX.ColumnActionEventHandler(this.gridEX1_ColumnHeaderClick);
-            this.gridEX1.Click += new System.EventHandler(this.gridEX1_Click);
-            // 
             // OptGenerarPDF
             // 
             this.OptGenerarPDF.AutoSize = true;
@@ -681,6 +575,123 @@ namespace Estilo_Propio_Csharp
             this.OptClienteTemporada.UseVisualStyleBackColor = false;
             this.OptClienteTemporada.Click += new System.EventHandler(this.OpcionFiltroBusqueda);
             // 
+            // buttonBar1
+            // 
+            this.buttonBar1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonBar1.DragStyle = Janus.Windows.ButtonBar.DragStyle.InvertedRect;
+            buttonBar1_Item_0_0.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_0.Image")));
+            buttonBar1_Item_0_0.Key = "CREARFT";
+            buttonBar1_Item_0_0.Text = "Crear FT";
+            buttonBar1_Item_0_1.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_1.Image")));
+            buttonBar1_Item_0_1.Key = "VEROPS";
+            buttonBar1_Item_0_1.Text = "Ver OPs";
+            buttonBar1_Item_0_2.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_2.Image")));
+            buttonBar1_Item_0_2.Key = "PREPUBLICAR";
+            buttonBar1_Item_0_2.Text = "Pre Publicar";
+            buttonBar1_Item_0_3.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_3.Image")));
+            buttonBar1_Item_0_3.Key = "MODPREPUBLICAR";
+            buttonBar1_Item_0_3.Text = "Modificar por Pre Publicar";
+            buttonBar1_Item_0_4.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_4.Image")));
+            buttonBar1_Item_0_4.Key = "PUBLICAR";
+            buttonBar1_Item_0_4.Text = "Publicar";
+            buttonBar1_Item_0_5.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_5.Image")));
+            buttonBar1_Item_0_5.Key = "RECHAZARPREP";
+            buttonBar1_Item_0_5.Text = "Rechazar Pre Publicacion";
+            buttonBar1_Item_0_6.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_6.Image")));
+            buttonBar1_Item_0_6.Key = "CREADOPREP";
+            buttonBar1_Item_0_6.Text = "Pasar a Creado x PrePublicar";
+            buttonBar1_Item_0_6.Visible = false;
+            buttonBar1_Item_0_7.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_7.Image")));
+            buttonBar1_Item_0_7.Key = "GENERARFT";
+            buttonBar1_Item_0_7.Text = "Generar FT PDF";
+            buttonBar1_Item_0_8.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_8.Image")));
+            buttonBar1_Item_0_8.Key = "VERFT";
+            buttonBar1_Item_0_8.Text = "Ver FT";
+            buttonBar1_Item_0_9.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_9.Image")));
+            buttonBar1_Item_0_9.Key = "AUTORIZAPUBLI";
+            buttonBar1_Item_0_9.Text = "Autorizacion Publicacion";
+            buttonBar1_Item_0_10.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_10.Image")));
+            buttonBar1_Item_0_10.Key = "VERMODIFICACION";
+            buttonBar1_Item_0_10.Text = "Ver Modificaciones respecto a Publc.Ant";
+            buttonBar1_Item_0_11.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_11.Image")));
+            buttonBar1_Item_0_11.Key = "VERPUBLICACIONES";
+            buttonBar1_Item_0_11.Text = "Ver Todas las Publicaciones";
+            buttonBar1_Item_0_12.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_12.Image")));
+            buttonBar1_Item_0_12.Key = "VERDETRECHAZO";
+            buttonBar1_Item_0_12.Text = "Ver Detalle Rechazo";
+            buttonBar1_Item_0_13.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_13.Image")));
+            buttonBar1_Item_0_13.Key = "USUARIOPUBLI";
+            buttonBar1_Item_0_13.Text = "Usuarios que vieron Publicación";
+            buttonBar1_Item_0_14.Image = ((System.Drawing.Image)(resources.GetObject("buttonBar1_Item_0_14.Image")));
+            buttonBar1_Item_0_14.Key = "EXPORTAR";
+            buttonBar1_Item_0_14.Text = "Exportar información a Excel";
+            buttonBar1_Group_0.Items.AddRange(new Janus.Windows.ButtonBar.ButtonBarItem[] {
+            buttonBar1_Item_0_0,
+            buttonBar1_Item_0_1,
+            buttonBar1_Item_0_2,
+            buttonBar1_Item_0_3,
+            buttonBar1_Item_0_4,
+            buttonBar1_Item_0_5,
+            buttonBar1_Item_0_6,
+            buttonBar1_Item_0_7,
+            buttonBar1_Item_0_8,
+            buttonBar1_Item_0_9,
+            buttonBar1_Item_0_10,
+            buttonBar1_Item_0_11,
+            buttonBar1_Item_0_12,
+            buttonBar1_Item_0_13,
+            buttonBar1_Item_0_14});
+            buttonBar1_Group_0.Key = "Group1";
+            buttonBar1_Group_0.Text = "New Group";
+            buttonBar1_Group_0.TextAlignment = Janus.Windows.ButtonBar.Alignment.Near;
+            buttonBar1_Group_0.View = Janus.Windows.ButtonBar.ButtonBarView.SmallIcons;
+            this.buttonBar1.Groups.AddRange(new Janus.Windows.ButtonBar.ButtonBarGroup[] {
+            buttonBar1_Group_0});
+            this.buttonBar1.HeaderGroupVisible = false;
+            this.buttonBar1.Location = new System.Drawing.Point(0, 98);
+            this.buttonBar1.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonBar1.Name = "buttonBar1";
+            this.buttonBar1.OfficeColorScheme = Janus.Windows.ButtonBar.OfficeColorScheme.Blue;
+            this.buttonBar1.Orientation = Janus.Windows.ButtonBar.ButtonBarOrientation.Horizontal;
+            this.buttonBar1.SelectionArea = Janus.Windows.ButtonBar.SelectionArea.FullItem;
+            this.buttonBar1.Size = new System.Drawing.Size(1133, 25);
+            this.buttonBar1.SmallImageSize = new System.Drawing.Size(18, 18);
+            this.buttonBar1.TabIndex = 29;
+            this.buttonBar1.Text = "buttonBar1";
+            this.buttonBar1.VisualStyle = Janus.Windows.ButtonBar.VisualStyle.Office2010;
+            this.buttonBar1.ItemClick += new Janus.Windows.ButtonBar.ItemEventHandler(this.buttonBar1_ItemClick);
+            // 
+            // gridEX1
+            // 
+            this.gridEX1.AllowEdit = Janus.Windows.GridEX.InheritableBoolean.False;
+            this.gridEX1.AlternatingColors = true;
+            this.gridEX1.DefaultFilterRowComparison = Janus.Windows.GridEX.FilterConditionOperator.Contains;
+            gridEX1_DesignTimeLayout.LayoutString = "<GridEXLayoutData><RootTable><GroupCondition /><HeaderLines>2</HeaderLines></Root" +
+    "Table></GridEXLayoutData>";
+            this.gridEX1.DesignTimeLayout = gridEX1_DesignTimeLayout;
+            this.gridEX1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridEX1.EnterKeyBehavior = Janus.Windows.GridEX.EnterKeyBehavior.None;
+            this.gridEX1.FilterMode = Janus.Windows.GridEX.FilterMode.Automatic;
+            this.gridEX1.FilterRowButtonStyle = Janus.Windows.GridEX.FilterRowButtonStyle.ConditionOperatorDropDown;
+            this.gridEX1.FilterRowUpdateMode = Janus.Windows.GridEX.FilterRowUpdateMode.WhenValueChanges;
+            this.gridEX1.GroupByBoxVisible = false;
+            this.gridEX1.Location = new System.Drawing.Point(0, 123);
+            this.gridEX1.Margin = new System.Windows.Forms.Padding(2);
+            this.gridEX1.Name = "gridEX1";
+            this.gridEX1.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
+            this.gridEX1.RecordNavigator = true;
+            this.gridEX1.Size = new System.Drawing.Size(1133, 327);
+            this.gridEX1.TabIndex = 30;
+            this.gridEX1.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
+            this.gridEX1.FormattingRow += new Janus.Windows.GridEX.RowLoadEventHandler(this.gridEX1_FormattingRow);
+            this.gridEX1.EditingCell += new Janus.Windows.GridEX.EditingCellEventHandler(this.gridEX1_EditingCell);
+            this.gridEX1.ColumnHeaderClick += new Janus.Windows.GridEX.ColumnActionEventHandler(this.gridEX1_ColumnHeaderClick);
+            this.gridEX1.Click += new System.EventHandler(this.gridEX1_Click);
+            // 
+            // gridEXExporter1
+            // 
+            this.gridEXExporter1.GridEX = this.gridEX1;
+            // 
             // FrmBandejaControlFTPublicaciones
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -759,5 +770,6 @@ namespace Estilo_Propio_Csharp
         internal System.Windows.Forms.Label label3;
         private Janus.Windows.EditControls.UIComboBox cboStatusFT;
         public System.Windows.Forms.RadioButton OptGenerarPDF;
+        private Janus.Windows.GridEX.Export.GridEXExporter gridEXExporter1;
     }
 }

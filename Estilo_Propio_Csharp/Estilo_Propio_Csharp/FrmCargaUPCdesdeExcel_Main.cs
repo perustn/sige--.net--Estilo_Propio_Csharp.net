@@ -38,6 +38,7 @@ namespace Estilo_Propio_Csharp
             // Define tus parámetros en una lista
             List<string> parameters = new List<string>
             {
+                "UPC",
                 VariablesGenerales.pConnect,
                 VariablesGenerales.pConnectSeguridad,
                 VariablesGenerales.pConnectVB6,

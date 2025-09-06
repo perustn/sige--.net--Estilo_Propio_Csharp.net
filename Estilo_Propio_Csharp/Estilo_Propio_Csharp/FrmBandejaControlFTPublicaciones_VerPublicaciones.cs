@@ -129,6 +129,11 @@ namespace Estilo_Propio_Csharp
                             withBlock2.Width = 80;
                             withBlock2.TextAlignment = TextAlignment.Center;
                         }
+
+                        {
+                            var withBlock2 = withBlock1.Columns["IsUltimaPub"];
+                            withBlock2.Visible = false;
+                        }
                     }
                 }
             }
@@ -155,6 +160,16 @@ namespace Estilo_Propio_Csharp
                             return;
                         string sRutaTemp;
                         sRutaTemp = @"C:\\TEMP\\";
+
+                        if((bool)GrdLista.GetValue(GrdLista.RootTable.Columns["IsUltimaPub"].Index) == true)
+                        {
+                            strSQL = string.Empty;
+                            strSQL += "\n" + "EXEC FT_Save_Revisiones_por_Usuario";
+                            strSQL += "\n" + string.Format(" @id_publicacion    = {0}", GrdLista.GetValue(GrdLista.RootTable.Columns["ID_Publicacion"].Index));
+                            strSQL += "\n" + string.Format(",@cod_usuario		='{0}'", VariablesGenerales.pUsuario);
+                            strSQL += "\n" + string.Format(",@cod_estacion		='{0}'", Environment.MachineName);
+                            oHp.EjecutarOperacion(strSQL);
+                        }
 
                         if (!System.IO.Directory.Exists(sRutaTemp))
                             System.IO.Directory.CreateDirectory(sRutaTemp);

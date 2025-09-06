@@ -394,82 +394,19 @@ namespace Estilo_Propio_Csharp
         {
             try
             {
-                if (string.IsNullOrEmpty(TxtDescripcion.Text.TrimEnd()))
+                (int _IDPublicacion, int _IDFichaTecnica) = SavePublicacionBD();
+
+                if (_IDPublicacion == 0)
                 {
-                    MessageBox.Show("Ingresar Descripcion de Ficha", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No se pudo publicar la fT", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                oDtEstructuraFTProcesos.Clear();
-                foreach (GridEXRow oGridEXRow in grxRutaDePrenda.GetDataRows())
-                {
-                    if (Convert.ToBoolean(oGridEXRow.Cells["Flg_Seleccion"].Value) == true)
-                    {
-                        DataRow oDrNUEVO = oDtEstructuraFTProcesos.NewRow();
-                        oDrNUEVO["Cod_EstPro"] = TxtEstiloPropio.Text.Trim();
-                        oDrNUEVO["Cod_Version"] = TxtVersion.Text.Trim();
-                        oDrNUEVO["Cod_Proceso"] = oGridEXRow.Cells["cod_proceso"].Value;
-                        oDtEstructuraFTProcesos.Rows.Add(oDrNUEVO);
-                    }
-                }
+                MessageBox.Show($"Se genero el id de publicacion {_IDPublicacion.ToString()}", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                using (SqlConnection connection = new SqlConnection(VariablesGenerales.pConnect))
-                {
-                    connection.Open();
-                    using (SqlCommand cmd = connection.CreateCommand())
-                    {
-                        SqlTransaction transaction;
-                        transaction = connection.BeginTransaction("ValidaTransacción");
-                        cmd.Connection = connection;
-                        cmd.Transaction = transaction;
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        try
-                        {
-                            cmd.CommandText = "FT_CREACION_FT_PUBLICACION_DESDE_BANDEJA";
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.Add("@COD_ESTPRO", SqlDbType.Char, 5).Value = TxtEstiloPropio.Text;
-                            cmd.Parameters.Add("@COD_VERSION", SqlDbType.Char, 2).Value = TxtVersion.Text;
-                            cmd.Parameters.Add("@COD_CLIENTE", SqlDbType.Char, 5).Value = ClienteSel;
-                            cmd.Parameters.Add("@COD_TEMCLI", SqlDbType.Char, 3).Value = TemporadaSel;
-                            cmd.Parameters.Add("@DESCRIPCION", SqlDbType.VarChar, 50).Value = TxtDescripcion.Text;
-                            cmd.Parameters.Add("@observacion", SqlDbType.NVarChar, 250).Value = TxtObservacion.Text;
-                            cmd.Parameters.Add("@Tabla_Procesos", SqlDbType.Structured).Value = oDtEstructuraFTProcesos;
-                            cmd.Parameters.Add("@Flg_LaFT_EsCompleta", SqlDbType.Bit).Value = IIf(rbtCompleta.Checked == true, 1, 0);
-                            cmd.Parameters.Add("@TablaRequerimientoComercial", SqlDbType.Structured).Value = oDtDatosSeleccionadosFT;
-                            cmd.Parameters.Add("@ComentariosPublicar", SqlDbType.VarChar, 4000).Value = "";
-                            cmd.Parameters.Add("@Cod_Motivo_FT_Parcial", SqlDbType.Char, 3).Value = TxtCodMotivo.Text;
-                            cmd.Parameters.Add("@Fec_Comprometida_FT_Parcial_En_Completo", SqlDbType.DateTime).Value = dtpFecComprometidaFT_Parcial.Value.ToShortDateString();
-                            cmd.Parameters.Add("@Flg_ParaCompraDeTela", SqlDbType.Bit).Value = IIf(rbSICompraTela.Checked == true, 1, 0);
-                            cmd.Parameters.Add("@PC_CREACION", SqlDbType.VarChar, 100).Value = Environment.MachineName;
-                            cmd.Parameters.Add("@COD_USUARIO", SqlDbType.VarChar, 100).Value = VariablesGenerales.pUsuario;
-                            cmd.Parameters.Add("@ID_Publicacion", SqlDbType.Int).Direction = ParameterDirection.Output;
-                            cmd.Parameters.Add("@ID_FichaTecnica", SqlDbType.Int).Direction = ParameterDirection.Output;
-
-                            cmd.ExecuteNonQuery();
-                            IDPublicacion = (int)cmd.Parameters["@ID_Publicacion"].Value;
-                            IDFichaTecnica = (int)cmd.Parameters["@ID_FichaTecnica"].Value;
-                            cmd.Parameters.Clear();
-                            transaction.Commit();
-                                                        
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            MessageBox.Show("No se ha podido realizar la operación solicitada, por favor vuélvalo a intentar: " + ex.Message.ToString(), "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                    }
-                }
-
-                bool FichaGenerada;
-                //FichaGenerada = await GenFT.GenerarFtPDFAsync(TxtEstiloPropio.Text, TxtVersion.Text, IDFichaTecnica, IDPublicacion, ClienteSel);
-                FichaGenerada = await GeneraFTAsync(TxtEstiloPropio.Text, TxtVersion.Text, IDFichaTecnica, IDPublicacion, ClienteSel);
-                ////Genera Excel y convierte a PDF
-                if (FichaGenerada)
+                if(await GeneraFTAsync(TxtEstiloPropio.Text, TxtVersion.Text, _IDFichaTecnica, _IDPublicacion, ClienteSel))
                 {
                     IsCambioOK = true;
-                    MessageBox.Show("La Ficha Tecnica Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     DialogResult = DialogResult.OK;
                 }
             }
@@ -479,9 +416,80 @@ namespace Estilo_Propio_Csharp
             }
         }
 
+        private (int IDPublicacion, int IDFichaTecnica) SavePublicacionBD()
+        {
+            if (string.IsNullOrEmpty(TxtDescripcion.Text.TrimEnd()))
+            {
+                MessageBox.Show("Ingresar Descripcion de Ficha", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return (0,0);
+            }
+
+            oDtEstructuraFTProcesos.Clear();
+            foreach (GridEXRow oGridEXRow in grxRutaDePrenda.GetDataRows())
+            {
+                if (Convert.ToBoolean(oGridEXRow.Cells["Flg_Seleccion"].Value) == true)
+                {
+                    DataRow oDrNUEVO = oDtEstructuraFTProcesos.NewRow();
+                    oDrNUEVO["Cod_EstPro"] = TxtEstiloPropio.Text.Trim();
+                    oDrNUEVO["Cod_Version"] = TxtVersion.Text.Trim();
+                    oDrNUEVO["Cod_Proceso"] = oGridEXRow.Cells["cod_proceso"].Value;
+                    oDtEstructuraFTProcesos.Rows.Add(oDrNUEVO);
+                }
+            }
+
+            using (SqlConnection connection = new SqlConnection(VariablesGenerales.pConnect))
+            {
+                connection.Open();
+                using (SqlCommand cmd = connection.CreateCommand())
+                {
+                    SqlTransaction transaction;
+                    transaction = connection.BeginTransaction("ValidaTransacción");
+                    cmd.Connection = connection;
+                    cmd.Transaction = transaction;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    try
+                    {
+                        cmd.CommandText = "FT_CREACION_FT_PUBLICACION_DESDE_BANDEJA";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@COD_ESTPRO", SqlDbType.Char, 5).Value = TxtEstiloPropio.Text;
+                        cmd.Parameters.Add("@COD_VERSION", SqlDbType.Char, 2).Value = TxtVersion.Text;
+                        cmd.Parameters.Add("@COD_CLIENTE", SqlDbType.Char, 5).Value = ClienteSel;
+                        cmd.Parameters.Add("@COD_TEMCLI", SqlDbType.Char, 3).Value = TemporadaSel;
+                        cmd.Parameters.Add("@DESCRIPCION", SqlDbType.VarChar, 50).Value = TxtDescripcion.Text;
+                        cmd.Parameters.Add("@observacion", SqlDbType.NVarChar, 250).Value = TxtObservacion.Text;
+                        cmd.Parameters.Add("@Tabla_Procesos", SqlDbType.Structured).Value = oDtEstructuraFTProcesos;
+                        cmd.Parameters.Add("@Flg_LaFT_EsCompleta", SqlDbType.Bit).Value = IIf(rbtCompleta.Checked == true, 1, 0);
+                        cmd.Parameters.Add("@TablaRequerimientoComercial", SqlDbType.Structured).Value = oDtDatosSeleccionadosFT;
+                        cmd.Parameters.Add("@ComentariosPublicar", SqlDbType.VarChar, 4000).Value = "";
+                        cmd.Parameters.Add("@Cod_Motivo_FT_Parcial", SqlDbType.Char, 3).Value = TxtCodMotivo.Text;
+                        cmd.Parameters.Add("@Fec_Comprometida_FT_Parcial_En_Completo", SqlDbType.DateTime).Value = dtpFecComprometidaFT_Parcial.Value.ToShortDateString();
+                        cmd.Parameters.Add("@Flg_ParaCompraDeTela", SqlDbType.Bit).Value = IIf(rbSICompraTela.Checked == true, 1, 0);
+                        cmd.Parameters.Add("@PC_CREACION", SqlDbType.VarChar, 100).Value = Environment.MachineName;
+                        cmd.Parameters.Add("@COD_USUARIO", SqlDbType.VarChar, 100).Value = VariablesGenerales.pUsuario;
+                        cmd.Parameters.Add("@ID_Publicacion", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add("@ID_FichaTecnica", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+                        IDPublicacion = (int)cmd.Parameters["@ID_Publicacion"].Value;
+                        IDFichaTecnica = (int)cmd.Parameters["@ID_FichaTecnica"].Value;
+                        cmd.Parameters.Clear();
+                        transaction.Commit();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show("No se ha podido realizar la operación solicitada, por favor vuélvalo a intentar: " + ex.Message.ToString(), "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+
+            return (IDPublicacion, IDFichaTecnica);
+        }
+
         private async Task<bool> GeneraFTAsync (string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel)
         {
-
             bool returnOK = false;
             var cancellationTokenSource = new CancellationTokenSource();
             var formProgreso = new FormularioProgreso();
@@ -491,11 +499,12 @@ namespace Estilo_Propio_Csharp
             formProgreso.ProcesoCompletado += (s, e) => AgregarLog("✓ Proceso completado exitosamente");
             formProgreso.ProcesoCancelado += (s, e) => AgregarLog("⚠ Proceso cancelado por el usuario");
             formProgreso.ProcesoError += (s, ex) => AgregarLog($"✗ Error en proceso: {ex.Message}");
+            formProgreso.CerrarProgreso += (s, e) => CerrarFormulario();
 
             try
             {
                 // Mostrar formulario de progreso
-                formProgreso.Show();
+                formProgreso.Show(this);
                 AgregarLog("Iniciando proceso...");
 
                 // Crear progress reporter
@@ -548,5 +557,11 @@ namespace Estilo_Propio_Csharp
         }
 
         object IIf(bool expression, object truePart, object falsePart) { return expression ? truePart : falsePart; }
+
+        private void CerrarFormulario()
+        {
+            IsCambioOK = true;
+            DialogResult = DialogResult.OK;
+        }
     }
 }

@@ -27,7 +27,6 @@ namespace Estilo_Propio_Csharp
         public new DataTable oDt;
         public Boolean IsCambioOK;
         public int FilaSeleccionado;
-        public string TipoCambioStatus;
         public string DesRptstatus;
         public int IDPublicacion;
 
@@ -60,20 +59,6 @@ namespace Estilo_Propio_Csharp
                 }
 
                 this.ActiveControl = TxtObservacion;
-                switch (TipoCambioStatus)
-                {
-                    case "PREPUBLICAR":
-                        this.Size = new System.Drawing.Size(524, 274);
-                        break;
-
-                    case "PUBLICAR":
-                        this.Size = new System.Drawing.Size(524, 192);
-                        break;
-
-                    case "MODPREPUBLICAR":
-                        this.Size = new System.Drawing.Size(524, 192);
-                        break;
-                }
             }
             catch (Exception)
             {
@@ -183,6 +168,24 @@ namespace Estilo_Propio_Csharp
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }        
+
+        private void BtnAceptar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                PrePublicarAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private void BtnCancelar_Click(object sender, EventArgs e)
+        {
+            IsCambioOK = false;
+            DialogResult = DialogResult.Cancel;
         }
 
         private async Task PrePublicarAsync()
@@ -254,7 +257,7 @@ namespace Estilo_Propio_Csharp
             try
             {
                 // Mostrar formulario de progreso
-                formProgreso.Show();
+                formProgreso.Show(this);
                 AgregarLog("Iniciando proceso...");
 
                 // Crear progress reporter
@@ -299,73 +302,6 @@ namespace Estilo_Propio_Csharp
             //txtLog.AppendText($"[{DateTime.Now:HH:mm:ss}] {mensaje}\r\n");
             //txtLog.SelectionStart = txtLog.Text.Length;
             //txtLog.ScrollToCaret();
-        }
-
-        private void BtnAceptar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                DialogResult rpt;
-                switch (TipoCambioStatus)
-                {
-                    case "PREPUBLICAR":
-                        PrePublicarAsync();
-
-                        break;
-
-                    case "PUBLICAR":
-                        DesRptstatus = "Publicar";
-
-                        strSQL = string.Empty;
-                        strSQL += "\n" + "EXEC FT_Cambia_Status_a_Publicado";
-                        strSQL += "\n" + string.Format(" @Id_Publicacion            = {0} ", TxtIdPublicacion.Text);
-                        strSQL += "\n" + string.Format(",@cod_usuario               ='{0}'", VariablesGenerales.pUsuario);
-                        strSQL += "\n" + string.Format(",@ComentariosDePublicacion  ='{0}'", TxtObservacion.Text);
-                        strSQL += "\n" + string.Format(",@cod_estacion              ='{0}'", Environment.MachineName);
-                        rpt = MessageBox.Show("¿Está seguro de " + DesRptstatus + " la FT seleccionada?", "Pregunta", MessageBoxButtons.YesNo);
-                        if (DialogResult.Yes == rpt)
-                        {
-                            if (oHp.EjecutarOperacion(strSQL) == true)
-                            {
-                                IsCambioOK = true;
-                                MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                DialogResult = DialogResult.OK;
-                            }
-                        }
-                        break;
-
-                    case "MODPREPUBLICAR":
-                        DesRptstatus = "Modificar por Pre Publicación ";
-
-                        strSQL = string.Empty;
-                        strSQL += "\n" + "EXEC FT_Cambia_Status_a_Modificada_por_PrePublicar";
-                        strSQL += "\n" + string.Format(" @Id_Publicacion            = {0} ", TxtIdPublicacion.Text);
-                        strSQL += "\n" + string.Format(",@cod_usuario               ='{0}'", VariablesGenerales.pUsuario);
-                        strSQL += "\n" + string.Format(",@ComentariosDePublicacion  ='{0}'", TxtObservacion.Text);
-                        strSQL += "\n" + string.Format(",@cod_estacion              ='{0}'", Environment.MachineName);
-                        rpt = MessageBox.Show("¿Está seguro de cambiar Status a " + DesRptstatus + " de la FT seleccionada?", "Pregunta", MessageBoxButtons.YesNo);
-                        if (DialogResult.Yes == rpt)
-                        {
-                            if (oHp.EjecutarOperacion(strSQL) == true)
-                            {
-                                IsCambioOK = true;
-                                MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                DialogResult = DialogResult.OK;
-                            }
-                        }
-                        break;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        private void BtnCancelar_Click(object sender, EventArgs e)
-        {
-            IsCambioOK = false;
-            DialogResult = DialogResult.Cancel;
         }
 
         object IIf(bool expression, object truePart, object falsePart) { return expression ? truePart : falsePart; }

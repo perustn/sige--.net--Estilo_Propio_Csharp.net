@@ -1,7 +1,7 @@
 ﻿
 namespace Estilo_Propio_Csharp
 {
-    partial class FrmBandejaControlFTPublicaciones_PrePublicar
+    partial class FrmBandejaControlFTPublicaciones_Publicar
     {
         /// <summary>
         /// Required designer variable.
@@ -29,13 +29,6 @@ namespace Estilo_Propio_Csharp
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.BtnCancelar = new Janus.Windows.EditControls.UIButton();
-            this.BtnAceptar = new Janus.Windows.EditControls.UIButton();
-            this.Panel1 = new System.Windows.Forms.Panel();
-            this.label29 = new System.Windows.Forms.Label();
-            this.TxtIdPublicacion = new System.Windows.Forms.TextBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.ChkEsEstampado = new Janus.Windows.EditControls.UICheckBox();
             this.grpMotivoParcial = new Janus.Windows.EditControls.UIGroupBox();
@@ -47,23 +40,211 @@ namespace Estilo_Propio_Csharp
             this.TxtObservacion = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
-            this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.Panel1.SuspendLayout();
+            this.Panel1 = new System.Windows.Forms.Panel();
+            this.label29 = new System.Windows.Forms.Label();
+            this.TxtIdPublicacion = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.BtnCancelar = new Janus.Windows.EditControls.UIButton();
+            this.BtnAceptar = new Janus.Windows.EditControls.UIButton();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grpMotivoParcial)).BeginInit();
             this.grpMotivoParcial.SuspendLayout();
+            this.Panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.White;
+            this.panel4.Controls.Add(this.ChkEsEstampado);
+            this.panel4.Controls.Add(this.grpMotivoParcial);
+            this.panel4.Controls.Add(this.TxtDesMotivo);
+            this.panel4.Controls.Add(this.TxtCodMotivo);
+            this.panel4.Controls.Add(this.TxtObservacion);
+            this.panel4.Controls.Add(this.label1);
+            this.panel4.Controls.Add(this.label32);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(0, 27);
+            this.panel4.Margin = new System.Windows.Forms.Padding(2);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(508, 96);
+            this.panel4.TabIndex = 282;
+            // 
+            // ChkEsEstampado
+            // 
+            this.ChkEsEstampado.AutoSize = true;
+            this.ChkEsEstampado.BackColor = System.Drawing.Color.Transparent;
+            this.ChkEsEstampado.Checked = true;
+            this.ChkEsEstampado.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ChkEsEstampado.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ChkEsEstampado.Location = new System.Drawing.Point(7, 124);
+            this.ChkEsEstampado.Name = "ChkEsEstampado";
+            this.ChkEsEstampado.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
+            this.ChkEsEstampado.Size = new System.Drawing.Size(121, 17);
+            this.ChkEsEstampado.TabIndex = 241;
+            this.ChkEsEstampado.Text = "¿Es Ficha Completa?";
+            this.ChkEsEstampado.VisualStyle = Janus.Windows.UI.VisualStyle.Office2010;
+            // 
+            // grpMotivoParcial
+            // 
+            this.grpMotivoParcial.Controls.Add(this.TxtCodMotivoParcial);
+            this.grpMotivoParcial.Controls.Add(this.TxtDesMotivoParcial);
+            this.grpMotivoParcial.Controls.Add(this.label2);
+            this.grpMotivoParcial.Enabled = false;
+            this.grpMotivoParcial.Location = new System.Drawing.Point(3, 131);
+            this.grpMotivoParcial.Name = "grpMotivoParcial";
+            this.grpMotivoParcial.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
+            this.grpMotivoParcial.Size = new System.Drawing.Size(501, 41);
+            this.grpMotivoParcial.TabIndex = 245;
+            this.grpMotivoParcial.VisualStyle = Janus.Windows.UI.Dock.PanelVisualStyle.Office2010;
+            // 
+            // TxtCodMotivoParcial
+            // 
+            this.TxtCodMotivoParcial.AcceptsReturn = true;
+            this.TxtCodMotivoParcial.BackColor = System.Drawing.SystemColors.Window;
+            this.TxtCodMotivoParcial.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TxtCodMotivoParcial.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.TxtCodMotivoParcial.Location = new System.Drawing.Point(136, 14);
+            this.TxtCodMotivoParcial.MaxLength = 0;
+            this.TxtCodMotivoParcial.Name = "TxtCodMotivoParcial";
+            this.TxtCodMotivoParcial.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TxtCodMotivoParcial.Size = new System.Drawing.Size(43, 20);
+            this.TxtCodMotivoParcial.TabIndex = 242;
+            // 
+            // TxtDesMotivoParcial
+            // 
+            this.TxtDesMotivoParcial.AcceptsReturn = true;
+            this.TxtDesMotivoParcial.BackColor = System.Drawing.SystemColors.Window;
+            this.TxtDesMotivoParcial.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TxtDesMotivoParcial.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.TxtDesMotivoParcial.Location = new System.Drawing.Point(180, 14);
+            this.TxtDesMotivoParcial.MaxLength = 0;
+            this.TxtDesMotivoParcial.Name = "TxtDesMotivoParcial";
+            this.TxtDesMotivoParcial.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TxtDesMotivoParcial.Size = new System.Drawing.Size(315, 20);
+            this.TxtDesMotivoParcial.TabIndex = 244;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(4, 21);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(154, 13);
+            this.label2.TabIndex = 243;
+            this.label2.Text = "Motivo Ficha Parcial.................";
+            // 
+            // TxtDesMotivo
+            // 
+            this.TxtDesMotivo.AcceptsReturn = true;
+            this.TxtDesMotivo.BackColor = System.Drawing.SystemColors.Window;
+            this.TxtDesMotivo.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TxtDesMotivo.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.TxtDesMotivo.Location = new System.Drawing.Point(183, 97);
+            this.TxtDesMotivo.MaxLength = 0;
+            this.TxtDesMotivo.Name = "TxtDesMotivo";
+            this.TxtDesMotivo.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TxtDesMotivo.Size = new System.Drawing.Size(315, 20);
+            this.TxtDesMotivo.TabIndex = 134;
+            // 
+            // TxtCodMotivo
+            // 
+            this.TxtCodMotivo.AcceptsReturn = true;
+            this.TxtCodMotivo.BackColor = System.Drawing.SystemColors.Window;
+            this.TxtCodMotivo.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TxtCodMotivo.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.TxtCodMotivo.Location = new System.Drawing.Point(139, 97);
+            this.TxtCodMotivo.MaxLength = 0;
+            this.TxtCodMotivo.Name = "TxtCodMotivo";
+            this.TxtCodMotivo.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TxtCodMotivo.Size = new System.Drawing.Size(43, 20);
+            this.TxtCodMotivo.TabIndex = 132;
+            // 
+            // TxtObservacion
+            // 
+            this.TxtObservacion.AcceptsReturn = true;
+            this.TxtObservacion.BackColor = System.Drawing.SystemColors.Window;
+            this.TxtObservacion.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TxtObservacion.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.TxtObservacion.Location = new System.Drawing.Point(139, 7);
+            this.TxtObservacion.MaxLength = 0;
+            this.TxtObservacion.Multiline = true;
+            this.TxtObservacion.Name = "TxtObservacion";
+            this.TxtObservacion.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TxtObservacion.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.TxtObservacion.Size = new System.Drawing.Size(359, 84);
+            this.TxtObservacion.TabIndex = 74;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 104);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(141, 13);
+            this.label1.TabIndex = 133;
+            this.label1.Text = "Motivo .................................";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(7, 15);
+            this.label32.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(148, 13);
+            this.label32.TabIndex = 72;
+            this.label32.Text = "Observacion ..........................";
+            // 
+            // Panel1
+            // 
+            this.Panel1.BackColor = System.Drawing.Color.Transparent;
+            this.Panel1.Controls.Add(this.label29);
+            this.Panel1.Controls.Add(this.TxtIdPublicacion);
+            this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Panel1.Location = new System.Drawing.Point(0, 0);
+            this.Panel1.Name = "Panel1";
+            this.Panel1.Size = new System.Drawing.Size(508, 27);
+            this.Panel1.TabIndex = 281;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.BackColor = System.Drawing.Color.Transparent;
+            this.label29.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label29.Font = new System.Drawing.Font("Verdana", 6.75F, System.Drawing.FontStyle.Bold);
+            this.label29.ForeColor = System.Drawing.Color.Gold;
+            this.label29.Location = new System.Drawing.Point(9, 8);
+            this.label29.Name = "label29";
+            this.label29.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label29.Size = new System.Drawing.Size(92, 12);
+            this.label29.TabIndex = 125;
+            this.label29.Text = "ID PUBLICACION";
+            // 
+            // TxtIdPublicacion
+            // 
+            this.TxtIdPublicacion.AcceptsReturn = true;
+            this.TxtIdPublicacion.BackColor = System.Drawing.Color.LightCyan;
+            this.TxtIdPublicacion.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TxtIdPublicacion.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.TxtIdPublicacion.Location = new System.Drawing.Point(116, 4);
+            this.TxtIdPublicacion.MaxLength = 0;
+            this.TxtIdPublicacion.Name = "TxtIdPublicacion";
+            this.TxtIdPublicacion.ReadOnly = true;
+            this.TxtIdPublicacion.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TxtIdPublicacion.Size = new System.Drawing.Size(44, 20);
+            this.TxtIdPublicacion.TabIndex = 126;
             // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Transparent;
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 205);
+            this.panel2.Location = new System.Drawing.Point(0, 123);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(508, 30);
-            this.panel2.TabIndex = 277;
+            this.panel2.TabIndex = 280;
             // 
             // panel3
             // 
@@ -101,240 +282,52 @@ namespace Estilo_Propio_Csharp
             this.BtnAceptar.VisualStyle = Janus.Windows.UI.VisualStyle.Office2010;
             this.BtnAceptar.Click += new System.EventHandler(this.BtnAceptar_Click);
             // 
-            // Panel1
-            // 
-            this.Panel1.BackColor = System.Drawing.Color.Transparent;
-            this.Panel1.Controls.Add(this.label29);
-            this.Panel1.Controls.Add(this.TxtIdPublicacion);
-            this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Panel1.Location = new System.Drawing.Point(0, 0);
-            this.Panel1.Name = "Panel1";
-            this.Panel1.Size = new System.Drawing.Size(508, 27);
-            this.Panel1.TabIndex = 278;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.BackColor = System.Drawing.Color.Transparent;
-            this.label29.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label29.Font = new System.Drawing.Font("Verdana", 6.75F, System.Drawing.FontStyle.Bold);
-            this.label29.ForeColor = System.Drawing.Color.Gold;
-            this.label29.Location = new System.Drawing.Point(9, 8);
-            this.label29.Name = "label29";
-            this.label29.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.label29.Size = new System.Drawing.Size(92, 12);
-            this.label29.TabIndex = 125;
-            this.label29.Text = "ID PUBLICACION";
-            // 
-            // TxtIdPublicacion
-            // 
-            this.TxtIdPublicacion.AcceptsReturn = true;
-            this.TxtIdPublicacion.BackColor = System.Drawing.Color.LightCyan;
-            this.TxtIdPublicacion.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtIdPublicacion.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtIdPublicacion.Location = new System.Drawing.Point(116, 4);
-            this.TxtIdPublicacion.MaxLength = 0;
-            this.TxtIdPublicacion.Name = "TxtIdPublicacion";
-            this.TxtIdPublicacion.ReadOnly = true;
-            this.TxtIdPublicacion.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtIdPublicacion.Size = new System.Drawing.Size(44, 20);
-            this.TxtIdPublicacion.TabIndex = 126;
-            // 
-            // panel4
-            // 
-            this.panel4.BackColor = System.Drawing.Color.White;
-            this.panel4.Controls.Add(this.ChkEsEstampado);
-            this.panel4.Controls.Add(this.grpMotivoParcial);
-            this.panel4.Controls.Add(this.TxtDesMotivo);
-            this.panel4.Controls.Add(this.TxtCodMotivo);
-            this.panel4.Controls.Add(this.TxtObservacion);
-            this.panel4.Controls.Add(this.label1);
-            this.panel4.Controls.Add(this.label32);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(0, 27);
-            this.panel4.Margin = new System.Windows.Forms.Padding(2);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(508, 178);
-            this.panel4.TabIndex = 279;
-            // 
-            // ChkEsEstampado
-            // 
-            this.ChkEsEstampado.AutoSize = true;
-            this.ChkEsEstampado.BackColor = System.Drawing.Color.Transparent;
-            this.ChkEsEstampado.Checked = true;
-            this.ChkEsEstampado.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChkEsEstampado.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ChkEsEstampado.Location = new System.Drawing.Point(7, 124);
-            this.ChkEsEstampado.Name = "ChkEsEstampado";
-            this.ChkEsEstampado.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
-            this.ChkEsEstampado.Size = new System.Drawing.Size(121, 17);
-            this.ChkEsEstampado.TabIndex = 241;
-            this.ChkEsEstampado.Text = "¿Es Ficha Completa?";
-            this.ChkEsEstampado.VisualStyle = Janus.Windows.UI.VisualStyle.Office2010;
-            this.ChkEsEstampado.Click += new System.EventHandler(this.ChkEsEstampado_Click);
-            // 
-            // grpMotivoParcial
-            // 
-            this.grpMotivoParcial.Controls.Add(this.TxtCodMotivoParcial);
-            this.grpMotivoParcial.Controls.Add(this.TxtDesMotivoParcial);
-            this.grpMotivoParcial.Controls.Add(this.label2);
-            this.grpMotivoParcial.Enabled = false;
-            this.grpMotivoParcial.Location = new System.Drawing.Point(3, 131);
-            this.grpMotivoParcial.Name = "grpMotivoParcial";
-            this.grpMotivoParcial.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
-            this.grpMotivoParcial.Size = new System.Drawing.Size(501, 41);
-            this.grpMotivoParcial.TabIndex = 245;
-            this.grpMotivoParcial.VisualStyle = Janus.Windows.UI.Dock.PanelVisualStyle.Office2010;
-            // 
-            // TxtCodMotivoParcial
-            // 
-            this.TxtCodMotivoParcial.AcceptsReturn = true;
-            this.TxtCodMotivoParcial.BackColor = System.Drawing.SystemColors.Window;
-            this.TxtCodMotivoParcial.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtCodMotivoParcial.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtCodMotivoParcial.Location = new System.Drawing.Point(136, 14);
-            this.TxtCodMotivoParcial.MaxLength = 0;
-            this.TxtCodMotivoParcial.Name = "TxtCodMotivoParcial";
-            this.TxtCodMotivoParcial.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtCodMotivoParcial.Size = new System.Drawing.Size(43, 20);
-            this.TxtCodMotivoParcial.TabIndex = 242;
-            this.TxtCodMotivoParcial.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtCodMotivoParcial_KeyPress);
-            // 
-            // TxtDesMotivoParcial
-            // 
-            this.TxtDesMotivoParcial.AcceptsReturn = true;
-            this.TxtDesMotivoParcial.BackColor = System.Drawing.SystemColors.Window;
-            this.TxtDesMotivoParcial.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtDesMotivoParcial.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtDesMotivoParcial.Location = new System.Drawing.Point(180, 14);
-            this.TxtDesMotivoParcial.MaxLength = 0;
-            this.TxtDesMotivoParcial.Name = "TxtDesMotivoParcial";
-            this.TxtDesMotivoParcial.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtDesMotivoParcial.Size = new System.Drawing.Size(315, 20);
-            this.TxtDesMotivoParcial.TabIndex = 244;
-            this.TxtDesMotivoParcial.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtDesMotivoParcial_KeyPress);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 21);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(154, 13);
-            this.label2.TabIndex = 243;
-            this.label2.Text = "Motivo Ficha Parcial.................";
-            // 
-            // TxtDesMotivo
-            // 
-            this.TxtDesMotivo.AcceptsReturn = true;
-            this.TxtDesMotivo.BackColor = System.Drawing.SystemColors.Window;
-            this.TxtDesMotivo.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtDesMotivo.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtDesMotivo.Location = new System.Drawing.Point(183, 97);
-            this.TxtDesMotivo.MaxLength = 0;
-            this.TxtDesMotivo.Name = "TxtDesMotivo";
-            this.TxtDesMotivo.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtDesMotivo.Size = new System.Drawing.Size(315, 20);
-            this.TxtDesMotivo.TabIndex = 134;
-            this.TxtDesMotivo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtDesMotivo_KeyPress);
-            // 
-            // TxtCodMotivo
-            // 
-            this.TxtCodMotivo.AcceptsReturn = true;
-            this.TxtCodMotivo.BackColor = System.Drawing.SystemColors.Window;
-            this.TxtCodMotivo.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtCodMotivo.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtCodMotivo.Location = new System.Drawing.Point(139, 97);
-            this.TxtCodMotivo.MaxLength = 0;
-            this.TxtCodMotivo.Name = "TxtCodMotivo";
-            this.TxtCodMotivo.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtCodMotivo.Size = new System.Drawing.Size(43, 20);
-            this.TxtCodMotivo.TabIndex = 132;
-            this.TxtCodMotivo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtCodMotivo_KeyPress);
-            // 
-            // TxtObservacion
-            // 
-            this.TxtObservacion.AcceptsReturn = true;
-            this.TxtObservacion.BackColor = System.Drawing.SystemColors.Window;
-            this.TxtObservacion.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtObservacion.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtObservacion.Location = new System.Drawing.Point(139, 7);
-            this.TxtObservacion.MaxLength = 0;
-            this.TxtObservacion.Multiline = true;
-            this.TxtObservacion.Name = "TxtObservacion";
-            this.TxtObservacion.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtObservacion.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TxtObservacion.Size = new System.Drawing.Size(359, 84);
-            this.TxtObservacion.TabIndex = 74;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 104);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(141, 13);
-            this.label1.TabIndex = 133;
-            this.label1.Text = "Motivo .................................";
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(7, 15);
-            this.label32.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(148, 13);
-            this.label32.TabIndex = 72;
-            this.label32.Text = "Observacion ..........................";
-            // 
-            // FrmBandejaControlFTPublicaciones_PrePublicar
+            // FrmBandejaControlFTPublicaciones_Publicar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(508, 235);
+            this.ClientSize = new System.Drawing.Size(508, 153);
+            this.ControlBox = false;
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.Panel1);
             this.Controls.Add(this.panel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FrmBandejaControlFTPublicaciones_PrePublicar";
-            this.ShowIcon = false;
+            this.Name = "FrmBandejaControlFTPublicaciones_Publicar";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Cambio Status a Por PrePublicar";
-            this.Load += new System.EventHandler(this.FrmBandejaControlFTPublicaciones_PrePublicar_Load);
-            this.panel2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.Panel1.ResumeLayout(false);
-            this.Panel1.PerformLayout();
+            this.Text = "Cambiar Status";
+            this.Load += new System.EventHandler(this.FrmBandejaControlFTPublicaciones_Publicar_Load);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grpMotivoParcial)).EndInit();
             this.grpMotivoParcial.ResumeLayout(false);
             this.grpMotivoParcial.PerformLayout();
+            this.Panel1.ResumeLayout(false);
+            this.Panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        internal System.Windows.Forms.Panel panel2;
-        internal System.Windows.Forms.Panel panel3;
-        internal Janus.Windows.EditControls.UIButton BtnCancelar;
-        internal Janus.Windows.EditControls.UIButton BtnAceptar;
-        internal System.Windows.Forms.Panel Panel1;
-        public System.Windows.Forms.Label label29;
-        public System.Windows.Forms.TextBox TxtIdPublicacion;
         private System.Windows.Forms.Panel panel4;
-        public System.Windows.Forms.TextBox TxtObservacion;
-        private System.Windows.Forms.Label label32;
-        public System.Windows.Forms.TextBox TxtDesMotivo;
-        public System.Windows.Forms.TextBox TxtCodMotivo;
-        private System.Windows.Forms.Label label1;
         private Janus.Windows.EditControls.UICheckBox ChkEsEstampado;
         private Janus.Windows.EditControls.UIGroupBox grpMotivoParcial;
         public System.Windows.Forms.TextBox TxtCodMotivoParcial;
         public System.Windows.Forms.TextBox TxtDesMotivoParcial;
         private System.Windows.Forms.Label label2;
+        public System.Windows.Forms.TextBox TxtDesMotivo;
+        public System.Windows.Forms.TextBox TxtCodMotivo;
+        public System.Windows.Forms.TextBox TxtObservacion;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label32;
+        internal System.Windows.Forms.Panel Panel1;
+        public System.Windows.Forms.Label label29;
+        public System.Windows.Forms.TextBox TxtIdPublicacion;
+        internal System.Windows.Forms.Panel panel2;
+        internal System.Windows.Forms.Panel panel3;
+        internal Janus.Windows.EditControls.UIButton BtnCancelar;
+        internal Janus.Windows.EditControls.UIButton BtnAceptar;
     }
 }

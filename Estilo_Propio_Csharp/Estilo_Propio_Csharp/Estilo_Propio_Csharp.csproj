@@ -331,6 +331,12 @@
     <Compile Include="FrmBandejaControlFTPublicaciones_PrePublicar.Designer.cs">
       <DependentUpon>FrmBandejaControlFTPublicaciones_PrePublicar.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmBandejaControlFTPublicaciones_Publicar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBandejaControlFTPublicaciones_Publicar.Designer.cs">
+      <DependentUpon>FrmBandejaControlFTPublicaciones_Publicar.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmBandejaControlFTPublicaciones_RechazarPrePublicar.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -454,6 +460,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmBandejaControlFTPublicaciones_PrePublicar.resx">
       <DependentUpon>FrmBandejaControlFTPublicaciones_PrePublicar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBandejaControlFTPublicaciones_Publicar.resx">
+      <DependentUpon>FrmBandejaControlFTPublicaciones_Publicar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmBandejaControlFTPublicaciones_RechazarPrePublicar.resx">
       <DependentUpon>FrmBandejaControlFTPublicaciones_RechazarPrePublicar.cs</DependentUpon>

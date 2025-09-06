@@ -43,6 +43,7 @@ namespace Estilo_Propio_Csharp
 
         public DataTable oDtEstructuraFTecnica;
         public string ListaOpsSel;
+        public bool EvaluaSeleccionReg;
         private bool isExecutionGeneracionFT = false;
         #endregion
 
@@ -676,6 +677,20 @@ namespace Estilo_Propio_Csharp
                         if (gridEX1.RecordCount == 0) { return; }
                         oDtEstructuraFTecnica.Clear();
                         ListaOpsSel = "";
+                        EvaluaSeleccionReg = false;
+                        foreach (GridEXRow oGridEXRow in gridEX1.GetDataRows())
+                        {
+                            if (Convert.ToBoolean(oGridEXRow.Cells["Flg"].Value) == true)
+                            {
+                                EvaluaSeleccionReg = true;
+                            }
+                        }
+                        if(EvaluaSeleccionReg == false)
+                        {
+                            MessageBox.Show("Para crear una FT debe de seleccionar algún registro de la grilla", "Mensaje");
+                            return;
+                        }
+
                         foreach (GridEXRow oGridEXRow in gridEX1.GetDataRows())
                         {
                             if (Convert.ToBoolean(oGridEXRow.Cells["Flg"].Value) == true)
@@ -688,20 +703,6 @@ namespace Estilo_Propio_Csharp
                                 {
                                     ListaOpsSel = ListaOpsSel + "," + oGridEXRow.Cells["OP"].Value.ToString();
                                 }                                
-                                //DataRow oDrNUEVO = oDtEstructuraFTecnica.NewRow();
-                                //oDrNUEVO["Cod_Cliente"] = oGridEXRow.Cells["Cod_Cliente"].Value;
-                                //oDrNUEVO["Cod_TemCli"] = oGridEXRow.Cells["Cod_TemCli"].Value;
-                                //oDrNUEVO["Cod_EstCli"] = oGridEXRow.Cells["Cod_EstCli"].Value;
-                                //oDrNUEVO["Cod_EstPro"] = oGridEXRow.Cells["Cod_EstPro"].Value;
-                                //oDrNUEVO["Cod_Version"] = oGridEXRow.Cells["Cod_Version"].Value;
-                                //oDrNUEVO["AlternativaDeConsumo"] = 0;
-                                //oDrNUEVO["Num_Cotizacion"] = 0;
-                                //oDrNUEVO["OpcionCotizacion"] =0;
-                                //oDrNUEVO["PO"] = oGridEXRow.Cells["PO"].Value;
-                                //oDrNUEVO["Cod_Fabrica"] = "001";
-                                //oDrNUEVO["OP"] = oGridEXRow.Cells["OP"].Value;
-                                //oDrNUEVO["OM"] = "";
-                                //oDtEstructuraFTecnica.Rows.Add(oDrNUEVO);
                             }
                         }
 
@@ -717,9 +718,14 @@ namespace Estilo_Propio_Csharp
                         oFrm.oDtDatosSeleccionadosFT = oDtEstructuraFTecnica;
                         oFrm.ClienteSel = FiltroClienteSel;
                         oFrm.TemporadaSel = FiltroTemporadaSel;
-                        oFrm.ShowDialog();
-                        if (oFrm.IsCambioOK == true)
+                        if(oFrm.ShowDialog() == DialogResult.OK)
                         {
+                            OpcionFiltro = "4";
+                            VisibilidadObj(false);
+                            cboStatusFT.SelectedIndex = 2;
+                            OptIDPublicacion.Checked = true;
+                            grpIDPublicacion.Visible = true;
+                            TxtIDPublicacion.Text = oFrm.IDPublicacion.ToString();
                             CargaGrilla();
                         }
                         break;
@@ -740,13 +746,11 @@ namespace Estilo_Propio_Csharp
                     case "PREPUBLICAR":
                         if (gridEX1.RecordCount == 0) { return; }
                         FrmBandejaControlFTPublicaciones_PrePublicar oPrePubl = new FrmBandejaControlFTPublicaciones_PrePublicar();
-                        oPrePubl.Text = "Cambio Status a Por PrePublicar";
                         oPrePubl.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oPrePubl.EstiloPropioSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString();
                         oPrePubl.Versionsel= gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString();
                         oPrePubl.IdFichaTecnicaSel = (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index);
                         oPrePubl.CodigoClienteSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString();
-                        oPrePubl.TipoCambioStatus = "PREPUBLICAR";
                         oPrePubl.ShowDialog();
                         if (oPrePubl.IsCambioOK == true)
                         {
@@ -756,7 +760,7 @@ namespace Estilo_Propio_Csharp
 
                     case "MODPREPUBLICAR":
                         if (gridEX1.RecordCount == 0) { return; }
-                        FrmBandejaControlFTPublicaciones_PrePublicar oMod = new FrmBandejaControlFTPublicaciones_PrePublicar();
+                        FrmBandejaControlFTPublicaciones_Publicar oMod = new FrmBandejaControlFTPublicaciones_Publicar();
                         oMod.Text = "Cambio Status a Modificada por PrePublicar";
                         oMod.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oMod.TipoCambioStatus = "MODPREPUBLICAR";
@@ -769,7 +773,7 @@ namespace Estilo_Propio_Csharp
 
                     case "PUBLICAR":
                         if (gridEX1.RecordCount == 0) { return; }
-                        FrmBandejaControlFTPublicaciones_PrePublicar oPubl = new FrmBandejaControlFTPublicaciones_PrePublicar();
+                        FrmBandejaControlFTPublicaciones_Publicar oPubl = new FrmBandejaControlFTPublicaciones_Publicar();
                         oPubl.Text = "Cambio Status a Publicado";
                         oPubl.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oPubl.TipoCambioStatus = "PUBLICAR";
@@ -819,6 +823,13 @@ namespace Estilo_Propio_Csharp
                         string sRutaTemp;
                         sRutaTemp = @"C:\\TEMP\\";
 
+                        strSQL = string.Empty;
+                        strSQL += "\n" + "EXEC FT_Save_Revisiones_por_Usuario";
+                        strSQL += "\n" + string.Format(" @id_publicacion    = {0}", gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index));
+                        strSQL += "\n" + string.Format(",@cod_usuario		='{0}'", VariablesGenerales.pUsuario);
+                        strSQL += "\n" + string.Format(",@cod_estacion		='{0}'", Environment.MachineName);
+                        oHp.EjecutarOperacion(strSQL);
+
                         if (!System.IO.Directory.Exists(sRutaTemp))
                             System.IO.Directory.CreateDirectory(sRutaTemp);
                         RutaOriginal = gridEX1.GetValue(gridEX1.RootTable.Columns["FILE_ADJUNTO"].Index).ToString();
@@ -850,8 +861,8 @@ namespace Estilo_Propio_Csharp
                             // Abrir archivo
                             try
                             {
-                                System.IO.FileStream fs = System.IO.File.OpenWrite(sRutaTempNomFile);
-                                fs.Close();
+                                System.IO.FileStream fs1 = System.IO.File.OpenWrite(sRutaTempNomFile);
+                                fs1.Close();
                             }
                             catch (Exception exx)
                             {
@@ -864,14 +875,7 @@ namespace Estilo_Propio_Csharp
                             if (!rtnvalue)
                             {
                                 System.Diagnostics.Process Arc;
-                                Arc = Process.Start(sRutaTempNomFile);
-
-                                strSQL = string.Empty;
-                                strSQL += "\n" + "EXEC FT_Save_Revisiones_por_Usuario";
-                                strSQL += "\n" + string.Format(" @id_publicacion    = {0}", gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index));
-                                strSQL += "\n" + string.Format(",@cod_usuario		='{0}'", VariablesGenerales.pUsuario);
-                                strSQL += "\n" + string.Format(",@cod_estacion		='{0}'", Environment.MachineName);
-                                oHp.EjecutarOperacion(strSQL);
+                                Arc = Process.Start(sRutaTempNomFile);                                
                             }
                             else
                                 MessageBox.Show("Archivo ya se encuentra Abierto por Usted. Favor de Revisar", "Mensaje");
@@ -933,6 +937,24 @@ namespace Estilo_Propio_Csharp
                         oUsuPl.CargaGrilla();
                         oUsuPl.ShowDialog();
                         break;
+
+                    case "EXPORTAR":
+                        if (gridEX1.RowCount == 0)
+                            return;
+                        string Ruta_Archivo;
+
+                        Ruta_Archivo = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                        Random numAleatorio = new Random(System.Convert.ToInt32(DateTime.Now.Ticks & int.MaxValue));
+                        string RutaUniArchivo = string.Format(Ruta_Archivo + @"\Export_{0}.xls", System.Convert.ToString(numAleatorio.Next()));
+                        System.IO.FileStream fs = new System.IO.FileStream(RutaUniArchivo, System.IO.FileMode.Create);
+
+                        gridEXExporter1.ExportMode = Janus.Windows.GridEX.ExportMode.AllRows;
+                        gridEXExporter1.GridEX = gridEX1;
+                        gridEXExporter1.Export(fs);
+                        fs.Close();
+                        Process.Start(RutaUniArchivo);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -945,11 +967,22 @@ namespace Estilo_Propio_Csharp
         private static extern int GetWindowThreadProcessId(IntPtr hwnd, out int lpdwProcessId);
         private GridEXFormatStyle objGridEXFormatStyle_Check = new GridEXFormatStyle() { FontSize = 1, BackColor = Color.AliceBlue, ForeColor = DefaultBackColor, TextAlignment = TextAlignment.Center, ImageHorizontalAlignment = ImageHorizontalAlignment.Center, ImageVerticalAlignment = ImageVerticalAlignment.Center };
         private GridEXFormatStyle objGridEXFormatStyle_UnCheck = new GridEXFormatStyle() { FontSize = 1, BackColor = Color.AliceBlue, ForeColor = DefaultBackColor, TextAlignment = TextAlignment.Center, ImageHorizontalAlignment = ImageHorizontalAlignment.Center, ImageVerticalAlignment = ImageVerticalAlignment.Center };
-
+        private GridEXFormatStyle objGridEXFormatColor = new GridEXFormatStyle() { BackColor = Color.Yellow };
         private void gridEX1_FormattingRow(object sender, RowLoadEventArgs e)
         {
             try
             {
+                if (e.Row.RowType == Janus.Windows.GridEX.RowType.Record)
+                {
+                    var valor = e.Row.Cells["POR GENERAR PDF"].Value;
+
+                    if (valor != null && valor.ToString().Trim().ToUpper() == "SI")
+                    {
+                        // Pintamos toda la fila de color amarillo
+                        e.Row.RowStyle = objGridEXFormatColor;
+                    }
+                }
+
                 foreach (GridEXColumn oGridEXColumn in gridEX1.RootTable.Columns)
                 {
                     if (oGridEXColumn.Key.ToUpper() == K_strColCheck)
@@ -973,16 +1006,7 @@ namespace Estilo_Propio_Csharp
                     }
                 }
 
-                if (e.Row.RowType == Janus.Windows.GridEX.RowType.Record)
-                {
-                    var valor = e.Row.Cells["POR GENERAR PDF"].Value;
-
-                    if (valor != null && valor.ToString().Trim().ToUpper() == "SI")
-                    {
-                        // Pintamos toda la fila de color amarillo
-                        e.Row.RowStyle.BackColor = Color.Yellow;
-                    }
-                }
+                
             }
             catch (Exception ex)
             {
@@ -1159,7 +1183,7 @@ namespace Estilo_Propio_Csharp
             try
             {
                 // Mostrar formulario de progreso
-                formProgreso.Show();
+                formProgreso.Show(this);
                 AgregarLog("Iniciando proceso...");
 
                 // Crear progress reporter
@@ -1170,14 +1194,14 @@ namespace Estilo_Propio_Csharp
                 bool resultado = await GenFT.GenerarPDFAsync(EstiloPropioSel, Versionsel, IdFichaTecnicaSel, IDPublicacion, CodigoClienteSel,
                     progress, cancellationTokenSource.Token);
 
-                if (resultado)
-                {
-                    // Mostrar completado
-                    formProgreso.MostrarCompletado(
-                        "Proceso finalizado",
-                        $"Resultado: {resultado}"
-                    );
-                }
+                //if (resultado)
+                //{
+                //    // Mostrar completado
+                //    formProgreso.MostrarCompletado(
+                //        "Proceso finalizado",
+                //        $"Resultado: {resultado}"
+                //    );
+                //}
                 AgregarLog($"Resultado del proceso: {resultado}");
             }
             catch (OperationCanceledException)

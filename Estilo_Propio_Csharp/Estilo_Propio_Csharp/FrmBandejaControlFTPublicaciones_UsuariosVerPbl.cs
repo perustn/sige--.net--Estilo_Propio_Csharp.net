@@ -93,7 +93,7 @@ namespace Estilo_Propio_Csharp
                             withBlock2.Caption = "FECHA ULT REVISION";
                             withBlock2.Width = 120;
                             withBlock2.TextAlignment = TextAlignment.Center;
-                            withBlock2.FormatString = "dd/MM/yyyy";
+                            //withBlock2.FormatString = "dd/MM/yyyy";
                         }
 
                         {
@@ -101,7 +101,7 @@ namespace Estilo_Propio_Csharp
                             withBlock2.Caption = "FECHA 1RA REVISION";
                             withBlock2.Width = 120;
                             withBlock2.TextAlignment = TextAlignment.Center;
-                            withBlock2.FormatString = "dd/MM/yyyy";
+                            //withBlock2.FormatString = "dd/MM/yyyy";
                         }
 
                         {

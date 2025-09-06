@@ -45,6 +45,7 @@ namespace Estilo_Propio_Csharp
         public event EventHandler ProcesoCompletado;
         public event EventHandler ProcesoCancelado;
         public event EventHandler<Exception> ProcesoError;
+        public event EventHandler CerrarProgreso;
 
         private bool mostrarLog = false;
 
@@ -232,8 +233,12 @@ namespace Estilo_Propio_Csharp
         {
             if (procesoCompletado)
             {
+
                 timerActualizacion?.Stop();
                 AgregarLog("Cerrando formulario de progreso");
+
+                CerrarProgreso?.Invoke(this, EventArgs.Empty);
+
                 this.Close();
                 return;
             }
