@@ -139,21 +139,31 @@ namespace Estilo_Propio_Csharp
             //    DelayEntreReintentos = 1000
             //};
 
-            // Configuración
+            // Configuración para máximo rendimiento
             var config = new ConfiguracionCeldaControlAvanzada
             {
-                CeldaControl = "R2",           // Estado principal
-                NombreHoja = "Portada",        // Hoja de control
+                CeldaControl = "A1",           // Estado principal
+                NombreHoja = "Control",     // Hoja de control     
 
-                CeldaModuloActual = "R3",      // Módulo actual
-                CeldaError = "R4",             // Detalle del error
+                CeldaModuloActual = "A2",      // Módulo actual
+                CeldaError = "A3",             // Detalle del error
 
                 HojaLog = "Log",               // Hoja de log detallado
-                LeerLogCompleto = true,        // Leer todo el log en caso de error
-                MaxFilasLog = 50,              // Máximo 50 entradas de log
-                Reintentos = 3,
+
+                SoloLeerLogEnError = true,     // Solo leer log detallado si hay error
+                IgnorarLogDetallado = false,    // No leer log detallado nunca
+                                               
+                NivelMinimoLog = LogLevelExcel.Info, 
+
+                MaxFilasLog = 100,              // Máximo 50 entradas de log
+                Reintentos = 1,
                 EsOpcional = false
             };
+
+            // Configuración para depuración completa
+            // SoloLeerEnError = false,       // Siempre leer log
+            //IgnorarLogDetallado = false,   // Leer log detallado
+            //NivelMinimo = LogLevel.Debug,  // Todo el detalle
 
             ResultadoEjecucion resultado = await executor.EjecutarMacroAsync(
             rutaArchivo: RouteFileXLT,
@@ -168,7 +178,7 @@ namespace Estilo_Propio_Csharp
                         RutaArchivoCompleto,
                         "PDF"
                         },
-            timeoutSegundos: 300,
+            timeoutSegundos: 500,
             celdaControl: null,
             mostrarExcel: false,
             config: null,

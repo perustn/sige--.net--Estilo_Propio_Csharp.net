@@ -43,8 +43,20 @@ namespace Estilo_Propio_Csharp
         public string CeldaModuloActual { get; set; } = "B1";
         public string CeldaError { get; set; } = "C1";
         public string HojaLog { get; set; } = "Log";
-        public bool LeerLogCompleto { get; set; } = false;
         public int MaxFilasLog { get; set; } = 100;
+
+        public bool SoloLeerLogEnError { get; set; } = true;
+        public bool IgnorarLogDetallado { get; set; } = false;
+
+        public LogLevelExcel NivelMinimoLog { get; set; } = LogLevelExcel.Info;
+    }
+
+    public enum LogLevelExcel
+    {
+        Error = 1,
+        Warning = 2,
+        Info = 3,
+        Debug = 4
     }
 
     public class LogEntry
@@ -737,8 +749,8 @@ namespace Estilo_Propio_Csharp
                         resultado.MensajeError = ConstruirMensajeErrorDetallado(
                             valorControl, moduloActual, detalleError, hoja.Name, config.CeldaControl);
 
-                        // Leer log completo si está configurado
-                        if (config.LeerLogCompleto)
+                        // Solo leer log detallado si realmente es necesario
+                        if (!config.IgnorarLogDetallado && config.SoloLeerLogEnError)
                         {
                             var logCompleto = LeerLogCompleto(workbook, config);
                             resultado.LogDetallado = logCompleto;
@@ -798,23 +810,28 @@ namespace Estilo_Propio_Csharp
             try
             {
                 Worksheet hojaLog = workbook.Sheets[config.HojaLog];
-
-                for (int fila = 2; fila <= Math.Min(hojaLog.UsedRange.Rows.Count, config.MaxFilasLog + 1); fila++)
+                var usedRange = hojaLog.UsedRange;
+                if (usedRange != null)
                 {
-                    var timestamp = hojaLog.Cells[fila, 1].Value?.ToString();
-                    var modulo = hojaLog.Cells[fila, 2].Value?.ToString();
-                    var evento = hojaLog.Cells[fila, 3].Value?.ToString();
-                    var tipo = hojaLog.Cells[fila, 4].Value?.ToString();
+                    object[,] valores = usedRange.Value2;
 
-                    if (!string.IsNullOrEmpty(modulo))
+                    for (int fila = 2; fila <= Math.Min(usedRange.Rows.Count, config.MaxFilasLog + 1); fila++)
                     {
-                        logs.Add(new LogEntry
+                        var modulo = valores[fila, 2]?.ToString();
+                        var tipo = valores[fila, 4]?.ToString();
+
+                        // Filtrar por nivel de log
+                        if (!string.IsNullOrEmpty(modulo) &&
+                            DebeIncluirLog(tipo, config.NivelMinimoLog))
                         {
-                            Timestamp = timestamp,
-                            Modulo = modulo,
-                            Evento = evento,
-                            Tipo = tipo
-                        });
+                            logs.Add(new LogEntry
+                            {
+                                Timestamp = valores[fila, 1]?.ToString(),
+                                Modulo = modulo,
+                                Evento = valores[fila, 3]?.ToString(),
+                                Tipo = tipo
+                            });
+                        }
                     }
                 }
             }
@@ -826,7 +843,21 @@ namespace Estilo_Propio_Csharp
             return logs;
         }
 
-        
+        private static bool DebeIncluirLog(string tipo, LogLevelExcel nivelMinimo)
+        {
+            LogLevelExcel nivelLog = tipo?.ToUpper() switch
+            {
+                "ERROR" => LogLevelExcel.Error,
+                "WARNING" => LogLevelExcel.Warning,
+                "INFO" => LogLevelExcel.Info,
+                "DEBUG" => LogLevelExcel.Debug,
+                _ => LogLevelExcel.Info
+            };
+
+            return nivelLog <= nivelMinimo;
+        }
+
+
 
     }
 }
