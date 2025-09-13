@@ -130,6 +130,31 @@ namespace Estilo_Propio_Csharp
 
             var executor = new ExcelMacroExecutor();
 
+            // Ejemplo 2: Configuración por índice con reintentos
+            //var config = new ConfiguracionCeldaControl
+            //{
+            //    CeldaControl = "R2",
+            //    IndiceHoja = 1,
+            //    Reintentos = 3,
+            //    DelayEntreReintentos = 1000
+            //};
+
+            // Configuración
+            var config = new ConfiguracionCeldaControlAvanzada
+            {
+                CeldaControl = "R2",           // Estado principal
+                NombreHoja = "Portada",        // Hoja de control
+
+                CeldaModuloActual = "R3",      // Módulo actual
+                CeldaError = "R4",             // Detalle del error
+
+                HojaLog = "Log",               // Hoja de log detallado
+                LeerLogCompleto = true,        // Leer todo el log en caso de error
+                MaxFilasLog = 50,              // Máximo 50 entradas de log
+                Reintentos = 3,
+                EsOpcional = false
+            };
+
             ResultadoEjecucion resultado = await executor.EjecutarMacroAsync(
             rutaArchivo: RouteFileXLT,
             nombreMacro: MethodVBA,
@@ -141,11 +166,14 @@ namespace Estilo_Propio_Csharp
                         true,
                         vCarpetaFichaTecnicaCliente,
                         RutaArchivoCompleto,
-                        "PDF" },
+                        "PDF"
+                        },
             timeoutSegundos: 300,
             celdaControl: null,
-            mostrarExcel: false
-            );
+            mostrarExcel: false,
+            config: null,
+            configAvanzada: config
+            );;
 
          return resultado;
 
@@ -346,6 +374,18 @@ namespace Estilo_Propio_Csharp
                 }
                 else
                 {
+                    if (resultado.LogDetallado.Any())
+                    {
+                        foreach (var log in resultado.LogDetallado)
+                        {
+                            progress?.Report(new ProgresoInfo
+                            {
+                                Porcentaje = porcentaje,
+                                Mensaje = "Generando PDF",
+                                Detalle = log.ToString()
+                            });
+                        }
+                    }
                     throw new ProcessingException($"Error al Generar PDF: {resultado.MensajeError}");
                 }
 

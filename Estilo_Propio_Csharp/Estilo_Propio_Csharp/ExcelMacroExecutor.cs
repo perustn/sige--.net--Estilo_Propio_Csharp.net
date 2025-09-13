@@ -4,7 +4,9 @@ using System.ComponentModel;
 using Microsoft.Office.Interop.Excel;
 using System.IO;
 using System.Threading.Tasks;
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Estilo_Propio_Csharp
 {
@@ -13,9 +15,59 @@ namespace Estilo_Propio_Csharp
         public bool Exitoso { get; set; }
         public string MensajeError { get; set; }
         public string CodigoError { get; set; }
-        public object ResultadoMacro { get; set; }
+
+        public string ModuloConError { get; set; }
+        public List<LogEntry> LogDetallado { get; set; } = new List<LogEntry>();
+
+        public object Excel { get; set; }
         public TimeSpan TiempoEjecucion { get; set; }
+
+       
     }
+
+    public class ConfiguracionCeldaControl
+    {
+        public string CeldaControl { get; set; }
+        public string NombreHoja { get; set; }
+        public bool UsarHojaActiva { get; set; } = false;
+        public int? IndiceHoja { get; set; } // 1-based
+        public List<string> PatronesError { get; set; } = new List<string> { "ERROR", "FAIL", "EXCEPTION" };
+        public List<string> PatronesExito { get; set; } = new List<string> { "SUCCESS", "OK", "COMPLETED" };
+        public int Reintentos { get; set; } = 1;
+        public int DelayEntreReintentos { get; set; } = 500; // ms
+        public bool EsOpcional { get; set; } = true; // Si no se encuentra, continuar sin error
+    }
+
+    public class ConfiguracionCeldaControlAvanzada : ConfiguracionCeldaControl
+    {
+        public string CeldaModuloActual { get; set; } = "B1";
+        public string CeldaError { get; set; } = "C1";
+        public string HojaLog { get; set; } = "Log";
+        public bool LeerLogCompleto { get; set; } = false;
+        public int MaxFilasLog { get; set; } = 100;
+    }
+
+    public class LogEntry
+    {
+        public string Timestamp { get; set; }
+        public string Modulo { get; set; }
+        public string Evento { get; set; }
+        public string Tipo { get; set; }
+
+        public override string ToString()
+        {
+            return $"[{Timestamp}] {Tipo}: {Modulo} - {Evento}";
+        }
+    }
+
+    //public class ResultadoMacro
+    //{
+    //    public bool Exitoso { get; set; }
+    //    public string MensajeError { get; set; }
+    //    public string ModuloConError { get; set; }
+    //    public List<LogEntry> LogDetallado { get; set; } = new List<LogEntry>();
+    //}
+
 
     public class ExcelMacroExecutor
     {
@@ -37,7 +89,10 @@ namespace Estilo_Propio_Csharp
             object[] parametros = null,
             int timeoutSegundos = 300,
             string celdaControl = null,
-            bool mostrarExcel = false)
+            bool mostrarExcel = false,
+            ConfiguracionCeldaControl config = null,
+            ConfiguracionCeldaControlAvanzada configAvanzada = null
+            )
         {
             var resultado = new ResultadoEjecucion();
             var inicioTiempo = DateTime.Now;
@@ -117,17 +172,24 @@ namespace Estilo_Propio_Csharp
                         // Ejecutar la macro
                         if (parametros != null && parametros.Length > 0)
                         {
-                            //resultado.ResultadoMacro = excelApp.Run(nombreMacro, parametros);
-                            resultado.ResultadoMacro = EjecutarRunConParametrosIndividuales(excelApp, nombreMacro, parametros);
-                            //resultado.ResultadoMacro = excelApp.Run(nombreMacro, parametros[0]);
+                            resultado.Excel = EjecutarRunConParametrosIndividuales(excelApp, nombreMacro, parametros);
                         }
                         else
                         {
-                            resultado.ResultadoMacro = excelApp.Run(nombreMacro);
+                            resultado.Excel = excelApp.Run(nombreMacro);
                         }
 
-                        // Verificar celda de control si se especifica
-                        if (!string.IsNullOrEmpty(celdaControl))
+                        if (config != null)
+                        {
+                            resultado = VerificarCeldaControlConfigurable(workbook, config,resultado);
+                            return;
+                        }
+                        else if (configAvanzada != null)
+                        {
+                            resultado = VerificarCeldaControlAvanzada(workbook, configAvanzada, resultado);
+                            return;
+                        }
+                        else if (!string.IsNullOrEmpty(celdaControl))
                         {
                             try
                             {
@@ -461,6 +523,310 @@ namespace Estilo_Propio_Csharp
 
             return resultado.Exitoso;
         }
+
+        private ResultadoEjecucion VerificarCeldaControlConfigurable(Workbook workbook,
+        ConfiguracionCeldaControl config, ResultadoEjecucion resultado)
+        {
+            if (config == null || string.IsNullOrEmpty(config.CeldaControl))
+                return resultado;
+
+            Worksheet hoja = null;
+            string referenciaHoja = "";
+
+            try
+            {
+                // Determinar qué hoja usar según configuración
+                hoja = ObtenerHojaSegunConfiguracion(workbook, config, out referenciaHoja);
+
+                if (hoja == null)
+                {
+                    string mensaje = $"No se pudo obtener la hoja especificada: {referenciaHoja}";
+                    if (config.EsOpcional)
+                    {
+                        Console.WriteLine($"Advertencia: {mensaje}");
+                        return resultado;
+                    }
+                    else
+                    {
+                        resultado.MensajeError = mensaje;
+                        return resultado;
+                    }
+                }
+
+                // Intentar leer la celda con reintentos
+                string valorControl = LeerCeldaConReintentos(hoja, config);
+
+                if (!string.IsNullOrEmpty(valorControl))
+                {
+                    string referenciaCompleta = $"{hoja.Name}!{config.CeldaControl}";
+                    Console.WriteLine($"Estado de celda control [{referenciaCompleta}]: {valorControl}");
+
+                    // Verificar si es error
+                    if (EsErrorSegunPatrones(valorControl, config.PatronesError))
+                    {
+                        //resultado.MensajeError = $"Error reportado en {referenciaCompleta}: {valorControl}";
+                        resultado.MensajeError = valorControl;
+                        resultado.Exitoso = false;
+                        return resultado;
+                    }
+
+                    // Verificar si es éxito
+                    if (EsExitoSegunPatrones(valorControl, config.PatronesExito))
+                    {
+                        Console.WriteLine($"Macro ejecutada exitosamente según {referenciaCompleta}");
+                        resultado.Exitoso = true;
+                    }
+                }
+                else
+                {
+                    string mensaje = $"Celda de control {hoja.Name}!{config.CeldaControl} está vacía";
+                    if (config.EsOpcional)
+                    {
+                        Console.WriteLine($"Advertencia: {mensaje}");
+                    }
+                    else
+                    {
+                        resultado.MensajeError = $"Error: {mensaje}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = $"Error al verificar celda control {referenciaHoja}!{config.CeldaControl}: {ex.Message}";
+                if (config.EsOpcional)
+                {
+                    Console.WriteLine($"Advertencia: {mensaje}");
+                }
+                else
+                {
+                    resultado.MensajeError = mensaje;
+                }
+            }
+            return resultado;
+        }
+
+        private static Worksheet ObtenerHojaSegunConfiguracion(Workbook workbook,
+    ConfiguracionCeldaControl config, out string referencia)
+        {
+            referencia = "";
+
+            try
+            {
+                // Prioridad 1: Usar hoja activa
+                if (config.UsarHojaActiva)
+                {
+                    referencia = "HojaActiva";
+                    return workbook.ActiveSheet;
+                }
+
+                // Prioridad 2: Usar índice de hoja
+                if (config.IndiceHoja.HasValue)
+                {
+                    referencia = $"Indice{config.IndiceHoja.Value}";
+                    if (config.IndiceHoja.Value > 0 && config.IndiceHoja.Value <= workbook.Sheets.Count)
+                    {
+                        return workbook.Sheets[config.IndiceHoja.Value];
+                    }
+                }
+
+                // Prioridad 3: Usar nombre de hoja
+                if (!string.IsNullOrEmpty(config.NombreHoja))
+                {
+                    referencia = config.NombreHoja;
+                    foreach (Worksheet ws in workbook.Sheets)
+                    {
+                        if (ws.Name.Equals(config.NombreHoja, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return ws;
+                        }
+                    }
+                }
+
+                // Por defecto: hoja activa
+                referencia = "HojaActiva(Default)";
+                return workbook.ActiveSheet;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private static string LeerCeldaConReintentos(Worksheet hoja, ConfiguracionCeldaControl config)
+        {
+            string valorControl = null;
+
+            for (int intento = 0; intento < config.Reintentos; intento++)
+            {
+                try
+                {
+                    if (intento > 0)
+                    {
+                        System.Threading.Thread.Sleep(config.DelayEntreReintentos);
+                        Console.WriteLine($"Reintentando lectura de celda (intento {intento + 1}/{config.Reintentos})");
+                    }
+
+                    valorControl = hoja.Range[config.CeldaControl].Value?.ToString()?.Trim();
+
+                    if (!string.IsNullOrEmpty(valorControl))
+                        break;
+                }
+                catch (Exception ex)
+                {
+                    if (intento == config.Reintentos - 1) // Último intento
+                        throw;
+
+                    Console.WriteLine($"Error en intento {intento + 1}: {ex.Message}");
+                }
+            }
+
+            return valorControl;
+        }
+
+        private static bool EsErrorSegunPatrones(string valor, List<string> patrones)
+        {
+            if (string.IsNullOrEmpty(valor) || patrones == null || !patrones.Any())
+                return false;
+
+            string valorUpper = valor.ToUpper();
+            return patrones.Any(patron => valorUpper.Contains(patron.ToUpper()));
+        }
+
+        private static bool EsExitoSegunPatrones(string valor, List<string> patrones)
+        {
+            if (string.IsNullOrEmpty(valor) || patrones == null || !patrones.Any())
+                return false;
+
+            string valorUpper = valor.ToUpper();
+            return patrones.Any(patron => valorUpper.Equals(patron.ToUpper()) ||
+                                         valorUpper.StartsWith(patron.ToUpper() + ":"));
+        }
+
+      
+
+        private ResultadoEjecucion VerificarCeldaControlAvanzada(Workbook workbook,
+    ConfiguracionCeldaControlAvanzada config, ResultadoEjecucion resultado)
+        {
+            if (config == null || string.IsNullOrEmpty(config.CeldaControl))
+                return resultado;
+
+            try
+            {
+                Worksheet hoja = ObtenerHojaSegunConfiguracion(workbook, config, out string referenciaHoja);
+
+                if (hoja == null)
+                {
+                    resultado.MensajeError = $"No se pudo obtener la hoja: {referenciaHoja}";
+                    return resultado;
+                }
+
+                // Leer estado principal
+                string valorControl = LeerCeldaConReintentos(hoja, config);
+
+                if (!string.IsNullOrEmpty(valorControl))
+                {
+                    Console.WriteLine($"Estado principal: {valorControl}");
+
+                    if (EsErrorSegunPatrones(valorControl, config.PatronesError))
+                    {
+                        // Leer información adicional del error
+                        string moduloActual = LeerCeldaSiExiste(hoja, config.CeldaModuloActual);
+                        string detalleError = LeerCeldaSiExiste(hoja, config.CeldaError);
+
+                        // Construir mensaje de error detallado
+                        resultado.MensajeError = ConstruirMensajeErrorDetallado(
+                            valorControl, moduloActual, detalleError, hoja.Name, config.CeldaControl);
+
+                        // Leer log completo si está configurado
+                        if (config.LeerLogCompleto)
+                        {
+                            var logCompleto = LeerLogCompleto(workbook, config);
+                            resultado.LogDetallado = logCompleto;
+                        }
+
+                        resultado.Exitoso = false;
+                        resultado.ModuloConError = moduloActual;
+                        return resultado;
+                    }
+
+                    if (EsExitoSegunPatrones(valorControl, config.PatronesExito))
+                    {
+                        resultado.Exitoso = true;
+                        Console.WriteLine("Macro ejecutada exitosamente");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado.MensajeError = $"Error verificando control: {ex.Message}";
+            }
+            return resultado;
+        }
+
+        private static string LeerCeldaSiExiste(Worksheet hoja, string celda)
+        {
+            try
+            {
+                return hoja.Range[celda].Value?.ToString()?.Trim() ?? "";
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+        private static string ConstruirMensajeErrorDetallado(string valorControl, string modulo,
+            string detalleError, string nombreHoja, string celdaControl)
+        {
+            var mensaje = new StringBuilder();
+            //mensaje.AppendLine($"Error detectado en {nombreHoja}!{celdaControl}");
+            mensaje.AppendLine($"Estado: {valorControl}");
+
+            if (!string.IsNullOrEmpty(modulo))
+                mensaje.AppendLine($"Módulo con error: {modulo}");
+
+            if (!string.IsNullOrEmpty(detalleError))
+                mensaje.AppendLine($"Detalle del error: {detalleError}");
+
+            return mensaje.ToString().Trim();
+        }
+
+        private static List<LogEntry> LeerLogCompleto(Workbook workbook, ConfiguracionCeldaControlAvanzada config)
+        {
+            var logs = new List<LogEntry>();
+
+            try
+            {
+                Worksheet hojaLog = workbook.Sheets[config.HojaLog];
+
+                for (int fila = 2; fila <= Math.Min(hojaLog.UsedRange.Rows.Count, config.MaxFilasLog + 1); fila++)
+                {
+                    var timestamp = hojaLog.Cells[fila, 1].Value?.ToString();
+                    var modulo = hojaLog.Cells[fila, 2].Value?.ToString();
+                    var evento = hojaLog.Cells[fila, 3].Value?.ToString();
+                    var tipo = hojaLog.Cells[fila, 4].Value?.ToString();
+
+                    if (!string.IsNullOrEmpty(modulo))
+                    {
+                        logs.Add(new LogEntry
+                        {
+                            Timestamp = timestamp,
+                            Modulo = modulo,
+                            Evento = evento,
+                            Tipo = tipo
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error leyendo log completo: {ex.Message}");
+            }
+
+            return logs;
+        }
+
+        
 
     }
 }

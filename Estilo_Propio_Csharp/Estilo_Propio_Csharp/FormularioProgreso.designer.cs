@@ -62,7 +62,7 @@ namespace Estilo_Propio_Csharp
             this.panelProgreso.Controls.Add(this.lblTiempo);
             this.panelProgreso.Location = new System.Drawing.Point(10, 10);
             this.panelProgreso.Name = "panelProgreso";
-            this.panelProgreso.Size = new System.Drawing.Size(508, 160);
+            this.panelProgreso.Size = new System.Drawing.Size(508, 210);
             this.panelProgreso.TabIndex = 0;
             // 
             // lblPorcentaje
@@ -102,7 +102,7 @@ namespace Estilo_Propio_Csharp
             this.lblDetalle.ForeColor = System.Drawing.Color.Gray;
             this.lblDetalle.Location = new System.Drawing.Point(15, 80);
             this.lblDetalle.Name = "lblDetalle";
-            this.lblDetalle.Size = new System.Drawing.Size(420, 40);
+            this.lblDetalle.Size = new System.Drawing.Size(472, 97);
             this.lblDetalle.TabIndex = 3;
             this.lblDetalle.Text = "Preparando recursos...";
             // 
@@ -110,7 +110,7 @@ namespace Estilo_Propio_Csharp
             // 
             this.lblTiempo.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblTiempo.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lblTiempo.Location = new System.Drawing.Point(15, 125);
+            this.lblTiempo.Location = new System.Drawing.Point(15, 177);
             this.lblTiempo.Name = "lblTiempo";
             this.lblTiempo.Size = new System.Drawing.Size(200, 20);
             this.lblTiempo.TabIndex = 4;
@@ -118,7 +118,7 @@ namespace Estilo_Propio_Csharp
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(428, 174);
+            this.btnCancelar.Location = new System.Drawing.Point(426, 226);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(90, 30);
             this.btnCancelar.TabIndex = 1;
@@ -131,7 +131,7 @@ namespace Estilo_Propio_Csharp
             // 
             this.chkMostrarLog.Checked = true;
             this.chkMostrarLog.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkMostrarLog.Location = new System.Drawing.Point(20, 180);
+            this.chkMostrarLog.Location = new System.Drawing.Point(18, 232);
             this.chkMostrarLog.Name = "chkMostrarLog";
             this.chkMostrarLog.Size = new System.Drawing.Size(150, 20);
             this.chkMostrarLog.TabIndex = 0;
@@ -142,7 +142,7 @@ namespace Estilo_Propio_Csharp
             // lblLog
             // 
             this.lblLog.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblLog.Location = new System.Drawing.Point(20, 205);
+            this.lblLog.Location = new System.Drawing.Point(18, 257);
             this.lblLog.Name = "lblLog";
             this.lblLog.Size = new System.Drawing.Size(100, 20);
             this.lblLog.TabIndex = 1;
@@ -153,7 +153,7 @@ namespace Estilo_Propio_Csharp
             this.txtLog.BackColor = System.Drawing.Color.Black;
             this.txtLog.Font = new System.Drawing.Font("Consolas", 8F);
             this.txtLog.ForeColor = System.Drawing.Color.Lime;
-            this.txtLog.Location = new System.Drawing.Point(20, 230);
+            this.txtLog.Location = new System.Drawing.Point(18, 282);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
@@ -166,7 +166,7 @@ namespace Estilo_Propio_Csharp
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(528, 439);
+            this.ClientSize = new System.Drawing.Size(528, 491);
             this.ControlBox = false;
             this.Controls.Add(this.chkMostrarLog);
             this.Controls.Add(this.lblLog);
