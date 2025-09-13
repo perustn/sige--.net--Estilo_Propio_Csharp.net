@@ -732,6 +732,11 @@ namespace Estilo_Propio_Csharp
 
                     case "VEROPS":
                         if (gridEX1.RecordCount == 0) { return; }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                         FilaSeleccionado = gridEX1.CurrentRow.Position;
                         FrmBandejaControlFTPublicaciones_VerOPs oAct = new FrmBandejaControlFTPublicaciones_VerOPs();
                         oAct.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
@@ -745,12 +750,19 @@ namespace Estilo_Propio_Csharp
 
                     case "PREPUBLICAR":
                         if (gridEX1.RecordCount == 0) { return; }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                         FrmBandejaControlFTPublicaciones_PrePublicar oPrePubl = new FrmBandejaControlFTPublicaciones_PrePublicar();
                         oPrePubl.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oPrePubl.EstiloPropioSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString();
                         oPrePubl.Versionsel= gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString();
                         oPrePubl.IdFichaTecnicaSel = (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index);
                         oPrePubl.CodigoClienteSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString();
+                        oPrePubl.TxtComentariosGenerales.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Observacion_FT"].Index).ToString();
+                        oPrePubl.CargarRutaDePrenda();
                         oPrePubl.ShowDialog();
                         if (oPrePubl.IsCambioOK == true)
                         {
@@ -760,10 +772,19 @@ namespace Estilo_Propio_Csharp
 
                     case "MODPREPUBLICAR":
                         if (gridEX1.RecordCount == 0) { return; }
-                        FrmBandejaControlFTPublicaciones_Publicar oMod = new FrmBandejaControlFTPublicaciones_Publicar();
-                        oMod.Text = "Cambio Status a Modificada por PrePublicar";
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                        FrmBandejaControlFTPublicaciones_ModifPublicar oMod = new FrmBandejaControlFTPublicaciones_ModifPublicar();
                         oMod.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
-                        oMod.TipoCambioStatus = "MODPREPUBLICAR";
+                        oMod.EstiloPropioSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString();
+                        oMod.Versionsel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString();
+                        oMod.IdFichaTecnicaSel = (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index);
+                        oMod.CodigoClienteSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString();
+                        oMod.TxtComentariosGenerales.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Observacion_FT"].Index).ToString();
+                        oMod.CargarRutaDePrenda();
                         oMod.ShowDialog();
                         if (oMod.IsCambioOK == true)
                         {
@@ -773,8 +794,13 @@ namespace Estilo_Propio_Csharp
 
                     case "PUBLICAR":
                         if (gridEX1.RecordCount == 0) { return; }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                         FrmBandejaControlFTPublicaciones_Publicar oPubl = new FrmBandejaControlFTPublicaciones_Publicar();
-                        oPubl.Text = "Cambio Status a Publicado";
+                        oPubl.Text = "";
                         oPubl.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oPubl.TipoCambioStatus = "PUBLICAR";
                         oPubl.ShowDialog();
@@ -786,6 +812,11 @@ namespace Estilo_Propio_Csharp
 
                     case "RECHAZARPREP":
                         if (gridEX1.RecordCount == 0) { return; }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                         FrmBandejaControlFTPublicaciones_RechazarPrePublicar oRec = new FrmBandejaControlFTPublicaciones_RechazarPrePublicar();
                         oRec.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oRec.ShowDialog();
@@ -802,19 +833,30 @@ namespace Estilo_Propio_Csharp
 
                     case "GENERARFT":
                         if (gridEX1.RecordCount == 0) { return; }
-                        //if(gridEX1.GetValue(gridEX1.RootTable.Columns["POR GENERAR PDF"].Index) == "SI")
-                        //{
-                        
-                        GeneraFTPDFAsync(gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString(),
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) != 0)
+                        {
+
+                            GeneraFTPDFAsync(gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString(),
                                         gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString(), 
                                         (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index), 
                                         (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index), 
                                         gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString());
-                        //}
+                        }
                         break;
 
                     case "VERFT":
                         if (gridEX1.RecordCount == 0) { return; }
+                        if((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+
                         int xfilas;
                         string RutaOriginal;
                         xfilas = gridEX1.Row;
@@ -886,6 +928,11 @@ namespace Estilo_Propio_Csharp
 
                     case "AUTORIZAPUBLI":
                         if (gridEX1.RecordCount == 0) { return; }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                         rpt = MessageBox.Show("¿Está seguro de actualizar la publicación de la FT seleccionada?", "Pregunta", MessageBoxButtons.YesNo);
                         if (DialogResult.Yes == rpt)
                         {
@@ -904,6 +951,11 @@ namespace Estilo_Propio_Csharp
 
                     case "VERMODIFICACION":
                         if (gridEX1.RecordCount == 0) { return; }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                         FilaSeleccionado = gridEX1.CurrentRow.Position;
                         FrmBandejaControlFTPublicaciones_VerModificaciones oVer = new FrmBandejaControlFTPublicaciones_VerModificaciones();
                         oVer.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
@@ -924,6 +976,11 @@ namespace Estilo_Propio_Csharp
 
                     case "VERDETRECHAZO":
                         if (gridEX1.RecordCount == 0) { return; }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                         FrmBandejaControlFTPublicaciones_VerDetRechazo oVerRech = new FrmBandejaControlFTPublicaciones_VerDetRechazo();
                         oVerRech.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oVerRech.CargaGrilla();
@@ -932,6 +989,11 @@ namespace Estilo_Propio_Csharp
 
                     case "USUARIOPUBLI":
                         if (gridEX1.RecordCount == 0) { return; }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
                         FrmBandejaControlFTPublicaciones_UsuariosVerPbl oUsuPl = new FrmBandejaControlFTPublicaciones_UsuariosVerPbl();
                         oUsuPl.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oUsuPl.CargaGrilla();

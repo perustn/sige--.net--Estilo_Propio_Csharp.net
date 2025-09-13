@@ -73,6 +73,7 @@ namespace Estilo_Propio_Csharp
                 CreateTableFTProcesos();
                 CargarRutaDePrenda();
                 MarcarTodos(true);
+                grxRutaDePrenda.Enabled = false;
 
             }
             catch (Exception)
@@ -480,7 +481,7 @@ namespace Estilo_Propio_Csharp
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show("No se ha podido realizar la operación solicitada, por favor vuélvalo a intentar: " + ex.Message.ToString(), "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("No es posible generar la Ficha Técnica " + Environment.NewLine + " debido a que " + ex.Message.ToString() + Environment.NewLine + " Por favor, revíselos.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

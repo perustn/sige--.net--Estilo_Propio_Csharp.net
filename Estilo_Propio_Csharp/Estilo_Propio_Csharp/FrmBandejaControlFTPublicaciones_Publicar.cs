@@ -63,52 +63,24 @@ namespace Estilo_Propio_Csharp
 
         private void BtnAceptar_Click(object sender, EventArgs e)
         {
+            DialogResult rpt;
             try
-            {
-                DialogResult rpt;
-                switch (TipoCambioStatus)
+            {                
+                strSQL = string.Empty;
+                strSQL += "\n" + "EXEC FT_Cambia_Status_a_Publicado";
+                strSQL += "\n" + string.Format(" @Id_Publicacion            = {0} ", TxtIdPublicacion.Text);
+                strSQL += "\n" + string.Format(",@cod_usuario               ='{0}'", VariablesGenerales.pUsuario);
+                strSQL += "\n" + string.Format(",@ComentariosDePublicacion  ='{0}'", TxtObservacion.Text);
+                strSQL += "\n" + string.Format(",@cod_estacion              ='{0}'", Environment.MachineName);
+                rpt = MessageBox.Show("¿Está seguro de Publicar la FT seleccionada?", "Pregunta", MessageBoxButtons.YesNo);
+                if (DialogResult.Yes == rpt)
                 {
-                    case "PUBLICAR":
-                        DesRptstatus = "Publicar";
-
-                        strSQL = string.Empty;
-                        strSQL += "\n" + "EXEC FT_Cambia_Status_a_Publicado";
-                        strSQL += "\n" + string.Format(" @Id_Publicacion            = {0} ", TxtIdPublicacion.Text);
-                        strSQL += "\n" + string.Format(",@cod_usuario               ='{0}'", VariablesGenerales.pUsuario);
-                        strSQL += "\n" + string.Format(",@ComentariosDePublicacion  ='{0}'", TxtObservacion.Text);
-                        strSQL += "\n" + string.Format(",@cod_estacion              ='{0}'", Environment.MachineName);
-                        rpt = MessageBox.Show("¿Está seguro de " + DesRptstatus + " la FT seleccionada?", "Pregunta", MessageBoxButtons.YesNo);
-                        if (DialogResult.Yes == rpt)
-                        {
-                            if (oHp.EjecutarOperacion(strSQL) == true)
-                            {
-                                IsCambioOK = true;
-                                MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                DialogResult = DialogResult.OK;
-                            }
-                        }
-                        break;
-
-                    case "MODPREPUBLICAR":
-                        DesRptstatus = "Modificar por Pre Publicación ";
-
-                        strSQL = string.Empty;
-                        strSQL += "\n" + "EXEC FT_Cambia_Status_a_Modificada_por_PrePublicar";
-                        strSQL += "\n" + string.Format(" @Id_Publicacion            = {0} ", TxtIdPublicacion.Text);
-                        strSQL += "\n" + string.Format(",@cod_usuario               ='{0}'", VariablesGenerales.pUsuario);
-                        strSQL += "\n" + string.Format(",@ComentariosDePublicacion  ='{0}'", TxtObservacion.Text);
-                        strSQL += "\n" + string.Format(",@cod_estacion              ='{0}'", Environment.MachineName);
-                        rpt = MessageBox.Show("¿Está seguro de cambiar Status a " + DesRptstatus + " de la FT seleccionada?", "Pregunta", MessageBoxButtons.YesNo);
-                        if (DialogResult.Yes == rpt)
-                        {
-                            if (oHp.EjecutarOperacion(strSQL) == true)
-                            {
-                                IsCambioOK = true;
-                                MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                DialogResult = DialogResult.OK;
-                            }
-                        }
-                        break;
+                    if (oHp.EjecutarOperacion(strSQL) == true)
+                    {
+                        IsCambioOK = true;
+                        MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        DialogResult = DialogResult.OK;
+                    }
                 }
             }
             catch (Exception)

@@ -1,7 +1,7 @@
 ﻿
 namespace Estilo_Propio_Csharp
 {
-    partial class FrmBandejaControlFTPublicaciones_Publicar
+    partial class FrmBandejaControlFTPublicaciones_ModifPublicar
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,7 @@ namespace Estilo_Propio_Csharp
         /// </summary>
         private void InitializeComponent()
         {
+            Janus.Windows.GridEX.GridEXLayout grxRutaDePrenda_DesignTimeLayout = new Janus.Windows.GridEX.GridEXLayout();
             this.panel4 = new System.Windows.Forms.Panel();
             this.TxtObservacion = new System.Windows.Forms.TextBox();
             this.label32 = new System.Windows.Forms.Label();
@@ -39,10 +40,17 @@ namespace Estilo_Propio_Csharp
             this.panel3 = new System.Windows.Forms.Panel();
             this.BtnCancelar = new Janus.Windows.EditControls.UIButton();
             this.BtnAceptar = new Janus.Windows.EditControls.UIButton();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.TxtComentariosGenerales = new System.Windows.Forms.TextBox();
+            this.Label4 = new System.Windows.Forms.Label();
+            this.LblParcial = new System.Windows.Forms.Label();
+            this.grxRutaDePrenda = new Janus.Windows.GridEX.GridEX();
             this.panel4.SuspendLayout();
             this.Panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grxRutaDePrenda)).BeginInit();
             this.SuspendLayout();
             // 
             // panel4
@@ -50,12 +58,12 @@ namespace Estilo_Propio_Csharp
             this.panel4.BackColor = System.Drawing.Color.White;
             this.panel4.Controls.Add(this.TxtObservacion);
             this.panel4.Controls.Add(this.label32);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(0, 27);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel4.Location = new System.Drawing.Point(0, 364);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(512, 100);
-            this.panel4.TabIndex = 282;
+            this.panel4.Size = new System.Drawing.Size(788, 100);
+            this.panel4.TabIndex = 285;
             // 
             // TxtObservacion
             // 
@@ -63,13 +71,13 @@ namespace Estilo_Propio_Csharp
             this.TxtObservacion.BackColor = System.Drawing.SystemColors.Window;
             this.TxtObservacion.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.TxtObservacion.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtObservacion.Location = new System.Drawing.Point(139, 7);
+            this.TxtObservacion.Location = new System.Drawing.Point(233, 10);
             this.TxtObservacion.MaxLength = 0;
             this.TxtObservacion.Multiline = true;
             this.TxtObservacion.Name = "TxtObservacion";
             this.TxtObservacion.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.TxtObservacion.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TxtObservacion.Size = new System.Drawing.Size(359, 84);
+            this.TxtObservacion.Size = new System.Drawing.Size(551, 84);
             this.TxtObservacion.TabIndex = 74;
             // 
             // label32
@@ -78,9 +86,9 @@ namespace Estilo_Propio_Csharp
             this.label32.Location = new System.Drawing.Point(7, 15);
             this.label32.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(148, 13);
+            this.label32.Size = new System.Drawing.Size(300, 13);
             this.label32.TabIndex = 72;
-            this.label32.Text = "Observacion ..........................";
+            this.label32.Text = "Observacion de Modificar la Pre Publicación  ..........................";
             // 
             // Panel1
             // 
@@ -90,8 +98,8 @@ namespace Estilo_Propio_Csharp
             this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.Panel1.Location = new System.Drawing.Point(0, 0);
             this.Panel1.Name = "Panel1";
-            this.Panel1.Size = new System.Drawing.Size(512, 27);
-            this.Panel1.TabIndex = 281;
+            this.Panel1.Size = new System.Drawing.Size(788, 27);
+            this.Panel1.TabIndex = 284;
             // 
             // label29
             // 
@@ -126,17 +134,17 @@ namespace Estilo_Propio_Csharp
             this.panel2.BackColor = System.Drawing.Color.Transparent;
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 127);
+            this.panel2.Location = new System.Drawing.Point(0, 464);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(512, 30);
-            this.panel2.TabIndex = 280;
+            this.panel2.Size = new System.Drawing.Size(788, 30);
+            this.panel2.TabIndex = 283;
             // 
             // panel3
             // 
             this.panel3.Controls.Add(this.BtnCancelar);
             this.panel3.Controls.Add(this.BtnAceptar);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(305, 0);
+            this.panel3.Location = new System.Drawing.Point(581, 0);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(207, 30);
             this.panel3.TabIndex = 0;
@@ -167,26 +175,108 @@ namespace Estilo_Propio_Csharp
             this.BtnAceptar.VisualStyle = Janus.Windows.UI.VisualStyle.Office2010;
             this.BtnAceptar.Click += new System.EventHandler(this.BtnAceptar_Click);
             // 
-            // FrmBandejaControlFTPublicaciones_Publicar
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.White;
+            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel5.Controls.Add(this.TxtComentariosGenerales);
+            this.panel5.Controls.Add(this.Label4);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(0, 27);
+            this.panel5.Margin = new System.Windows.Forms.Padding(2);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(788, 83);
+            this.panel5.TabIndex = 286;
+            // 
+            // TxtComentariosGenerales
+            // 
+            this.TxtComentariosGenerales.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.TxtComentariosGenerales.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtComentariosGenerales.Location = new System.Drawing.Point(148, 0);
+            this.TxtComentariosGenerales.MaxLength = 4000;
+            this.TxtComentariosGenerales.Multiline = true;
+            this.TxtComentariosGenerales.Name = "TxtComentariosGenerales";
+            this.TxtComentariosGenerales.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.TxtComentariosGenerales.Size = new System.Drawing.Size(636, 79);
+            this.TxtComentariosGenerales.TabIndex = 28;
+            // 
+            // Label4
+            // 
+            this.Label4.BackColor = System.Drawing.Color.LightCyan;
+            this.Label4.Dock = System.Windows.Forms.DockStyle.Left;
+            this.Label4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Label4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label4.ForeColor = System.Drawing.Color.Navy;
+            this.Label4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label4.Location = new System.Drawing.Point(0, 0);
+            this.Label4.Name = "Label4";
+            this.Label4.Size = new System.Drawing.Size(148, 79);
+            this.Label4.TabIndex = 27;
+            this.Label4.Text = "Comentarios Generales de la FT";
+            this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LblParcial
+            // 
+            this.LblParcial.BackColor = System.Drawing.Color.Gold;
+            this.LblParcial.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LblParcial.Dock = System.Windows.Forms.DockStyle.Top;
+            this.LblParcial.Font = new System.Drawing.Font("Segoe UI", 7F);
+            this.LblParcial.ForeColor = System.Drawing.Color.Blue;
+            this.LblParcial.Image = global::Estilo_Propio_Csharp.Properties.Resources.info_16X16;
+            this.LblParcial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LblParcial.Location = new System.Drawing.Point(0, 110);
+            this.LblParcial.Name = "LblParcial";
+            this.LblParcial.Size = new System.Drawing.Size(788, 20);
+            this.LblParcial.TabIndex = 287;
+            this.LblParcial.Text = "            INGRESAR EL MOTIVO DEL CAMBIO DE STATUS A MODIFICAR DE LOS PROCESOS";
+            this.LblParcial.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // grxRutaDePrenda
+            // 
+            this.grxRutaDePrenda.DefaultFilterRowComparison = Janus.Windows.GridEX.FilterConditionOperator.Contains;
+            grxRutaDePrenda_DesignTimeLayout.LayoutString = "<GridEXLayoutData><RootTable><GroupCondition /><HeaderLines>2</HeaderLines></Root" +
+    "Table></GridEXLayoutData>";
+            this.grxRutaDePrenda.DesignTimeLayout = grxRutaDePrenda_DesignTimeLayout;
+            this.grxRutaDePrenda.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grxRutaDePrenda.EnterKeyBehavior = Janus.Windows.GridEX.EnterKeyBehavior.None;
+            this.grxRutaDePrenda.FilterMode = Janus.Windows.GridEX.FilterMode.Automatic;
+            this.grxRutaDePrenda.FilterRowUpdateMode = Janus.Windows.GridEX.FilterRowUpdateMode.WhenValueChanges;
+            this.grxRutaDePrenda.GroupByBoxVisible = false;
+            this.grxRutaDePrenda.Location = new System.Drawing.Point(0, 130);
+            this.grxRutaDePrenda.Name = "grxRutaDePrenda";
+            this.grxRutaDePrenda.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
+            this.grxRutaDePrenda.Size = new System.Drawing.Size(788, 234);
+            this.grxRutaDePrenda.TabIndex = 288;
+            this.grxRutaDePrenda.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
+            this.grxRutaDePrenda.FormattingRow += new Janus.Windows.GridEX.RowLoadEventHandler(this.grxRutaDePrenda_FormattingRow);
+            this.grxRutaDePrenda.Click += new System.EventHandler(this.grxRutaDePrenda_Click);
+            // 
+            // FrmBandejaControlFTPublicaciones_ModifPublicar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(512, 157);
+            this.ClientSize = new System.Drawing.Size(788, 494);
             this.ControlBox = false;
+            this.Controls.Add(this.grxRutaDePrenda);
+            this.Controls.Add(this.LblParcial);
+            this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.Panel1);
             this.Controls.Add(this.panel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "FrmBandejaControlFTPublicaciones_Publicar";
+            this.Name = "FrmBandejaControlFTPublicaciones_ModifPublicar";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Cambio Status a Publicado";
-            this.Load += new System.EventHandler(this.FrmBandejaControlFTPublicaciones_Publicar_Load);
+            this.Text = "Cambio Status a Modificada por PrePublicar";
+            this.Load += new System.EventHandler(this.FrmBandejaControlFTPublicaciones_ModifPublicar_Load);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.Panel1.ResumeLayout(false);
             this.Panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grxRutaDePrenda)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -203,5 +293,10 @@ namespace Estilo_Propio_Csharp
         internal System.Windows.Forms.Panel panel3;
         internal Janus.Windows.EditControls.UIButton BtnCancelar;
         internal Janus.Windows.EditControls.UIButton BtnAceptar;
+        private System.Windows.Forms.Panel panel5;
+        internal System.Windows.Forms.Label Label4;
+        internal System.Windows.Forms.TextBox TxtComentariosGenerales;
+        internal System.Windows.Forms.Label LblParcial;
+        internal Janus.Windows.GridEX.GridEX grxRutaDePrenda;
     }
 }

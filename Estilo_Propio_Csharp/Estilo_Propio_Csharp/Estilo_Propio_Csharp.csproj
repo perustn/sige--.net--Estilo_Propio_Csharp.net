@@ -325,6 +325,12 @@
     <Compile Include="FrmBandejaControlFTPublicaciones_CrearFT.Designer.cs">
       <DependentUpon>FrmBandejaControlFTPublicaciones_CrearFT.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmBandejaControlFTPublicaciones_ModifPublicar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBandejaControlFTPublicaciones_ModifPublicar.Designer.cs">
+      <DependentUpon>FrmBandejaControlFTPublicaciones_ModifPublicar.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmBandejaControlFTPublicaciones_PrePublicar.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -409,6 +415,24 @@
     <Compile Include="FrmCargaUPCdesdeExcel_Main.Designer.cs">
       <DependentUpon>FrmCargaUPCdesdeExcel_Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmEstiloVersionMadreDependencia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmEstiloVersionMadreDependencia.Designer.cs">
+      <DependentUpon>FrmEstiloVersionMadreDependencia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmEstiloVersionMadreDependencia_AddDepend.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmEstiloVersionMadreDependencia_AddDepend.Designer.cs">
+      <DependentUpon>FrmEstiloVersionMadreDependencia_AddDepend.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmEstiloVersionMadreDependencia_Adicionar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmEstiloVersionMadreDependencia_Adicionar.Designer.cs">
+      <DependentUpon>FrmEstiloVersionMadreDependencia_Adicionar.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmMantMotivoRechazo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -458,6 +482,9 @@
     <EmbeddedResource Include="FrmBandejaControlFTPublicaciones_CrearFT.resx">
       <DependentUpon>FrmBandejaControlFTPublicaciones_CrearFT.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmBandejaControlFTPublicaciones_ModifPublicar.resx">
+      <DependentUpon>FrmBandejaControlFTPublicaciones_ModifPublicar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmBandejaControlFTPublicaciones_PrePublicar.resx">
       <DependentUpon>FrmBandejaControlFTPublicaciones_PrePublicar.cs</DependentUpon>
     </EmbeddedResource>
@@ -499,6 +526,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmCargaUPCdesdeExcel_Main.resx">
       <DependentUpon>FrmCargaUPCdesdeExcel_Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmEstiloVersionMadreDependencia.resx">
+      <DependentUpon>FrmEstiloVersionMadreDependencia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmEstiloVersionMadreDependencia_AddDepend.resx">
+      <DependentUpon>FrmEstiloVersionMadreDependencia_AddDepend.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmEstiloVersionMadreDependencia_Adicionar.resx">
+      <DependentUpon>FrmEstiloVersionMadreDependencia_Adicionar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMantMotivoRechazo.resx">
       <DependentUpon>FrmMantMotivoRechazo.cs</DependentUpon>

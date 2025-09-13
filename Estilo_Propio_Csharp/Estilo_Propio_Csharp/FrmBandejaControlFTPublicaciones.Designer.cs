@@ -526,10 +526,10 @@ namespace Estilo_Propio_Csharp
             this.OptRangoFecha.Location = new System.Drawing.Point(9, 54);
             this.OptRangoFecha.Name = "OptRangoFecha";
             this.OptRangoFecha.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.OptRangoFecha.Size = new System.Drawing.Size(205, 24);
+            this.OptRangoFecha.Size = new System.Drawing.Size(190, 24);
             this.OptRangoFecha.TabIndex = 154;
             this.OptRangoFecha.Tag = "3";
-            this.OptRangoFecha.Text = "         Por Rango Fechas Despacho";
+            this.OptRangoFecha.Text = "         Por Rango Fechas Plan FT";
             this.OptRangoFecha.UseVisualStyleBackColor = false;
             this.OptRangoFecha.Click += new System.EventHandler(this.OpcionFiltroBusqueda);
             // 

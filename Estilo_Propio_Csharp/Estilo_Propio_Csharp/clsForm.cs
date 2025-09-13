@@ -107,6 +107,10 @@ namespace Estilo_Propio_Csharp
                 case "FRMBANDEJACONTROLFTPUBLICACIONES":
                     MyForm = new FrmBandejaControlFTPublicaciones();
                     break;
+
+                case "FRMESTILOVERSIONMADREDEPENDENCIA":
+                    MyForm = new FrmEstiloVersionMadreDependencia();
+                    break;
             }
             return MyForm;
         }

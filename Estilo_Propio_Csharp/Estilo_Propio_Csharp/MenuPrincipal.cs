@@ -36,7 +36,7 @@ namespace Estilo_Propio_Csharp
 
         private void uiButton2_Click(object sender, EventArgs e)
         {
-            FrmCargaUPCdesdeExcel FRM = new FrmCargaUPCdesdeExcel();
+            FrmEstiloVersionMadreDependencia FRM = new FrmEstiloVersionMadreDependencia();
             FRM.ShowDialog();
         }
     }
