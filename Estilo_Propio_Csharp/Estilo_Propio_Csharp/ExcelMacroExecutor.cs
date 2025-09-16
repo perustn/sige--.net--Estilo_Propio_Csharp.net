@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static Estilo_Propio_Csharp.FormularioProgreso;
+using System.Threading;
 
 namespace Estilo_Propio_Csharp
 {
@@ -49,6 +51,8 @@ namespace Estilo_Propio_Csharp
         public bool IgnorarLogDetallado { get; set; } = false;
 
         public LogLevelExcel NivelMinimoLog { get; set; } = LogLevelExcel.Info;
+
+        public bool MonitoreoTiempoReal { get; set; } = false;
     }
 
     public enum LogLevelExcel
@@ -103,14 +107,17 @@ namespace Estilo_Propio_Csharp
             string celdaControl = null,
             bool mostrarExcel = false,
             ConfiguracionCeldaControl config = null,
-            ConfiguracionCeldaControlAvanzada configAvanzada = null
-            )
+            ConfiguracionCeldaControlAvanzada configAvanzada = null,
+            IProgress<ProgresoInfo> progress = null, 
+            CancellationToken cancellationToken = default)
         {
             var resultado = new ResultadoEjecucion();
             var inicioTiempo = DateTime.Now;
 
             Application excelApp = null;
             Workbook workbook = null;
+            MonitorLogBuffer monitor = null;
+            Task tareaMonitoreo = null;
 
             try
             {
@@ -128,7 +135,7 @@ namespace Estilo_Propio_Csharp
                 }
 
                 // Configurar timeout si se especifica
-                Task tareaEjecucion = Task.Run(() =>
+                Task tareaEjecucion = Task.Run(async () =>
                 {
                     try
                     {
@@ -179,6 +186,35 @@ namespace Estilo_Propio_Csharp
                             }
                         }
 
+                       
+                        //if (configAvanzada != null && configAvanzada.MonitoreoTiempoReal)
+                        //{
+                        //    monitor = new MonitorLogBuffer(workbook, configAvanzada);
+
+                        //    int porcentaje = 12;
+                        //    // Configurar eventos del monitor
+                        //    monitor.NuevaEntradaLog += (entrada) =>
+                        //    {
+                        //        progress?.Report(new ProgresoInfo
+                        //        {
+                        //            Porcentaje = porcentaje + 1,
+                        //            Mensaje = "Generando PDF",
+                        //            Detalle = ($"{entrada.Modulo}: {entrada.Evento}")
+                        //        });
+                        //    };
+
+                        //    monitor.EstadoCambiado += (estado) =>
+                        //    {
+                        //        if (!string.IsNullOrEmpty(estado) && estado != "RUNNING")
+                        //        {
+                        //            Console.WriteLine($"🔄 Estado cambiado a: {estado}");
+                        //        }
+                        //    };
+
+                        //    // Iniciar monitoreo en paralelo
+                        //    Console.WriteLine("🔍 Iniciando monitoreo de log en tiempo real...");
+                        //    tareaMonitoreo = monitor.IniciarMonitoreoBuffer(cancellationToken);
+                        //}
                         Console.WriteLine($"Ejecutando macro: {nombreMacro}");
 
                         // Ejecutar la macro
@@ -190,6 +226,27 @@ namespace Estilo_Propio_Csharp
                         {
                             resultado.Excel = excelApp.Run(nombreMacro);
                         }
+
+                        // Esperar un poco para que el monitor capture logs finales
+                        //if (monitor != null)
+                        //{
+                        //    await Task.Delay(1000);
+                        //    monitor.Detener();
+
+                        //    // Esperar a que termine el monitoreo
+                        //    if (tareaMonitoreo != null)
+                        //    {
+                        //        try
+                        //        {
+                        //            await tareaMonitoreo;
+                        //            Console.WriteLine("✅ Monitoreo completado");
+                        //        }
+                        //        catch (OperationCanceledException)
+                        //        {
+                        //            Console.WriteLine("⏹️ Monitoreo cancelado");
+                        //        }
+                        //    }
+                        //}
 
                         if (config != null)
                         {
@@ -247,6 +304,8 @@ namespace Estilo_Propio_Csharp
                     {
                         resultado.MensajeError = $"La ejecución excedió el timeout de {timeoutSegundos} segundos";
                         resultado.CodigoError = "TIMEOUT";
+
+                        //monitor?.Detener();
                     }
                     else
                     {
@@ -265,6 +324,17 @@ namespace Estilo_Propio_Csharp
             }
             finally
             {
+                //monitor?.Detener();
+                //// Esperar que termine el monitoreo si aún está corriendo
+                //if (tareaMonitoreo != null && !tareaMonitoreo.IsCompleted)
+                //{
+                //    try
+                //    {
+                //        await Task.WhenAny(tareaMonitoreo, Task.Delay(2000)); // Esperar máximo 2 segundos
+                //    }
+                //    catch { }
+                //}
+
                 resultado.TiempoEjecucion = DateTime.Now - inicioTiempo;
 
                 // Liberar recursos COM

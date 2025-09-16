@@ -119,7 +119,8 @@ namespace Estilo_Propio_Csharp
             return ArchivoDestino;
         }
 
-        private async Task<ResultadoEjecucion> GenerarPDFAsync_V2(string codEstpro, string codVersion, int IDFichaTecnica, string vCarpetaFichaTecnicaCliente, string RutaArchivoCompleto)
+        private async Task<ResultadoEjecucion> GenerarPDFAsync_V2(string codEstpro, string codVersion, int IDFichaTecnica, string vCarpetaFichaTecnicaCliente, string RutaArchivoCompleto,
+            IProgress<ProgresoInfo> progress, CancellationToken cancellationToken)
         {
             string RouteFileXLT = VariablesGenerales.pRuta;
             string RouteLogo = oHp.DevuelveDato("SELECT Ruta_Logo = ISNULL(Ruta_Logo, '') From SEGURIDAD..SEG_EMPRESAS WHERE Cod_Empresa = '" +
@@ -157,7 +158,8 @@ namespace Estilo_Propio_Csharp
 
                 MaxFilasLog = 100,              // Máximo 50 entradas de log
                 Reintentos = 1,
-                EsOpcional = false
+                EsOpcional = false,
+                MonitoreoTiempoReal = true
             };
 
             // Configuración para depuración completa
@@ -178,11 +180,13 @@ namespace Estilo_Propio_Csharp
                         RutaArchivoCompleto,
                         "PDF"
                         },
-            timeoutSegundos: 500,
+            timeoutSegundos: 1000,
             celdaControl: null,
             mostrarExcel: false,
             config: null,
-            configAvanzada: config
+            configAvanzada: config,
+            progress, 
+            cancellationToken
             );;
 
          return resultado;
@@ -370,7 +374,9 @@ namespace Estilo_Propio_Csharp
                 });
 
                 string mensajePDF = "";
-                ResultadoEjecucion resultado = await GenerarPDFAsync_V2(codEstpro, codVersion, IDFichaTecnica, vCarpetaFichaTecnicaCliente, RutaArchivoCompleto);
+                ResultadoEjecucion resultado = await GenerarPDFAsync_V2(codEstpro, codVersion, IDFichaTecnica, vCarpetaFichaTecnicaCliente, RutaArchivoCompleto,
+                    progress, cancellationToken
+                    );
 
                 if (resultado.Exitoso)
                 {
