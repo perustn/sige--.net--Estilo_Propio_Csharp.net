@@ -162,6 +162,22 @@ namespace Estilo_Propio_Csharp
                 MonitoreoTiempoReal = true
             };
 
+            string RouteFileLog = VariablesGenerales.pRuta;
+            RouteFileLog = Path.Combine(RouteFileLog, "macro_log.csv");
+
+            var configCSV = new ConfiguracionLogCSV
+            {
+                RutaArchivoLog = RouteFileLog,
+                CeldaControl = "A1",
+                NombreHoja = "Control",
+                MonitoreoTiempoReal = true,
+                IntervaloMonitoreoMs = 100,
+                CrearArchivoSiNoExiste = true,
+                LimpiarLogAnterior = true,
+                AgregarTimestampAlNombre = true,
+                NivelesPermitidos = new List<LogLevelExcel> { LogLevelExcel.Error, LogLevelExcel.Warning, LogLevelExcel.Info }
+            };
+
             // Configuración para depuración completa
             // SoloLeerEnError = false,       // Siempre leer log
             //IgnorarLogDetallado = false,   // Leer log detallado
@@ -186,7 +202,8 @@ namespace Estilo_Propio_Csharp
             config: null,
             configAvanzada: config,
             progress, 
-            cancellationToken
+            cancellationToken,
+            configCSV: configCSV
             );;
 
          return resultado;

@@ -24,7 +24,8 @@ namespace Estilo_Propio_Csharp
         public object Excel { get; set; }
         public TimeSpan TiempoEjecucion { get; set; }
 
-       
+        public string RutaArchivoLog { get; set; }
+
     }
 
     public class ConfiguracionCeldaControl
@@ -109,15 +110,19 @@ namespace Estilo_Propio_Csharp
             ConfiguracionCeldaControl config = null,
             ConfiguracionCeldaControlAvanzada configAvanzada = null,
             IProgress<ProgresoInfo> progress = null, 
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            ConfiguracionLogCSV configCSV = null
+            )
         {
             var resultado = new ResultadoEjecucion();
             var inicioTiempo = DateTime.Now;
 
             Application excelApp = null;
             Workbook workbook = null;
-            MonitorLogBuffer monitor = null;
             Task tareaMonitoreo = null;
+
+            CSVLogWriter csvWriter = null;
+            MonitorLogCSV monitor = null;
 
             try
             {
@@ -139,6 +144,11 @@ namespace Estilo_Propio_Csharp
                 {
                     try
                     {
+
+                        // Inicializar CSV Writer
+                        csvWriter = new CSVLogWriter(configCSV);
+                        resultado.RutaArchivoLog = csvWriter.RutaArchivoActual;
+
                         // Inicializar Excel
                         excelApp = new Application();
                         excelApp.Visible = mostrarExcel;
@@ -166,12 +176,6 @@ namespace Estilo_Propio_Csharp
                             CorruptLoad: XlCorruptLoad.xlNormalLoad
                         );
 
-                        //// Verificar si la macro existe
-                        //if (!VerificarMacroExiste(workbook, nombreMacro))
-                        //{
-                        //    resultado.MensajeError = $"La macro '{nombreMacro}' no existe en el archivo";
-                        //    return;
-                        //}
 
                         // Limpiar celda de control si se especifica
                         if (!string.IsNullOrEmpty(celdaControl))
@@ -186,7 +190,49 @@ namespace Estilo_Propio_Csharp
                             }
                         }
 
-                       
+                        if (configCSV != null)
+                        {
+                            try
+                            {
+                                Worksheet hoja = ObtenerHojaSegunConfiguracion(workbook, configAvanzada, out string referenciaHoja);
+                                hoja.Range["A4"].Value = csvWriter.RutaArchivoActual;
+                                Console.WriteLine($"📝 Ruta de log comunicada a Excel: {csvWriter.RutaArchivoActual}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"⚠️ No se pudo comunicar ruta de log a Excel: {ex.Message}");
+                            }
+                        }
+
+                        // Configurar monitoreo CSV
+                        if (configCSV.MonitoreoTiempoReal)
+                        {
+                            monitor = new MonitorLogCSV(workbook, configCSV);
+
+                            int porcentaje = 12;
+                            // Configurar eventos del monitor
+                            monitor.NuevaEntradaLog += (entrada) =>
+                            {
+                                progress?.Report(new ProgresoInfo
+                                {
+                                    Porcentaje = porcentaje + 1,
+                                    Mensaje = "Generando PDF",
+                                    Detalle = ($"{entrada.Modulo}: {entrada.Evento}")
+                                });
+                            };
+
+                            monitor.EstadoCambiado += (estado) =>
+                            {
+                                if (!string.IsNullOrEmpty(estado) && estado != "RUNNING")
+                                {
+                                    Console.WriteLine($"🔄 Estado: {estado}");
+                                }
+                            };
+
+                            Console.WriteLine("🔍 Iniciando monitoreo CSV...");
+                            tareaMonitoreo = monitor.IniciarMonitoreo(cancellationToken);
+                        }
+
                         //if (configAvanzada != null && configAvanzada.MonitoreoTiempoReal)
                         //{
                         //    monitor = new MonitorLogBuffer(workbook, configAvanzada);
@@ -227,26 +273,25 @@ namespace Estilo_Propio_Csharp
                             resultado.Excel = excelApp.Run(nombreMacro);
                         }
 
-                        // Esperar un poco para que el monitor capture logs finales
-                        //if (monitor != null)
-                        //{
-                        //    await Task.Delay(1000);
-                        //    monitor.Detener();
+                        //Esperar un poco para que el monitor capture logs finales
+                        if (monitor != null)
+                        {
+                            monitor.Detener();
 
-                        //    // Esperar a que termine el monitoreo
-                        //    if (tareaMonitoreo != null)
-                        //    {
-                        //        try
-                        //        {
-                        //            await tareaMonitoreo;
-                        //            Console.WriteLine("✅ Monitoreo completado");
-                        //        }
-                        //        catch (OperationCanceledException)
-                        //        {
-                        //            Console.WriteLine("⏹️ Monitoreo cancelado");
-                        //        }
-                        //    }
-                        //}
+                            // Esperar a que termine el monitoreo
+                            if (tareaMonitoreo != null)
+                            {
+                                try
+                                {
+                                    await Task.WhenAny(tareaMonitoreo, Task.Delay(3000));
+                                    Console.WriteLine("✅ Monitoreo completado");
+                                }
+                                catch (OperationCanceledException)
+                                {
+                                    Console.WriteLine("⏹️ Monitoreo cancelado");
+                                }
+                            }
+                        }
 
                         if (config != null)
                         {
@@ -305,7 +350,7 @@ namespace Estilo_Propio_Csharp
                         resultado.MensajeError = $"La ejecución excedió el timeout de {timeoutSegundos} segundos";
                         resultado.CodigoError = "TIMEOUT";
 
-                        //monitor?.Detener();
+                        monitor?.Detener();
                     }
                     else
                     {
@@ -324,16 +369,22 @@ namespace Estilo_Propio_Csharp
             }
             finally
             {
-                //monitor?.Detener();
-                //// Esperar que termine el monitoreo si aún está corriendo
-                //if (tareaMonitoreo != null && !tareaMonitoreo.IsCompleted)
-                //{
-                //    try
-                //    {
-                //        await Task.WhenAny(tareaMonitoreo, Task.Delay(2000)); // Esperar máximo 2 segundos
-                //    }
-                //    catch { }
-                //}
+
+
+                monitor?.Detener();
+                // Esperar que termine el monitoreo si aún está corriendo
+                if (tareaMonitoreo != null && !tareaMonitoreo.IsCompleted)
+                {
+                    try
+                    {
+                        await Task.WhenAny(tareaMonitoreo, Task.Delay(2000)); // Esperar máximo 2 segundos
+                    }
+                    catch { }
+                }
+
+                monitor?.Dispose();
+                csvWriter?.Dispose();
+
 
                 resultado.TiempoEjecucion = DateTime.Now - inicioTiempo;
 

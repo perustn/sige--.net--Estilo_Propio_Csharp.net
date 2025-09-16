@@ -267,6 +267,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MonitorLogCSV.cs" />
     <Compile Include="MonitorLogBuffer.cs" />
     <Compile Include="ClsForm.cs" />
     <Compile Include="ClsHelper.cs" />
