@@ -70,12 +70,12 @@ namespace Estilo_Propio_Csharp
 
         public string CreaCarpetaLocal()
         {
-            string vCarpetaFichaTecnicaCliente = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\FichaTecnicaTMP\\";
-            if (!Directory.Exists(vCarpetaFichaTecnicaCliente))
+            string carpetaLocal = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\FichaTecnicaTMP\\";
+            if (!Directory.Exists(carpetaLocal))
             {
-                Directory.CreateDirectory(vCarpetaFichaTecnicaCliente);
+                Directory.CreateDirectory(carpetaLocal);
             }
-            return vCarpetaFichaTecnicaCliente;
+            return carpetaLocal;
         }
 
         public string ValidaCarpetaCompartida(string CodigoClienteSel)
@@ -98,28 +98,21 @@ namespace Estilo_Propio_Csharp
             return true;
         }
 
-        public string CopiaPDFLocalCompartido(string CodigoClienteSel,string RutaArchivoCompleto, string NombreArchivo)
+        public void CopiarArchivo(string pathOrigen,string pathDestino)
         {
-            string RutaCompartida;
-            RutaCompartida = ValidaCarpetaCompartida(CodigoClienteSel);
-            string ArchivoDestino = Path.Combine(RutaCompartida, RutaArchivoCompleto + ".PDF");
 
-            if (System.IO.File.Exists(ArchivoDestino))
+            if (System.IO.File.Exists(pathDestino))
             {
-                File.Delete(ArchivoDestino);
-                File.Copy(NombreArchivo, ArchivoDestino);
-                Process.Start(NombreArchivo);
+                File.Delete(pathDestino);
+                File.Copy(pathOrigen, pathDestino);
             }
             else
             {
-                File.Copy(NombreArchivo, ArchivoDestino);
-                Process.Start(NombreArchivo);
+                File.Copy(pathOrigen, pathDestino);
             }
-
-            return ArchivoDestino;
         }
 
-        private async Task<ResultadoEjecucion> GenerarPDFAsync_V2(string codEstpro, string codVersion, int IDFichaTecnica, string vCarpetaFichaTecnicaCliente, string RutaArchivoCompleto,
+        private async Task<ResultadoEjecucion> GenerarPDFAsync_V2(string codEstpro, string codVersion, int IDFichaTecnica, string rutaFile, string nombreFile,
             IProgress<ProgresoInfo> progress, CancellationToken cancellationToken)
         {
             string RouteFileXLT = VariablesGenerales.pRuta;
@@ -159,11 +152,12 @@ namespace Estilo_Propio_Csharp
                 MaxFilasLog = 100,              // Máximo 50 entradas de log
                 Reintentos = 1,
                 EsOpcional = false,
-                MonitoreoTiempoReal = true
+                MonitoreoTiempoReal = true,
+                CeldaMetaData = "A7"
             };
 
-            string RouteFileLog = VariablesGenerales.pRuta;
-            RouteFileLog = Path.Combine(RouteFileLog, "macro_log.csv");
+            string RouteFileLog = rutaFile;
+            RouteFileLog = Path.Combine(RouteFileLog, nombreFile,"_log.csv");
 
             var configCSV = new ConfiguracionLogCSV
             {
@@ -192,8 +186,8 @@ namespace Estilo_Propio_Csharp
                         codVersion,
                         IDFichaTecnica,
                         true,
-                        vCarpetaFichaTecnicaCliente,
-                        RutaArchivoCompleto,
+                        rutaFile,
+                        nombreFile,
                         "PDF"
                         },
             timeoutSegundos: 1000,
@@ -364,11 +358,16 @@ namespace Estilo_Propio_Csharp
             });
 
             bool isGeneroOK = false;
-            string vCarpetaFichaTecnicaCliente;
-            vCarpetaFichaTecnicaCliente = CreaCarpetaLocal();
 
-            string RutaArchivoCompleto = string.Format("FT[{2}]EP{0}-{1}", codEstpro, codVersion, IDFichaTecnica);
-            string NombreArchivo = string.Format("{0}FT[{3}]EP{1}-{2}{4}", vCarpetaFichaTecnicaCliente, codEstpro, codVersion, IDFichaTecnica, ".PDF");
+            string rutaArchivoPDF = CreaCarpetaLocal();
+            string nombreArchivoPDF = string.Format("FT[{2}]EP{0}-{1}", codEstpro, codVersion, IDFichaTecnica);
+            string nombreArchivoPDF_ConIndice = string.Format("{0}{1}", nombreArchivoPDF, "_I");
+
+            string pathPDF = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF, ".PDF");
+            string pathPDF_ConIndice = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF_ConIndice, ".PDF");
+
+            string rutaArchivoPDF_Compartido = ValidaCarpetaCompartida(CodigoClienteSel);
+            string pathPDF_Compartido = Path.Combine(rutaArchivoPDF_Compartido, nombreArchivoPDF_ConIndice);
 
             try
             {
@@ -380,7 +379,7 @@ namespace Estilo_Propio_Csharp
                     Detalle = "Eliminando PDF existente"
                 });
 
-                EliminaPDF(NombreArchivo);
+                EliminaPDF(pathPDF);
 
                 porcentaje = 10;
                 progress?.Report(new ProgresoInfo
@@ -391,9 +390,8 @@ namespace Estilo_Propio_Csharp
                 });
 
                 string mensajePDF = "";
-                ResultadoEjecucion resultado = await GenerarPDFAsync_V2(codEstpro, codVersion, IDFichaTecnica, vCarpetaFichaTecnicaCliente, RutaArchivoCompleto,
-                    progress, cancellationToken
-                    );
+                ResultadoEjecucion resultado = await GenerarPDFAsync_V2(codEstpro, codVersion, IDFichaTecnica, rutaArchivoPDF, nombreArchivoPDF,
+                    progress, cancellationToken);
 
                 if (resultado.Exitoso)
                 {
@@ -422,6 +420,9 @@ namespace Estilo_Propio_Csharp
                     throw new ProcessingException($"Error al Generar PDF: {resultado.MensajeError}");
                 }
 
+                var procesador = new PdfIndexProcessor();
+                procesador.ProcesarPdfConIndice(pathPDF, resultado.RutaArchivoMetaData, pathPDF_ConIndice);
+
                 porcentaje = 80;
                 progress?.Report(new ProgresoInfo
                 {
@@ -430,20 +431,10 @@ namespace Estilo_Propio_Csharp
                     Detalle = "Protegiendo PDF"
                 });
 
-                /*
-                mensajePDF = await ProtegerPdf(vCarpetaFichaTecnicaCliente + RutaArchivoCompleto + ".PDF");
-                if (!mensajePDF.Equals(""))
-                {
-                    throw new ProcessingException($"Error al Proteger PDF: {mensajePDF}");
-                }
-                */
-                /* ********************************************************** */
-
-                if (!await ProtegerPdfExe(vCarpetaFichaTecnicaCliente + RutaArchivoCompleto + ".PDF"))
+                if (!await ProtegerPdfExe(pathPDF_ConIndice))
                 {
                     throw new ProcessingException($"Error al Proteger PDF");
                 };
-
 
                 porcentaje = 90;
                 progress?.Report(new ProgresoInfo
@@ -453,13 +444,7 @@ namespace Estilo_Propio_Csharp
                     Detalle = "Copiando a ruta compartida"
                 });
 
-                var task = Task.Run(() =>
-                {
-                    return CopiaPDFLocalCompartido(CodigoClienteSel, RutaArchivoCompleto, NombreArchivo);
-                }, cancellationToken);
-
-                string ArchivoDestino;
-                ArchivoDestino = await task;
+                CopiarArchivo(pathPDF_ConIndice, pathPDF_Compartido);
 
                 porcentaje = 95;
                 progress?.Report(new ProgresoInfo
@@ -469,9 +454,9 @@ namespace Estilo_Propio_Csharp
                     Detalle = "Guardando Ruta de PDF en base de datos"
                 });
 
-                task = Task.Run(() =>
+                var task = Task.Run(() =>
                 {
-                    return GuardarRutaPDFenBD(codEstpro, codVersion, IDFichaTecnica, ArchivoDestino, IdPublicacion);
+                    return GuardarRutaPDFenBD(codEstpro, codVersion, IDFichaTecnica, pathPDF_Compartido, IdPublicacion);
                 }, cancellationToken);
 
                 mensajePDF = await task;
@@ -488,6 +473,8 @@ namespace Estilo_Propio_Csharp
                     Mensaje = "Proceso completado",
                     Detalle = "Todos los pasos ejecutados correctamente"
                 });
+
+                Process.Start(pathPDF_ConIndice);
 
                 isGeneroOK = true;
             }

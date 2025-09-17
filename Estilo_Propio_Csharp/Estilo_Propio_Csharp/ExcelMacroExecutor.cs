@@ -25,6 +25,7 @@ namespace Estilo_Propio_Csharp
         public TimeSpan TiempoEjecucion { get; set; }
 
         public string RutaArchivoLog { get; set; }
+        public string RutaArchivoMetaData { get; set; }
 
     }
 
@@ -54,6 +55,8 @@ namespace Estilo_Propio_Csharp
         public LogLevelExcel NivelMinimoLog { get; set; } = LogLevelExcel.Info;
 
         public bool MonitoreoTiempoReal { get; set; } = false;
+
+        public string CeldaMetaData { get; set; } = "";
     }
 
     public enum LogLevelExcel
@@ -209,13 +212,13 @@ namespace Estilo_Propio_Csharp
                         {
                             monitor = new MonitorLogCSV(workbook, configCSV);
 
-                            int porcentaje = 12;
+                            
                             // Configurar eventos del monitor
                             monitor.NuevaEntradaLog += (entrada) =>
                             {
                                 progress?.Report(new ProgresoInfo
                                 {
-                                    Porcentaje = porcentaje + 1,
+                                    Porcentaje = (int)(entrada.Contador + 12),
                                     Mensaje = "Generando PDF",
                                     Detalle = ($"{entrada.Modulo}: {entrada.Evento}")
                                 });
@@ -884,6 +887,7 @@ namespace Estilo_Propio_Csharp
 
                     if (EsExitoSegunPatrones(valorControl, config.PatronesExito))
                     {
+                        resultado.RutaArchivoMetaData = LeerCeldaSiExiste(hoja, config.CeldaMetaData);
                         resultado.Exitoso = true;
                         Console.WriteLine("Macro ejecutada exitosamente");
                     }
