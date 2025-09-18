@@ -360,14 +360,14 @@ namespace Estilo_Propio_Csharp
             bool isGeneroOK = false;
 
             string rutaArchivoPDF = CreaCarpetaLocal();
-            string nombreArchivoPDF = string.Format("FT[{2}]EP{0}-{1}", codEstpro, codVersion, IDFichaTecnica);
-            string nombreArchivoPDF_ConIndice = string.Format("{0}{1}", nombreArchivoPDF, "_I");
+            string nombreArchivoPDF = string.Format("FT[{2}]EP{0}-{1}_TEMP", codEstpro, codVersion, IDFichaTecnica);
+            string nombreArchivoPDF_ConIndice = string.Format("FT[{2}]EP{0}-{1}", codEstpro, codVersion, IDFichaTecnica);
 
             string pathPDF = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF, ".PDF");
             string pathPDF_ConIndice = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF_ConIndice, ".PDF");
 
             string rutaArchivoPDF_Compartido = ValidaCarpetaCompartida(CodigoClienteSel);
-            string pathPDF_Compartido = Path.Combine(rutaArchivoPDF_Compartido, nombreArchivoPDF_ConIndice);
+            string pathPDF_Compartido = Path.Combine(rutaArchivoPDF_Compartido, nombreArchivoPDF_ConIndice + ".PDF");
 
             try
             {
@@ -386,7 +386,7 @@ namespace Estilo_Propio_Csharp
                 {
                     Porcentaje = porcentaje,
                     Mensaje = "Generando PDF",
-                    Detalle = "Inicio de Extraccion informacion de base de datos y construyendo PDF"
+                    Detalle = "Inicio de Invocacion de plantilla XLT"
                 });
 
                 string mensajePDF = "";

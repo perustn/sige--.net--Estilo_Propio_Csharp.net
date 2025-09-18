@@ -148,17 +148,37 @@ namespace Estilo_Propio_Csharp
                     try
                     {
 
+                        progress?.Report(new ProgresoInfo
+                        {
+                            Porcentaje = 13,
+                            Mensaje = "Generando PDF",
+                            Detalle = "Inicializar CSV Writer"
+                        });
+
                         // Inicializar CSV Writer
                         csvWriter = new CSVLogWriter(configCSV);
                         resultado.RutaArchivoLog = csvWriter.RutaArchivoActual;
 
-                        // Inicializar Excel
+                        progress?.Report(new ProgresoInfo
+                        {
+                            Porcentaje = 14,
+                            Mensaje = "Generando PDF",
+                            Detalle = "Inicializar Excel"
+                        });
+
                         excelApp = new Application();
                         excelApp.Visible = mostrarExcel;
                         excelApp.DisplayAlerts = false;
                         excelApp.EnableEvents = false;
                         excelApp.ScreenUpdating = false;
                         //excelApp.Calculation = XlCalculation.xlCalculationManual;
+
+                        progress?.Report(new ProgresoInfo
+                        {
+                            Porcentaje = 15,
+                            Mensaje = "Generando PDF",
+                            Detalle = $"Abriendo archivo: {rutaArchivo}"
+                        });
 
                         Console.WriteLine($"Abriendo archivo: {rutaArchivo}");
                         workbook = excelApp.Workbooks.Open(
@@ -218,9 +238,9 @@ namespace Estilo_Propio_Csharp
                             {
                                 progress?.Report(new ProgresoInfo
                                 {
-                                    Porcentaje = (int)(entrada.Contador + 12),
+                                    Porcentaje = (int)(entrada.Contador + 15),
                                     Mensaje = "Generando PDF",
-                                    Detalle = ($"{entrada.Modulo}: {entrada.Evento}")
+                                    Detalle = ($"{entrada.Modulo}: {entrada.Evento} {entrada.Detalles}")
                                 });
                             };
 
@@ -265,6 +285,13 @@ namespace Estilo_Propio_Csharp
                         //    tareaMonitoreo = monitor.IniciarMonitoreoBuffer(cancellationToken);
                         //}
                         Console.WriteLine($"Ejecutando macro: {nombreMacro}");
+
+                        progress?.Report(new ProgresoInfo
+                        {
+                            Porcentaje = 66,
+                            Mensaje = "Generando PDF",
+                            Detalle = $"Ejecutando macro: {nombreMacro}"
+                        });
 
                         // Ejecutar la macro
                         if (parametros != null && parametros.Length > 0)
