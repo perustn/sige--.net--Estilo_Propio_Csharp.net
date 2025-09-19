@@ -259,7 +259,8 @@ namespace Estilo_Propio_Csharp
 
             // Variables para controlar el contenido
             int itemsProcessados = 0;
-            int numeroPagina = 2; // Empezar en página 2 (la 1 es el índice)
+            int paginasIndiceEstimadas = (int)Math.Ceiling((double)metadata.documento.hojas.Count / 26); // ~20 items por página
+
             int numeroPaginaIndice = 1;
 
             while (itemsProcessados < metadata.documento.hojas.Count)
@@ -355,18 +356,22 @@ namespace Estilo_Propio_Csharp
                     string textoPaginas;
                     if (hoja.numeroPaginasPDF == 1)
                     {
-                        textoPaginas = numeroPagina.ToString();
+                        textoPaginas = (hoja.paginaInicioPDF + paginasIndiceEstimadas + 1).ToString();
                     }
                     else
                     {
-                        textoPaginas = $"{numeroPagina}-{numeroPagina + hoja.numeroPaginasPDF - 1}";
+                        //textoPaginas = $"{numeroPagina}-{numeroPagina + hoja.numeroPaginasPDF - 1}";
+                        // Mostrar rango real + offset del índice
+                        int paginaInicioMostrar = hoja.paginaInicioPDF + paginasIndiceEstimadas + 1;
+                        int paginaFinMostrar = hoja.paginaFinPDF + paginasIndiceEstimadas + 1;
+                        textoPaginas = $"{paginaInicioMostrar}-{paginaFinMostrar}";
                     }
 
                     gfx.DrawString(textoPaginas, fuenteItem, XBrushes.Black,
                                   new XRect(pagina.Width - 100, y, 80, 18), XStringFormats.Center);
 
                     y += altoItem;
-                    numeroPagina += hoja.numeroPaginasPDF;
+                    //numeroPagina += hoja.numeroPaginasPDF;
                     itemsEnEstaPagina++;
                     itemsProcessados++;
                 }
@@ -405,9 +410,11 @@ namespace Estilo_Propio_Csharp
 
                 gfx.Dispose();
                 numeroPaginaIndice++;
+
             }
 
             Console.WriteLine($"📋 Índice creado con {paginasIndice.Count} páginas");
+            Console.WriteLine($"📄 El contenido empezará en la página {paginasIndice.Count + 1 }");
             return paginasIndice;
         }
 
@@ -503,9 +510,9 @@ namespace Estilo_Propio_Csharp
                 double espacioDisponible = paginaIndice.Height - y - 100;
                 int itemsQueCaben = (int)(espacioDisponible / altoItem);
 
-                // Para debugging: dibujar rectángulos visibles
-                //var gfx = XGraphics.FromPdfPage(paginaIndice);
-                //var penDebug = new XPen(XColors.Red, 1) { DashStyle = XDashStyle.Dash };
+                //Para debugging: dibujar rectángulos visibles
+               var gfx = XGraphics.FromPdfPage(paginaIndice);
+                var penDebug = new XPen(XColors.Red, 1) { DashStyle = XDashStyle.Dash };
 
                 for (int i = 0; i < itemsQueCaben && itemsProcessados < metadata.documento.hojas.Count; i++)
                 {
@@ -518,7 +525,7 @@ namespace Estilo_Propio_Csharp
                     double bottom = y + altoItem;
 
                     // 🐛 DEBUGGING: Dibujar rectángulo visible (quitar después)
-                    //gfx.DrawRectangle(penDebug, left, top, right - left, bottom - top);
+                    gfx.DrawRectangle(penDebug, left, top, right - left, bottom - top);
 
                     // Crear enlace con coordenadas corregidas
                     try
@@ -566,7 +573,7 @@ namespace Estilo_Propio_Csharp
                     indiceMarcador++;
                 }
 
-                //gfx.Dispose();
+                gfx.Dispose();
             }
         }
     }
