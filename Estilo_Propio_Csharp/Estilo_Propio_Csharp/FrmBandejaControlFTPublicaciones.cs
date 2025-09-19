@@ -762,6 +762,8 @@ namespace Estilo_Propio_Csharp
                         oPrePubl.IdFichaTecnicaSel = (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index);
                         oPrePubl.CodigoClienteSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString();
                         oPrePubl.TxtComentariosGenerales.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Observacion_FT"].Index).ToString();
+                        oPrePubl.TxtCodMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["COD_MOTIVO"].Index).ToString();
+                        oPrePubl.TxtDesMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["NOMBRE_MOTIVO"].Index).ToString();
                         oPrePubl.CargarRutaDePrenda();
                         oPrePubl.ShowDialog();
                         if (oPrePubl.IsCambioOK == true)

@@ -413,7 +413,6 @@ namespace Estilo_Propio_Csharp
                         cmd.Parameters.Add("@Flg_LaFT_Escomplete_publicacion", SqlDbType.Bit).Value = IIf(ChkEsEstampado.Checked == true, 1, 0);
                         cmd.Parameters.Add("@cod_motivo_ft_parcial_publicacion", SqlDbType.Char, 3).Value = TxtCodMotivoParcial.Text;
                         cmd.Parameters.Add("@observacion", SqlDbType.VarChar, 500).Value = TxtComentariosGenerales.Text;
-
                         cmd.ExecuteNonQuery();
                         IDPublicacion = (int)cmd.Parameters["@ID_Publicacion_Ult"].Value;
                         cmd.Parameters.Clear();

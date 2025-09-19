@@ -196,6 +196,60 @@ namespace Estilo_Propio_Csharp
             }
         }
 
+        private void TxtCodMotivo_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                BuscarMotivo();
+            }
+        }
+
+        private void TxtDesMotivo_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                BuscarMotivo();
+            }
+        }
+
+        public void BuscarMotivo()
+        {
+            try
+            {
+                FrmBusquedaGeneral oTipo = new FrmBusquedaGeneral();
+                oTipo.sQuery = "Exec FT_AYUDA_ES_EstProVer_Ficha_Tecnica_Motivo";
+                oTipo.Cargar_Datos();
+                if (oTipo.dtResultados.Rows.Count == 1)
+                {
+                    TxtCodMotivo.Text = Convert.ToString(oTipo.dtResultados.Rows[0]["Cod_Motivo"]);
+                    TxtDesMotivo.Text = Convert.ToString(oTipo.dtResultados.Rows[0]["Descripcion"]);
+                }
+                else
+                {
+                    oTipo.ShowDialog();
+                    if (oTipo.oParent.CODIGO != "")
+                    {
+                        TxtCodMotivo.Text = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Cod_Motivo"].Value);
+                        TxtDesMotivo.Text = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Descripcion"].Value);
+                    }
+                }
+                BtnAceptar.Focus();
+                oTipo.oParent.CODIGO = ""; oTipo.oParent.DESCRIPCION = ""; oTipo.oParent.TipoAdd = "";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void TxtObservacion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                BtnAceptar.Focus();
+            }
+        }
+
         private void BtnAceptar_Click(object sender, EventArgs e)
         {            
             try
@@ -221,6 +275,7 @@ namespace Estilo_Propio_Csharp
                 strSQL += "\n" + string.Format(",@ComentariosDePublicacion  ='{0}'", TxtObservacion.Text);
                 strSQL += "\n" + string.Format(",@cod_estacion              ='{0}'", Environment.MachineName);
                 strSQL += "\n" + string.Format(",@observacion               ='{0}'", TxtComentariosGenerales.Text);
+                strSQL += "\n" + string.Format(",@Cod_Motivo_publicacion    ='{0}'", TxtCodMotivo.Text);
                 if (oHp.EjecutarOperacion(strSQL) == true)
                 {
                     foreach (GridEXRow oGridEXRow in grxRutaDePrenda.GetDataRows())
@@ -397,6 +452,6 @@ namespace Estilo_Propio_Csharp
             catch (Exception ex)
             {
             }
-        }
+        }       
     }
 }
