@@ -54,16 +54,19 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        private static void EjecutarProteccionPdf(string parametro)
+        private static void EjecutarProteccionPdf(string archivoDestino)
         {
             try
             {
                 GeneradorFichaTecnica ft = new GeneradorFichaTecnica();
 
+                string OwnerPassword = PDFProtectionPdfSharp.PdfProtectionService.GenerateSecurePassword();
+
                 // Ejecutar de forma síncrona usando GetAwaiter().GetResult()
-                ft.ProtegerPdf(parametro).GetAwaiter().GetResult();
+                ft.ProtegerPdf(archivoDestino, OwnerPassword).GetAwaiter().GetResult();
 
                 Console.WriteLine("Protección PDF completada exitosamente");
+                Console.WriteLine(OwnerPassword);
                 Environment.Exit(0);
             }
             catch (Exception ex)

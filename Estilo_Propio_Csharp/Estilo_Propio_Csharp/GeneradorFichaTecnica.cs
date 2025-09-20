@@ -43,7 +43,8 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        private string GuardarRutaPDFenBD(string codEstpro, string codVersion, int IDFichaTecnica, string ArchivoDestino, int IdPublicacion)
+        private string GuardarRutaPDFenBD(string codEstpro, string codVersion, int IDFichaTecnica, string ArchivoDestino, 
+            int IdPublicacion, string Password_PDF_Protection = "")
         {
             string executionOk = "";
             // Guardar en base de datos
@@ -61,6 +62,8 @@ namespace Estilo_Propio_Csharp
             strSQL += string.Format(",@COD_USUARIO      = '{0}'", VariablesGenerales.pUsuario) + Environment.NewLine;
             strSQL += string.Format(",@PC_CREACION      = '{0}'", Environment.MachineName) + Environment.NewLine;
             strSQL += string.Format(",@ID_Publicacion_Tx=  {0} ", IdPublicacion) + Environment.NewLine;
+            strSQL += string.Format(",@Password_PDF_Protection= '{0}'", Password_PDF_Protection) + Environment.NewLine;
+
             if (!oHp.EjecutarOperacion(strSQL))
             {
                 executionOk = "Error en ejecucion de SP ES_MANT_ESTPROVER_FICHA_TECNICA";
@@ -310,16 +313,20 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        public async Task<string> ProtegerPdf(string carpetaDestino)
+        public async Task<string> ProtegerPdf(string carpetaDestino, string OwnerPassword ="")
         {
             string executionOk = "";
             using var pdfService = new PDFProtectionPdfSharp.PdfProtectionService();
+
+            if (OwnerPassword.Equals("")){
+                OwnerPassword = PDFProtectionPdfSharp.PdfProtectionService.GenerateSecurePassword();
+            }
 
             var config = new PDFProtectionPdfSharp.PdfProtectionConfig
             {
                 InputPath = carpetaDestino,
                 OutputPath = carpetaDestino, // mismo archivo → se reemplaza
-                OwnerPassword = PDFProtectionPdfSharp.PdfProtectionService.GenerateSecurePassword(),
+                OwnerPassword = OwnerPassword,
                 UserPassword = "",
                 Permissions = new PDFProtectionPdfSharp.PdfPermissions
                 {
@@ -346,7 +353,8 @@ namespace Estilo_Propio_Csharp
         }
 
         // Método público que permite llevar el control del proceso
-        public async Task<bool> GenerarPDFAsync(string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel,
+        public async Task<bool> GenerarPDFAsync(string codEstpro, 
+            string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel,
             IProgress<ProgresoInfo> progress, CancellationToken cancellationToken)
         {
             int porcentaje = 0;
@@ -360,8 +368,8 @@ namespace Estilo_Propio_Csharp
             bool isGeneroOK = false;
 
             string rutaArchivoPDF = CreaCarpetaLocal();
-            string nombreArchivoPDF = string.Format("FT[{2}]EP{0}-{1}_TEMP", codEstpro, codVersion, IDFichaTecnica);
-            string nombreArchivoPDF_ConIndice = string.Format("FT[{2}]EP{0}-{1}", codEstpro, codVersion, IDFichaTecnica);
+            string nombreArchivoPDF = string.Format("FT-EP{0}-{1}-{2}_T", codEstpro, codVersion, IdPublicacion);
+            string nombreArchivoPDF_ConIndice = string.Format("FT-EP{0}-{1}-{2}", codEstpro, codVersion, IdPublicacion);
 
             string pathPDF = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF, ".PDF");
             string pathPDF_ConIndice = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF_ConIndice, ".PDF");
@@ -431,7 +439,9 @@ namespace Estilo_Propio_Csharp
                     Detalle = "Protegiendo PDF"
                 });
 
-                if (!await ProtegerPdfExe(pathPDF_ConIndice))
+                ResultadoProteccionPDF proteccionPDF = await ProtegerPdfExe(pathPDF_ConIndice);
+
+                if (!proteccionPDF.Exitoso)
                 {
                     throw new ProcessingException($"Error al Proteger PDF");
                 };
@@ -456,7 +466,7 @@ namespace Estilo_Propio_Csharp
 
                 var task = Task.Run(() =>
                 {
-                    return GuardarRutaPDFenBD(codEstpro, codVersion, IDFichaTecnica, pathPDF_Compartido, IdPublicacion);
+                    return GuardarRutaPDFenBD(codEstpro, codVersion, IDFichaTecnica, pathPDF_Compartido, IdPublicacion, proteccionPDF.OwnerPassword);
                 }, cancellationToken);
 
                 mensajePDF = await task;
@@ -464,6 +474,16 @@ namespace Estilo_Propio_Csharp
                 {
                     throw new ProcessingException($"Error al guardar PDF en BD: {mensajePDF}");
                 }
+
+                porcentaje = 97;
+                progress?.Report(new ProgresoInfo
+                {
+                    Porcentaje = porcentaje,
+                    Mensaje = "Generando PDF",
+                    Detalle = "Eliminando PDF Local Temporal"
+                });
+
+                EliminaPDF(pathPDF);
 
                 // Finalización
                 porcentaje = 100;
@@ -510,9 +530,15 @@ namespace Estilo_Propio_Csharp
             }
             return isGeneroOK;
         }
-        private async Task<bool> ProtegerPdfExe(string carpetaDestino)
+
+        public class ResultadoProteccionPDF
         {
-            bool isGeneroOK = false;
+            public bool Exitoso { get; set; }
+            public string OwnerPassword { get; set; }
+        }
+        private async Task<ResultadoProteccionPDF> ProtegerPdfExe(string carpetaDestino)
+        {
+            ResultadoProteccionPDF resultado = new ResultadoProteccionPDF();
             string nameProy = "Estilo_Propio_Csharp";
             string tipo = ".exe";
             string sPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -548,16 +574,24 @@ namespace Estilo_Propio_Csharp
 
                 process.Start();
 
+                string output = await process.StandardOutput.ReadToEndAsync();
+
                 // Esperar a que termine el proceso
                 await Task.Run(() => process.WaitForExit());
 
                 // Obtener código de salida
                 if (process.ExitCode == 0)
                 {
-                    isGeneroOK = true;
+                    string[] lineas = output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (lineas.Length > 0)
+                    {
+                        resultado.OwnerPassword = lineas[lineas.Length - 1];
+                        resultado.Exitoso = true;
+                    }
                 }
             }
-            return isGeneroOK;
+            return resultado;
         }
     }
 }
