@@ -165,7 +165,7 @@ namespace Estilo_Propio_Csharp
             var configCSV = new ConfiguracionLogCSV
             {
                 RutaArchivoLog = RouteFileLog,
-                CeldaControl = "A1",
+                CeldaControl = "A4",
                 NombreHoja = "Control",
                 MonitoreoTiempoReal = true,
                 IntervaloMonitoreoMs = 100,
@@ -195,7 +195,7 @@ namespace Estilo_Propio_Csharp
                         },
             timeoutSegundos: 1000,
             celdaControl: null,
-            mostrarExcel: false,
+            mostrarExcel: true,
             config: null,
             configAvanzada: config,
             progress, 

@@ -218,7 +218,7 @@ namespace Estilo_Propio_Csharp
                             try
                             {
                                 Worksheet hoja = ObtenerHojaSegunConfiguracion(workbook, configAvanzada, out string referenciaHoja);
-                                hoja.Range["A4"].Value = csvWriter.RutaArchivoActual;
+                                hoja.Range[configCSV.CeldaControl].Value = csvWriter.RutaArchivoActual;
                                 Console.WriteLine($"📝 Ruta de log comunicada a Excel: {csvWriter.RutaArchivoActual}");
                             }
                             catch (Exception ex)

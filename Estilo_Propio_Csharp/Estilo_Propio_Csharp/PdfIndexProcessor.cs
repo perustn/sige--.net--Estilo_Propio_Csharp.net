@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf.Annotations;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace Estilo_Propio_Csharp
 {
@@ -15,12 +17,16 @@ namespace Estilo_Propio_Csharp
         public void ProcesarPdfConIndice(string pdfOriginal, string archivoMetadatos, string pdfFinal)
         {
             // 1. Cargar metadatos de Excel
-            var metadata = CargarMetadatos(archivoMetadatos);
+            DocumentoMetadata metadata = CargarMetadatos(archivoMetadatos);
             Console.WriteLine($"📊 Cargados metadatos de {metadata.documento.totalHojas} hojas");
 
+            metadata = ActualizarMetaDatos(metadata, pdfOriginal, archivoMetadatos);
+           
             // 2. Abrir PDF original
             PdfDocument documento = PdfReader.Open(pdfOriginal, PdfDocumentOpenMode.Import);
             Console.WriteLine($"📄 PDF original cargado: {documento.PageCount} páginas");
+
+            //metadata.documento.totalPaginasPDF = documento.PageCount;
 
             // Validar que coincida el número de páginas
             if (documento.PageCount != metadata.documento.totalPaginasPDF)
@@ -37,6 +43,7 @@ namespace Estilo_Propio_Csharp
             // 4. Crear página de índice
             var paginaIndice = CrearIndiceMultipagina(documentoFinal, metadata);
             Console.WriteLine("📋 Página de índice creada");
+            int nroPaginasIndice = paginaIndice.Count();
 
             // 5. Copiar páginas originales y crear marcadores
             var marcadores = new List<PdfOutline>();
@@ -61,6 +68,8 @@ namespace Estilo_Propio_Csharp
                         // Copiar la página al documento final
                         var nuevaPagina = documentoFinal.AddPage(paginaOriginal);
 
+                        var gfx = XGraphics.FromPdfPage(nuevaPagina);
+
                         Console.WriteLine($"     ✓ Copiada página {indicePagina} -> Posición {documentoFinal.PageCount - 1} en documento final");
 
                         // Guardar referencia a la PRIMERA página copiada de esta hoja
@@ -77,6 +86,14 @@ namespace Estilo_Propio_Csharp
                             Console.WriteLine($"     🏷️ Título agregado a primera página de la sección");
                         }
 
+                        // Número de página del índice
+                        gfx.DrawString($"Página {documentoFinal.PageCount } de { metadata.documento.totalPaginasPDF + nroPaginasIndice}",
+                                      new XFont("Arial", 8, XFontStyle.Regular),
+                                      XBrushes.Gray,
+                                      new XRect(0, nuevaPagina.Height - 20, nuevaPagina.Width, 15), 
+                                      XStringFormats.TopCenter);
+
+                        gfx.Dispose();
                         paginasCopiadas++;
                     }
                     else
@@ -123,6 +140,39 @@ namespace Estilo_Propio_Csharp
             documento.Close();
 
             Console.WriteLine($"💾 Documento guardado con {documentoFinal.PageCount} páginas");
+        }
+
+        private DocumentoMetadata ActualizarMetaDatos(DocumentoMetadata metadata, string pdfOriginal, string archivoMetadatos)
+        {
+            Dictionary<string, int> paginas = ContarPaginasPorHoja(pdfOriginal);
+
+            int paginaActual = 0;
+            // 1.1 Recorrer la lista de hojas en los metadatos y actualizarlas
+            if (metadata?.documento.hojas != null) // Asegurarse de que Hojas no sea null
+            {
+                foreach (var hojaInfo in metadata.documento.hojas)
+                {
+                    // Buscar el identificador de la hoja en el diccionario de conteos del PDF
+                    if (paginas.TryGetValue("CODHOJAEXCEL:" + hojaInfo.indice.ToString(), out int numPaginas))
+                    {
+                        hojaInfo.numeroPaginasPDF = numPaginas;
+                        hojaInfo.paginaInicioPDF = paginaActual;
+                        hojaInfo.paginaFinPDF = (paginaActual + numPaginas - 1);
+                    }
+                    else
+                    {
+                        // Si no se encuentra un conteo para esta hoja, podrías poner 0 o dejar un mensaje
+                        hojaInfo.numeroPaginasPDF = 0;
+                    }
+                    paginaActual = paginaActual + numPaginas;
+                }
+                metadata.documento.totalPaginasPDF = paginaActual;
+            }
+
+            string updatedJson = Newtonsoft.Json.JsonConvert.SerializeObject(metadata, Formatting.Indented);
+            File.WriteAllText(archivoMetadatos, updatedJson);
+
+            return metadata;
         }
 
         private DocumentoMetadata CargarMetadatos(string archivo)
@@ -575,6 +625,41 @@ namespace Estilo_Propio_Csharp
 
                 gfx.Dispose();
             }
+        }
+
+
+        public Dictionary<string, int> ContarPaginasPorHoja(string filePath)
+        {
+            
+            // Un diccionario para almacenar el conteo de páginas por cada hoja de Excel
+            var pageCounts = new Dictionary<string, int>();
+
+            // Usamos un bloque 'using' para asegurar que el documento se cierre correctamente
+            using (var document = UglyToad.PdfPig.PdfDocument.Open(filePath))
+            {
+                // Itera a través de cada página del PDF
+                foreach (var page in document.GetPages())
+                {
+                    var hojaCodeWord = page.GetWords()
+                                       .FirstOrDefault(word => word.Text.StartsWith("CODHOJAEXCEL", StringComparison.OrdinalIgnoreCase));
+                    if (hojaCodeWord != null)
+                    {
+                        // Extraemos el texto completo de esa palabra, que debería ser nuestro identificador único
+                        string sheetIdentifier = hojaCodeWord.Text;
+
+                        // Incrementamos el contador para este identificador de hoja
+                        if (pageCounts.ContainsKey(sheetIdentifier))
+                        {
+                            pageCounts[sheetIdentifier]++;
+                        }
+                        else
+                        {
+                            pageCounts[sheetIdentifier] = 1;
+                        }
+                    }
+                }
+            }
+            return pageCounts;
         }
     }
 
