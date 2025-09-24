@@ -195,7 +195,7 @@ namespace Estilo_Propio_Csharp
                         },
             timeoutSegundos: 1000,
             celdaControl: null,
-            mostrarExcel: true,
+            mostrarExcel: false,
             config: null,
             configAvanzada: config,
             progress, 
