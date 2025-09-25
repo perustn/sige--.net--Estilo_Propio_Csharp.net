@@ -360,8 +360,8 @@ namespace Estilo_Propio_Csharp
 
                 gfx.DrawString("SECCIÓN", fuenteItem, XBrushes.White,
                               new XRect(margenIzquierdo, y + 2, 160, 18), XStringFormats.CenterLeft);
-                gfx.DrawString("DESCRIPCIÓN", fuenteItem, XBrushes.White,
-                              new XRect(margenIzquierdo + 180, y + 2, 200, 18), XStringFormats.CenterLeft);
+                //gfx.DrawString("DESCRIPCIÓN", fuenteItem, XBrushes.White,
+                //              new XRect(margenIzquierdo + 180, y + 2, 200, 18), XStringFormats.CenterLeft);
                 gfx.DrawString("PÁGINAS", fuenteItem, XBrushes.White,
                               new XRect(pagina.Width - 100, y + 2, 80, 18), XStringFormats.Center);
 
@@ -392,15 +392,15 @@ namespace Estilo_Propio_Csharp
                     gfx.DrawString(hoja.tituloIndice, fuenteEnlace, XBrushes.Blue,
                                   new XRect(margenIzquierdo, y, 160, 18), XStringFormats.CenterLeft);
 
-                    // Descripción (truncar si es muy larga)
-                    string descripcionTruncada = hoja.descripcion;
-                    if (descripcionTruncada.Length > 35)
-                    {
-                        descripcionTruncada = descripcionTruncada.Substring(0, 32) + "...";
-                    }
+                    //// Descripción (truncar si es muy larga)
+                    //string descripcionTruncada = hoja.descripcion;
+                    //if (descripcionTruncada.Length > 35)
+                    //{
+                    //    descripcionTruncada = descripcionTruncada.Substring(0, 32) + "...";
+                    //}
 
-                    gfx.DrawString(descripcionTruncada, fuenteItem, XBrushes.Black,
-                                  new XRect(margenIzquierdo + 180, y, 200, 18), XStringFormats.CenterLeft);
+                    //gfx.DrawString(descripcionTruncada, fuenteItem, XBrushes.Black,
+                    //              new XRect(margenIzquierdo + 180, y, 200, 18), XStringFormats.CenterLeft);
 
                     // Rango de páginas
                     string textoPaginas;
