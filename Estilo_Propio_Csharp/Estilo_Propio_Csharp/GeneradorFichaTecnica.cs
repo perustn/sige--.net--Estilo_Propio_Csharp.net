@@ -195,7 +195,7 @@ namespace Estilo_Propio_Csharp
                         },
             timeoutSegundos: 1000,
             celdaControl: null,
-            mostrarExcel: true,
+            mostrarExcel: false,
             config: null,
             configAvanzada: config,
             progress, 
@@ -439,12 +439,18 @@ namespace Estilo_Propio_Csharp
                     Detalle = "Protegiendo PDF"
                 });
 
-                ResultadoProteccionPDF proteccionPDF = await ProtegerPdfExe(pathPDF_ConIndice);
+                string EventoParaValidaProteccionPDf = oHp.DevuelveDato("select dbo.sm_valida_Tg_Eventos_Parametrizables('431')",
+                        VariablesGenerales.pConnect).ToString();
 
-                if (!proteccionPDF.Exitoso)
+                ResultadoProteccionPDF proteccionPDF = null;
+                if (EventoParaValidaProteccionPDf == "S")
                 {
-                    throw new ProcessingException($"Error al Proteger PDF");
-                };
+                    proteccionPDF = await ProtegerPdfExe(pathPDF_ConIndice);
+                    if (!proteccionPDF.Exitoso)
+                    {
+                        throw new ProcessingException($"Error al Proteger PDF");
+                    };
+                }
 
                 porcentaje = 90;
                 progress?.Report(new ProgresoInfo
@@ -466,7 +472,14 @@ namespace Estilo_Propio_Csharp
 
                 var task = Task.Run(() =>
                 {
-                    return GuardarRutaPDFenBD(codEstpro, codVersion, IDFichaTecnica, pathPDF_Compartido, IdPublicacion, proteccionPDF.OwnerPassword);
+                    if (EventoParaValidaProteccionPDf == "S")
+                    {
+                        return GuardarRutaPDFenBD(codEstpro, codVersion, IDFichaTecnica, pathPDF_Compartido, IdPublicacion, proteccionPDF.OwnerPassword);
+                    }
+                    else
+                    {
+                        return GuardarRutaPDFenBD(codEstpro, codVersion, IDFichaTecnica, pathPDF_Compartido, IdPublicacion, "");
+                    }                       
                 }, cancellationToken);
 
                 mensajePDF = await task;

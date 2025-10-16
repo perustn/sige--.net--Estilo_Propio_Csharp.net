@@ -290,7 +290,7 @@ namespace Estilo_Propio_Csharp
             this.Name = "FrmBandejaControlFTPublicaciones_RechazarPrePublicar";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Cambio Status a PrePublicada Rechazada";
+            this.Text = "Cambio Status a FT Rechazada";
             this.Load += new System.EventHandler(this.FrmBandejaControlFTPublicaciones_RechazarPrePublicar_Load);
             this.Panel1.ResumeLayout(false);
             this.Panel1.PerformLayout();

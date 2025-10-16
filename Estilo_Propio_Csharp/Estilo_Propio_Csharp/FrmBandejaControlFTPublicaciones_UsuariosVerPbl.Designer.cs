@@ -52,7 +52,7 @@ namespace Estilo_Propio_Csharp
             this.GrdLista.Name = "GrdLista";
             this.GrdLista.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
             this.GrdLista.RecordNavigator = true;
-            this.GrdLista.Size = new System.Drawing.Size(471, 359);
+            this.GrdLista.Size = new System.Drawing.Size(521, 359);
             this.GrdLista.TabIndex = 285;
             this.GrdLista.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
             // 
@@ -64,7 +64,7 @@ namespace Estilo_Propio_Csharp
             this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.Panel1.Location = new System.Drawing.Point(0, 0);
             this.Panel1.Name = "Panel1";
-            this.Panel1.Size = new System.Drawing.Size(471, 27);
+            this.Panel1.Size = new System.Drawing.Size(521, 27);
             this.Panel1.TabIndex = 284;
             // 
             // label29
@@ -99,7 +99,7 @@ namespace Estilo_Propio_Csharp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(471, 386);
+            this.ClientSize = new System.Drawing.Size(521, 386);
             this.Controls.Add(this.GrdLista);
             this.Controls.Add(this.Panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

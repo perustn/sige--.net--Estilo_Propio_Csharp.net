@@ -31,7 +31,10 @@ namespace Estilo_Propio_Csharp
         {
             Janus.Windows.GridEX.GridEXLayout grxRutaDePrenda_DesignTimeLayout = new Janus.Windows.GridEX.GridEXLayout();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.TxtDesMotivo = new System.Windows.Forms.TextBox();
+            this.TxtCodMotivo = new System.Windows.Forms.TextBox();
             this.TxtObservacion = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.Panel1 = new System.Windows.Forms.Panel();
             this.label29 = new System.Windows.Forms.Label();
@@ -45,9 +48,6 @@ namespace Estilo_Propio_Csharp
             this.Label4 = new System.Windows.Forms.Label();
             this.LblParcial = new System.Windows.Forms.Label();
             this.grxRutaDePrenda = new Janus.Windows.GridEX.GridEX();
-            this.TxtDesMotivo = new System.Windows.Forms.TextBox();
-            this.TxtCodMotivo = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel4.SuspendLayout();
             this.Panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -71,6 +71,34 @@ namespace Estilo_Propio_Csharp
             this.panel4.Size = new System.Drawing.Size(788, 90);
             this.panel4.TabIndex = 285;
             // 
+            // TxtDesMotivo
+            // 
+            this.TxtDesMotivo.AcceptsReturn = true;
+            this.TxtDesMotivo.BackColor = System.Drawing.SystemColors.Window;
+            this.TxtDesMotivo.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TxtDesMotivo.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.TxtDesMotivo.Location = new System.Drawing.Point(276, 5);
+            this.TxtDesMotivo.MaxLength = 0;
+            this.TxtDesMotivo.Name = "TxtDesMotivo";
+            this.TxtDesMotivo.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TxtDesMotivo.Size = new System.Drawing.Size(507, 20);
+            this.TxtDesMotivo.TabIndex = 137;
+            this.TxtDesMotivo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtDesMotivo_KeyPress);
+            // 
+            // TxtCodMotivo
+            // 
+            this.TxtCodMotivo.AcceptsReturn = true;
+            this.TxtCodMotivo.BackColor = System.Drawing.SystemColors.Window;
+            this.TxtCodMotivo.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TxtCodMotivo.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.TxtCodMotivo.Location = new System.Drawing.Point(232, 5);
+            this.TxtCodMotivo.MaxLength = 0;
+            this.TxtCodMotivo.Name = "TxtCodMotivo";
+            this.TxtCodMotivo.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TxtCodMotivo.Size = new System.Drawing.Size(43, 20);
+            this.TxtCodMotivo.TabIndex = 135;
+            this.TxtCodMotivo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtCodMotivo_KeyPress);
+            // 
             // TxtObservacion
             // 
             this.TxtObservacion.AcceptsReturn = true;
@@ -87,15 +115,25 @@ namespace Estilo_Propio_Csharp
             this.TxtObservacion.TabIndex = 74;
             this.TxtObservacion.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtObservacion_KeyPress);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 12);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(240, 13);
+            this.label1.TabIndex = 136;
+            this.label1.Text = "Motivo ..................................................................";
+            // 
             // label32
             // 
             this.label32.AutoSize = true;
             this.label32.Location = new System.Drawing.Point(6, 34);
             this.label32.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(300, 13);
+            this.label32.Size = new System.Drawing.Size(81, 13);
             this.label32.TabIndex = 72;
-            this.label32.Text = "Observacion de Modificar la Pre Publicación  ..........................";
+            this.label32.Text = "Observaciones:";
             // 
             // Panel1
             // 
@@ -258,44 +296,6 @@ namespace Estilo_Propio_Csharp
             this.grxRutaDePrenda.FormattingRow += new Janus.Windows.GridEX.RowLoadEventHandler(this.grxRutaDePrenda_FormattingRow);
             this.grxRutaDePrenda.Click += new System.EventHandler(this.grxRutaDePrenda_Click);
             // 
-            // TxtDesMotivo
-            // 
-            this.TxtDesMotivo.AcceptsReturn = true;
-            this.TxtDesMotivo.BackColor = System.Drawing.SystemColors.Window;
-            this.TxtDesMotivo.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtDesMotivo.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtDesMotivo.Location = new System.Drawing.Point(276, 5);
-            this.TxtDesMotivo.MaxLength = 0;
-            this.TxtDesMotivo.Name = "TxtDesMotivo";
-            this.TxtDesMotivo.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtDesMotivo.Size = new System.Drawing.Size(507, 20);
-            this.TxtDesMotivo.TabIndex = 137;
-            this.TxtDesMotivo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtDesMotivo_KeyPress);
-            // 
-            // TxtCodMotivo
-            // 
-            this.TxtCodMotivo.AcceptsReturn = true;
-            this.TxtCodMotivo.BackColor = System.Drawing.SystemColors.Window;
-            this.TxtCodMotivo.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtCodMotivo.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtCodMotivo.Location = new System.Drawing.Point(232, 5);
-            this.TxtCodMotivo.MaxLength = 0;
-            this.TxtCodMotivo.Name = "TxtCodMotivo";
-            this.TxtCodMotivo.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtCodMotivo.Size = new System.Drawing.Size(43, 20);
-            this.TxtCodMotivo.TabIndex = 135;
-            this.TxtCodMotivo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtCodMotivo_KeyPress);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 12);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(240, 13);
-            this.label1.TabIndex = 136;
-            this.label1.Text = "Motivo ..................................................................";
-            // 
             // FrmBandejaControlFTPublicaciones_ModifPublicar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -311,7 +311,7 @@ namespace Estilo_Propio_Csharp
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FrmBandejaControlFTPublicaciones_ModifPublicar";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Cambio Status a Modificada por PrePublicar";
+            this.Text = "Cambio Status a FT en Modificación";
             this.Load += new System.EventHandler(this.FrmBandejaControlFTPublicaciones_ModifPublicar_Load);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();

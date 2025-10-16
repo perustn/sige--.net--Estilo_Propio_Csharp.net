@@ -34,6 +34,7 @@ namespace Estilo_Propio_Csharp
         public string Versionsel;
         public int IdFichaTecnicaSel;
         public string CodigoClienteSel;
+        public string TipoOpcion;
 
         public string Codigo = ""; string Descripcion = ""; string TipoAdd = ""; string TipoAdd2 = ""; string TipoAdd3 = ""; string TipoAdd4 = "";
         #endregion
@@ -254,6 +255,9 @@ namespace Estilo_Propio_Csharp
             {
                 grpMotivoParcial.Enabled = true;
             }
+            TxtCodMotivoParcial.Text = string.Empty;
+            TxtDesMotivoParcial.Text = string.Empty;
+            dtpFecComprometidaFT_Parcial.Value = DateTime.Now.Date;
         }
 
         private void TxtCodMotivoParcial_KeyPress(object sender, KeyPressEventArgs e)
@@ -293,12 +297,163 @@ namespace Estilo_Propio_Csharp
                         TxtDesMotivoParcial.Text = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Descripcion"].Value);
                     }
                 }
-                BtnAceptar.Focus();
+                dtpFecComprometidaFT_Parcial.Focus();
                 oTipo.oParent.CODIGO = ""; oTipo.oParent.DESCRIPCION = ""; oTipo.oParent.TipoAdd = "";
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dtpFecComprometidaFT_Parcial_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                BtnAceptar.Focus();
+            }
+        }        
+
+        private void BtnAceptar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                switch (TipoOpcion)
+                {
+                    case "T":
+                        PrePublicarAsync();
+                        break;
+
+                    case "M":
+                        ModificarPrePublicarAsync();
+                        break;
+                }
+                
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private void BtnCancelar_Click(object sender, EventArgs e)
+        {
+            IsCambioOK = false;
+            DialogResult = DialogResult.Cancel;
+        }
+               
+        private async Task PrePublicarAsync()
+        {
+            DesRptstatus = "Pre Publicar";
+
+            using (SqlConnection connection = new SqlConnection(VariablesGenerales.pConnect))
+            {
+                connection.Open();
+                using (SqlCommand cmd = connection.CreateCommand())
+                {
+                    SqlTransaction transaction;
+                    transaction = connection.BeginTransaction("ValidaTransacción");
+                    cmd.Connection = connection;
+                    cmd.Transaction = transaction;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    try
+                    {
+                        cmd.CommandText = "FT_Cambia_Status_a_PrePublicar";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@ID_Publicacion", SqlDbType.Int).Value = TxtIdPublicacion.Text;
+                        cmd.Parameters.Add("@COD_USUARIO", SqlDbType.VarChar, 100).Value = VariablesGenerales.pUsuario;
+                        cmd.Parameters.Add("@ComentariosDePublicacion", SqlDbType.VarChar, 4000).Value = TxtObservacion.Text;
+                        cmd.Parameters.Add("@MAIL", SqlDbType.VarChar, 200).Value = "";
+                        cmd.Parameters.Add("@cod_estacion", SqlDbType.VarChar, 500).Value = Environment.MachineName;
+                        cmd.Parameters.Add("@ID_Publicacion_Ult", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add("@Cod_Motivo_publicacion", SqlDbType.Char, 3).Value = TxtCodMotivo.Text;
+                        cmd.Parameters.Add("@Flg_LaFT_Escomplete_publicacion", SqlDbType.Bit).Value = IIf(ChkEsEstampado.Checked == true, 1, 0);
+                        cmd.Parameters.Add("@cod_motivo_ft_parcial_publicacion", SqlDbType.Char, 3).Value = TxtCodMotivoParcial.Text;
+                        cmd.Parameters.Add("@observacion", SqlDbType.VarChar, 500).Value = TxtComentariosGenerales.Text;
+                        cmd.Parameters.Add("@Fec_Comprometida_FT_Parcial_En_Completo", SqlDbType.DateTime).Value = dtpFecComprometidaFT_Parcial.Value.ToShortDateString();
+                        cmd.ExecuteNonQuery();
+                        IDPublicacion = (int)cmd.Parameters["@ID_Publicacion_Ult"].Value;
+                        cmd.Parameters.Clear();
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show("No se ha podido realizar la operación solicitada, por favor vuélvalo a intentar: " + ex.Message.ToString(), "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+            }
+
+            foreach (GridEXRow oGridEXRow in grxRutaDePrenda.GetDataRows())
+            {
+                strSQL = string.Empty;
+                strSQL += "\n" + "EXEC FT_UP_MAN_Es_EstProVer_Ficha_Tecnica_Secciones";
+                strSQL += "\n" + string.Format(" @opcion            ='{0}'", "U");
+                strSQL += "\n" + string.Format(",@ID_Publicacion	='{0}'", TxtIdPublicacion.Text);
+                strSQL += "\n" + string.Format(",@Sec_Seccion	    ='{0}'", oGridEXRow.Cells["SEC_SECCION"].Value);
+                strSQL += "\n" + string.Format(",@Cod_Proceso	    ='{0}'", oGridEXRow.Cells["cod_proceso"].Value);
+                strSQL += "\n" + string.Format(",@Observacion	    ='{0}'", oGridEXRow.Cells["OBSERVACION"].Value);
+                strSQL += "\n" + string.Format(",@cod_usuario	    ='{0}'", VariablesGenerales.pUsuario);
+                strSQL += "\n" + string.Format(",@cod_estacion	    ='{0}'", Environment.MachineName);
+                strSQL += "\n" + string.Format(",@is_seleccionado	= {0} ", IIf((bool)oGridEXRow.Cells["Flg_Seleccion"].Value == true, 1, 0));
+
+                oHp.EjecutarOperacion(strSQL);
+            }
+
+            //Genera Excel y convierte a PDF
+            if (await GeneraFTAsync(EstiloPropioSel, Versionsel, IdFichaTecnicaSel, IDPublicacion, CodigoClienteSel))
+            {
+                IsCambioOK = true;
+                MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+            }
+        }
+
+        private async Task ModificarPrePublicarAsync()
+        {
+            DialogResult rpt;
+            rpt = MessageBox.Show("¿Está seguro de cambiar Status a FT en Modificación?", "Pregunta", MessageBoxButtons.YesNo);
+            if (DialogResult.Yes == rpt)
+            {
+                strSQL = string.Empty;
+                strSQL += "\n" + "EXEC FT_Cambia_Status_a_Modificada_por_PrePublicar";
+                strSQL += "\n" + string.Format(" @Id_Publicacion            = {0} ", TxtIdPublicacion.Text);
+                strSQL += "\n" + string.Format(",@cod_usuario               ='{0}'", VariablesGenerales.pUsuario);
+                strSQL += "\n" + string.Format(",@ComentariosDePublicacion  ='{0}'", TxtObservacion.Text);
+                strSQL += "\n" + string.Format(",@cod_estacion              ='{0}'", Environment.MachineName);
+                strSQL += "\n" + string.Format(",@observacion               ='{0}'", TxtComentariosGenerales.Text);
+                strSQL += "\n" + string.Format(",@Cod_Motivo_publicacion    ='{0}'", TxtCodMotivo.Text);
+                strSQL += "\n" + string.Format(",@Flg_LaFT_Escomplete_publicacion           ='{0}'", IIf(ChkEsEstampado.Checked == true, 1, 0));
+                strSQL += "\n" + string.Format(",@cod_motivo_ft_parcial_publicacion         ='{0}'", TxtCodMotivoParcial.Text);
+                strSQL += "\n" + string.Format(",@Fec_Comprometida_FT_Parcial_En_Completo   ='{0}'", dtpFecComprometidaFT_Parcial.Value.ToShortDateString());
+                if (oHp.EjecutarOperacion(strSQL) == true)
+                {
+                    foreach (GridEXRow oGridEXRow in grxRutaDePrenda.GetDataRows())
+                    {
+                        strSQL = string.Empty;
+                        strSQL += "\n" + "EXEC FT_UP_MAN_Es_EstProVer_Ficha_Tecnica_Secciones";
+                        strSQL += "\n" + string.Format(" @opcion            ='{0}'", "U");
+                        strSQL += "\n" + string.Format(",@ID_Publicacion	='{0}'", TxtIdPublicacion.Text);
+                        strSQL += "\n" + string.Format(",@Sec_Seccion	    ='{0}'", oGridEXRow.Cells["SEC_SECCION"].Value);
+                        strSQL += "\n" + string.Format(",@Cod_Proceso	    ='{0}'", oGridEXRow.Cells["cod_proceso"].Value);
+                        strSQL += "\n" + string.Format(",@Observacion	    ='{0}'", oGridEXRow.Cells["OBSERVACION"].Value);
+                        strSQL += "\n" + string.Format(",@cod_usuario	    ='{0}'", VariablesGenerales.pUsuario);
+                        strSQL += "\n" + string.Format(",@cod_estacion	    ='{0}'", Environment.MachineName);
+                        strSQL += "\n" + string.Format(",@is_seleccionado	= {0} ", IIf((bool)oGridEXRow.Cells["Flg_Seleccion"].Value == true, 1, 0));
+
+                        oHp.EjecutarOperacion(strSQL);
+                    }
+
+                    /// Genera Excel y convierte a PDF
+                    //if (await GeneraFTAsync(EstiloPropioSel, Versionsel, IdFichaTecnicaSel, IDPublicacion, CodigoClienteSel))
+                    //{
+                        IsCambioOK = true;
+                        MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        DialogResult = DialogResult.OK;
+                    //}
+                }
             }
         }
 
@@ -364,92 +519,6 @@ namespace Estilo_Propio_Csharp
             //txtLog.AppendText($"[{DateTime.Now:HH:mm:ss}] {mensaje}\r\n");
             //txtLog.SelectionStart = txtLog.Text.Length;
             //txtLog.ScrollToCaret();
-        }
-
-        private void BtnAceptar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                PrePublicarAsync();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        private void BtnCancelar_Click(object sender, EventArgs e)
-        {
-            IsCambioOK = false;
-            DialogResult = DialogResult.Cancel;
-        }
-
-        private async Task PrePublicarAsync()
-        {
-            DesRptstatus = "Pre Publicar";
-
-            using (SqlConnection connection = new SqlConnection(VariablesGenerales.pConnect))
-            {
-                connection.Open();
-                using (SqlCommand cmd = connection.CreateCommand())
-                {
-                    SqlTransaction transaction;
-                    transaction = connection.BeginTransaction("ValidaTransacción");
-                    cmd.Connection = connection;
-                    cmd.Transaction = transaction;
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    try
-                    {
-                        cmd.CommandText = "FT_Cambia_Status_a_PrePublicar";
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@ID_Publicacion", SqlDbType.Int).Value = TxtIdPublicacion.Text;
-                        cmd.Parameters.Add("@COD_USUARIO", SqlDbType.VarChar, 100).Value = VariablesGenerales.pUsuario;
-                        cmd.Parameters.Add("@ComentariosDePublicacion", SqlDbType.VarChar, 4000).Value = TxtObservacion.Text;
-                        cmd.Parameters.Add("@MAIL", SqlDbType.VarChar, 200).Value = "";
-                        cmd.Parameters.Add("@cod_estacion", SqlDbType.VarChar, 500).Value = Environment.MachineName;
-                        cmd.Parameters.Add("@ID_Publicacion_Ult", SqlDbType.Int).Direction = ParameterDirection.Output;
-                        cmd.Parameters.Add("@Cod_Motivo_publicacion", SqlDbType.Char, 3).Value = TxtCodMotivo.Text;
-                        cmd.Parameters.Add("@Flg_LaFT_Escomplete_publicacion", SqlDbType.Bit).Value = IIf(ChkEsEstampado.Checked == true, 1, 0);
-                        cmd.Parameters.Add("@cod_motivo_ft_parcial_publicacion", SqlDbType.Char, 3).Value = TxtCodMotivoParcial.Text;
-                        cmd.Parameters.Add("@observacion", SqlDbType.VarChar, 500).Value = TxtComentariosGenerales.Text;
-                        cmd.ExecuteNonQuery();
-                        IDPublicacion = (int)cmd.Parameters["@ID_Publicacion_Ult"].Value;
-                        cmd.Parameters.Clear();
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        MessageBox.Show("No se ha podido realizar la operación solicitada, por favor vuélvalo a intentar: " + ex.Message.ToString(), "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                }
-            }
-
-            foreach (GridEXRow oGridEXRow in grxRutaDePrenda.GetDataRows())
-            {
-                strSQL = string.Empty;
-                strSQL += "\n" + "EXEC FT_UP_MAN_Es_EstProVer_Ficha_Tecnica_Secciones";
-                strSQL += "\n" + string.Format(" @opcion            ='{0}'", "U");
-                strSQL += "\n" + string.Format(",@ID_Publicacion	='{0}'", TxtIdPublicacion.Text);
-                strSQL += "\n" + string.Format(",@Sec_Seccion	    ='{0}'", oGridEXRow.Cells["SEC_SECCION"].Value);
-                strSQL += "\n" + string.Format(",@Cod_Proceso	    ='{0}'", oGridEXRow.Cells["cod_proceso"].Value);
-                strSQL += "\n" + string.Format(",@Observacion	    ='{0}'", oGridEXRow.Cells["OBSERVACION"].Value);
-                strSQL += "\n" + string.Format(",@cod_usuario	    ='{0}'", VariablesGenerales.pUsuario);
-                strSQL += "\n" + string.Format(",@cod_estacion	    ='{0}'", Environment.MachineName);
-                strSQL += "\n" + string.Format(",@is_seleccionado	= {0} ", IIf((bool)oGridEXRow.Cells["Flg_Seleccion"].Value == true, 1, 0));
-
-                oHp.EjecutarOperacion(strSQL);
-            }
-
-            //Genera Excel y convierte a PDF
-            if (await GeneraFTAsync(EstiloPropioSel, Versionsel, IdFichaTecnicaSel, IDPublicacion, CodigoClienteSel))
-            {
-                IsCambioOK = true;
-                MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                DialogResult = DialogResult.OK;
-            }
         }
 
         object IIf(bool expression, object truePart, object falsePart) { return expression ? truePart : falsePart; }
@@ -529,6 +598,6 @@ namespace Estilo_Propio_Csharp
             catch (Exception ex)
             {
             }
-        }
+        }        
     }
 }

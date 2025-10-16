@@ -53,6 +53,8 @@ namespace Estilo_Propio_Csharp
             this.Label4 = new System.Windows.Forms.Label();
             this.LblParcial = new System.Windows.Forms.Label();
             this.grxRutaDePrenda = new Janus.Windows.GridEX.GridEX();
+            this.dtpFecComprometidaFT_Parcial = new System.Windows.Forms.DateTimePicker();
+            this.Label14 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.Panel1.SuspendLayout();
@@ -159,10 +161,10 @@ namespace Estilo_Propio_Csharp
             this.panel4.Controls.Add(this.label1);
             this.panel4.Controls.Add(this.label32);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(0, 344);
+            this.panel4.Location = new System.Drawing.Point(0, 337);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(788, 120);
+            this.panel4.Size = new System.Drawing.Size(788, 127);
             this.panel4.TabIndex = 279;
             // 
             // ChkEsEstampado
@@ -183,6 +185,8 @@ namespace Estilo_Propio_Csharp
             // 
             // grpMotivoParcial
             // 
+            this.grpMotivoParcial.Controls.Add(this.dtpFecComprometidaFT_Parcial);
+            this.grpMotivoParcial.Controls.Add(this.Label14);
             this.grpMotivoParcial.Controls.Add(this.TxtCodMotivoParcial);
             this.grpMotivoParcial.Controls.Add(this.TxtDesMotivoParcial);
             this.grpMotivoParcial.Controls.Add(this.label2);
@@ -190,7 +194,7 @@ namespace Estilo_Propio_Csharp
             this.grpMotivoParcial.Location = new System.Drawing.Point(4, 41);
             this.grpMotivoParcial.Name = "grpMotivoParcial";
             this.grpMotivoParcial.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
-            this.grpMotivoParcial.Size = new System.Drawing.Size(426, 41);
+            this.grpMotivoParcial.Size = new System.Drawing.Size(426, 83);
             this.grpMotivoParcial.TabIndex = 245;
             this.grpMotivoParcial.VisualStyle = Janus.Windows.UI.Dock.PanelVisualStyle.Office2010;
             // 
@@ -291,9 +295,9 @@ namespace Estilo_Propio_Csharp
             this.label32.Location = new System.Drawing.Point(435, 14);
             this.label32.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(162, 13);
+            this.label32.Size = new System.Drawing.Size(81, 13);
             this.label32.TabIndex = 72;
-            this.label32.Text = "Observaciones por Pre Publicar :";
+            this.label32.Text = "Observaciones:";
             // 
             // panel5
             // 
@@ -365,11 +369,30 @@ namespace Estilo_Propio_Csharp
             this.grxRutaDePrenda.Location = new System.Drawing.Point(0, 130);
             this.grxRutaDePrenda.Name = "grxRutaDePrenda";
             this.grxRutaDePrenda.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
-            this.grxRutaDePrenda.Size = new System.Drawing.Size(788, 214);
+            this.grxRutaDePrenda.Size = new System.Drawing.Size(788, 207);
             this.grxRutaDePrenda.TabIndex = 289;
             this.grxRutaDePrenda.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
             this.grxRutaDePrenda.FormattingRow += new Janus.Windows.GridEX.RowLoadEventHandler(this.grxRutaDePrenda_FormattingRow);
             this.grxRutaDePrenda.Click += new System.EventHandler(this.grxRutaDePrenda_Click);
+            // 
+            // dtpFecComprometidaFT_Parcial
+            // 
+            this.dtpFecComprometidaFT_Parcial.Location = new System.Drawing.Point(8, 61);
+            this.dtpFecComprometidaFT_Parcial.Name = "dtpFecComprometidaFT_Parcial";
+            this.dtpFecComprometidaFT_Parcial.Size = new System.Drawing.Size(406, 20);
+            this.dtpFecComprometidaFT_Parcial.TabIndex = 246;
+            this.dtpFecComprometidaFT_Parcial.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dtpFecComprometidaFT_Parcial_KeyPress);
+            // 
+            // Label14
+            // 
+            this.Label14.AutoSize = true;
+            this.Label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.Label14.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Label14.Location = new System.Drawing.Point(6, 44);
+            this.Label14.Name = "Label14";
+            this.Label14.Size = new System.Drawing.Size(295, 13);
+            this.Label14.TabIndex = 245;
+            this.Label14.Text = "Indique la fecha comprometida de registro de tipo \"completo\"";
             // 
             // FrmBandejaControlFTPublicaciones_PrePublicar
             // 
@@ -388,7 +411,7 @@ namespace Estilo_Propio_Csharp
             this.Name = "FrmBandejaControlFTPublicaciones_PrePublicar";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Cambio Status a Por PrePublicar";
+            this.Text = "Cambio Status a FT Terminada";
             this.Load += new System.EventHandler(this.FrmBandejaControlFTPublicaciones_PrePublicar_Load);
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
@@ -421,8 +444,6 @@ namespace Estilo_Propio_Csharp
         public System.Windows.Forms.TextBox TxtDesMotivo;
         public System.Windows.Forms.TextBox TxtCodMotivo;
         private System.Windows.Forms.Label label1;
-        private Janus.Windows.EditControls.UICheckBox ChkEsEstampado;
-        private Janus.Windows.EditControls.UIGroupBox grpMotivoParcial;
         public System.Windows.Forms.TextBox TxtCodMotivoParcial;
         public System.Windows.Forms.TextBox TxtDesMotivoParcial;
         private System.Windows.Forms.Label label2;
@@ -431,5 +452,9 @@ namespace Estilo_Propio_Csharp
         internal System.Windows.Forms.Label Label4;
         internal System.Windows.Forms.Label LblParcial;
         internal Janus.Windows.GridEX.GridEX grxRutaDePrenda;
+        internal System.Windows.Forms.DateTimePicker dtpFecComprometidaFT_Parcial;
+        internal System.Windows.Forms.Label Label14;
+        public Janus.Windows.EditControls.UICheckBox ChkEsEstampado;
+        public Janus.Windows.EditControls.UIGroupBox grpMotivoParcial;
     }
 }

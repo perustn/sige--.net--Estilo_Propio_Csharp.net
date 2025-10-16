@@ -179,7 +179,7 @@ namespace Estilo_Propio_Csharp
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FrmBandejaControlFTPublicaciones_Publicar";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Cambio Status a Publicado";
+            this.Text = "Cambio Status a FT Publicada";
             this.Load += new System.EventHandler(this.FrmBandejaControlFTPublicaciones_Publicar_Load);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();

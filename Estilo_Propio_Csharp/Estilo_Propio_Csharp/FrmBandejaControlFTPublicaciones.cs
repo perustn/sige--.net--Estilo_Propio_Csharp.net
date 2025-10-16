@@ -166,6 +166,12 @@ namespace Estilo_Propio_Csharp
                         BtnBuscar.Focus();
                         break;
                     }
+                case "7":
+                    {
+                        OpcionFiltro = "7";
+                        BtnBuscar.Focus();
+                        break;
+                    }
             }
         }
 
@@ -478,7 +484,12 @@ namespace Estilo_Propio_Csharp
                             withBlock2.Width = 150;
                             withBlock2.Visible = true;
                         }
-
+                        {
+                            var withBlock2 = withBlock1.Columns["TIPOFICHA"];
+                            withBlock2.Width = 80;
+                            withBlock2.Visible = true;
+                            withBlock2.TextAlignment = TextAlignment.Center;
+                        }
                         {
                             var withBlock2 = withBlock1.Columns["Descripcion_FT"];
                             withBlock2.Caption = "DESCRIPCION FT";
@@ -611,6 +622,15 @@ namespace Estilo_Propio_Csharp
                         }
 
                         {
+                            var withBlock2 = withBlock1.Columns["Fec_Comprometida_FT_Parcial_En_Completo"];
+                            withBlock2.Caption = "FECHA COMPR. FT PARCIAL";
+                            withBlock2.Width = 130;
+                            withBlock2.Visible = true;
+                            withBlock2.FormatString = "dd/MM/yyyy";
+                            withBlock2.TextAlignment = TextAlignment.Center;
+                        }
+
+                        {
                             var withBlock2 = withBlock1.Columns["Cod_Motivo_Rechazo"];
                             withBlock2.Caption = "COD MOTIVO RECHAZO";
                             withBlock2.Width = 80;
@@ -654,6 +674,22 @@ namespace Estilo_Propio_Csharp
                             withBlock2.Visible = true;
                         }
 
+                        {
+                            var withBlock2 = withBlock1.Columns["Por_Cerrar"];
+                            withBlock2.Caption = "POR CERRAR";
+                            withBlock2.Width = 80;
+                            withBlock2.TextAlignment = TextAlignment.Center;
+                            withBlock2.Visible = true;
+                        }
+
+                        {
+                            var withBlock2 = withBlock1.Columns["Por_Explosionar"];
+                            withBlock2.Caption = "POR EXPLOSIONAR";
+                            withBlock2.Width = 120;
+                            withBlock2.TextAlignment = TextAlignment.Center;
+                            withBlock2.Visible = true;
+                        }
+
 
                     }
                 }
@@ -676,9 +712,7 @@ namespace Estilo_Propio_Csharp
                     case "CREARFT":
                         if (gridEX1.RecordCount == 0) { return; }
                         oDtEstructuraFTecnica.Clear();
-                        ListaOpsSel = "";
-                        EvaluaSeleccionReg = false;
-                        foreach (GridEXRow oGridEXRow in gridEX1.GetDataRows())
+                        ListaOpsSel = ""; foreach (GridEXRow oGridEXRow in gridEX1.GetDataRows())
                         {
                             if (Convert.ToBoolean(oGridEXRow.Cells["Flg"].Value) == true)
                             {
@@ -690,6 +724,8 @@ namespace Estilo_Propio_Csharp
                             MessageBox.Show("Para crear una FT debe de seleccionar algún registro de la grilla", "Mensaje");
                             return;
                         }
+                        EvaluaSeleccionReg = false;
+                       
 
                         foreach (GridEXRow oGridEXRow in gridEX1.GetDataRows())
                         {
@@ -718,7 +754,7 @@ namespace Estilo_Propio_Csharp
                         oFrm.oDtDatosSeleccionadosFT = oDtEstructuraFTecnica;
                         oFrm.ClienteSel = FiltroClienteSel;
                         oFrm.TemporadaSel = FiltroTemporadaSel;
-                        if(oFrm.ShowDialog() == DialogResult.OK)
+                        if (oFrm.ShowDialog() == DialogResult.OK)
                         {
                             OpcionFiltro = "4";
                             VisibilidadObj(false);
@@ -756,14 +792,33 @@ namespace Estilo_Propio_Csharp
                             return;
                         }
                         FrmBandejaControlFTPublicaciones_PrePublicar oPrePubl = new FrmBandejaControlFTPublicaciones_PrePublicar();
+                        oPrePubl.TipoOpcion = "T";
+                        oPrePubl.Text = "Cambio Status a FT Terminada";
                         oPrePubl.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oPrePubl.EstiloPropioSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString();
                         oPrePubl.Versionsel= gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString();
                         oPrePubl.IdFichaTecnicaSel = (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index);
                         oPrePubl.CodigoClienteSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString();
                         oPrePubl.TxtComentariosGenerales.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Observacion_FT"].Index).ToString();
-                        oPrePubl.TxtCodMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["COD_MOTIVO"].Index).ToString();
-                        oPrePubl.TxtDesMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["NOMBRE_MOTIVO"].Index).ToString();
+                        oPrePubl.TxtCodMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Motivo"].Index).ToString();
+                        oPrePubl.TxtDesMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Nombre_Motivo"].Index).ToString();
+
+                        if (Convert.ToBoolean(gridEX1.GetValue(gridEX1.RootTable.Columns["Flg_LaFT_EsCompleta"].Index).ToString()) == true)
+                        {
+                            oPrePubl.ChkEsEstampado.Checked = true;
+                            oPrePubl.grpMotivoParcial.Enabled = false;
+                            oPrePubl.TxtCodMotivoParcial.Text = string.Empty;
+                            oPrePubl.TxtDesMotivoParcial.Text = string.Empty;
+                            oPrePubl.dtpFecComprometidaFT_Parcial.Value = DateTime.Now.Date;
+                        }
+                        else
+                        {
+                            oPrePubl.ChkEsEstampado.Checked = false;
+                            oPrePubl.grpMotivoParcial.Enabled = true;
+                            oPrePubl.TxtCodMotivoParcial.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Motivo_parcial"].Index).ToString();
+                            oPrePubl.TxtDesMotivoParcial.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Nombre_Motivo_Parcial"].Index).ToString();
+                            oPrePubl.dtpFecComprometidaFT_Parcial.Value = Convert.ToDateTime(gridEX1.GetValue(gridEX1.RootTable.Columns["Fec_Comprometida_FT_Parcial_En_Completo"].Index).ToString());
+                        }
                         oPrePubl.CargarRutaDePrenda();
                         oPrePubl.ShowDialog();
                         if (oPrePubl.IsCambioOK == true)
@@ -779,16 +834,37 @@ namespace Estilo_Propio_Csharp
                             MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             return;
                         }
-                        FrmBandejaControlFTPublicaciones_ModifPublicar oMod = new FrmBandejaControlFTPublicaciones_ModifPublicar();
-                        oMod.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
-                        oMod.EstiloPropioSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString();
-                        oMod.Versionsel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString();
-                        oMod.IdFichaTecnicaSel = (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index);
-                        oMod.CodigoClienteSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString();
-                        oMod.TxtComentariosGenerales.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Observacion_FT"].Index).ToString();
-                        oMod.CargarRutaDePrenda();
-                        oMod.ShowDialog();
-                        if (oMod.IsCambioOK == true)
+                        FrmBandejaControlFTPublicaciones_PrePublicar oModPubl = new FrmBandejaControlFTPublicaciones_PrePublicar();
+                        oModPubl.TipoOpcion = "M";
+                        oModPubl.Text = "Cambio Status a FT en Modificación";
+                        oModPubl.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
+                        oModPubl.EstiloPropioSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString();
+                        oModPubl.Versionsel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString();
+                        oModPubl.IdFichaTecnicaSel = (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index);
+                        oModPubl.CodigoClienteSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString();
+                        oModPubl.TxtComentariosGenerales.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Observacion_FT"].Index).ToString();
+                        oModPubl.TxtCodMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Motivo"].Index).ToString();
+                        oModPubl.TxtDesMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Nombre_Motivo"].Index).ToString();
+
+                        if (Convert.ToBoolean(gridEX1.GetValue(gridEX1.RootTable.Columns["Flg_LaFT_EsCompleta"].Index).ToString()) == true)
+                        {
+                            oModPubl.ChkEsEstampado.Checked = true;
+                            oModPubl.grpMotivoParcial.Enabled = false;
+                            oModPubl.TxtCodMotivoParcial.Text = string.Empty;
+                            oModPubl.TxtDesMotivoParcial.Text = string.Empty;
+                            oModPubl.dtpFecComprometidaFT_Parcial.Value = DateTime.Now.Date;
+                        }
+                        else
+                        {
+                            oModPubl.ChkEsEstampado.Checked = false;
+                            oModPubl.grpMotivoParcial.Enabled = true;
+                            oModPubl.TxtCodMotivoParcial.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Motivo_parcial"].Index).ToString();
+                            oModPubl.TxtDesMotivoParcial.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Nombre_Motivo_Parcial"].Index).ToString();
+                            oModPubl.dtpFecComprometidaFT_Parcial.Value = Convert.ToDateTime(gridEX1.GetValue(gridEX1.RootTable.Columns["Fec_Comprometida_FT_Parcial_En_Completo"].Index).ToString());
+                        }
+                        oModPubl.CargarRutaDePrenda();
+                        oModPubl.ShowDialog();
+                        if (oModPubl.IsCambioOK == true)
                         {
                             CargaGrilla();
                         }

@@ -30,7 +30,6 @@ namespace Estilo_Propio_Csharp
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmBandejaControlFTPublicaciones));
             Janus.Windows.ButtonBar.ButtonBarGroup buttonBar1_Group_0 = new Janus.Windows.ButtonBar.ButtonBarGroup();
             Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_0 = new Janus.Windows.ButtonBar.ButtonBarItem();
             Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_1 = new Janus.Windows.ButtonBar.ButtonBarItem();
@@ -48,6 +47,7 @@ namespace Estilo_Propio_Csharp
             Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_13 = new Janus.Windows.ButtonBar.ButtonBarItem();
             Janus.Windows.ButtonBar.ButtonBarItem buttonBar1_Item_0_14 = new Janus.Windows.ButtonBar.ButtonBarItem();
             Janus.Windows.GridEX.GridEXLayout gridEX1_DesignTimeLayout = new Janus.Windows.GridEX.GridEXLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmBandejaControlFTPublicaciones));
             this.panel1 = new System.Windows.Forms.Panel();
             this.Panel2 = new System.Windows.Forms.Panel();
             this.cboStatusFT = new Janus.Windows.EditControls.UIComboBox();
@@ -84,6 +84,7 @@ namespace Estilo_Propio_Csharp
             this.buttonBar1 = new Janus.Windows.ButtonBar.ButtonBar();
             this.gridEX1 = new Janus.Windows.GridEX.GridEX();
             this.gridEXExporter1 = new Janus.Windows.GridEX.Export.GridEXExporter(this.components);
+            this.OptVerFichasParciales = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grpEstiloVersion)).BeginInit();
@@ -110,7 +111,7 @@ namespace Estilo_Propio_Csharp
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1133, 98);
+            this.panel1.Size = new System.Drawing.Size(1133, 115);
             this.panel1.TabIndex = 2;
             // 
             // Panel2
@@ -438,6 +439,7 @@ namespace Estilo_Propio_Csharp
             // 
             // uiGroupBox1
             // 
+            this.uiGroupBox1.Controls.Add(this.OptVerFichasParciales);
             this.uiGroupBox1.Controls.Add(this.OptGenerarPDF);
             this.uiGroupBox1.Controls.Add(this.OptEstiloVersion);
             this.uiGroupBox1.Controls.Add(this.OptIDPublicacion);
@@ -448,7 +450,7 @@ namespace Estilo_Propio_Csharp
             this.uiGroupBox1.Location = new System.Drawing.Point(6, 6);
             this.uiGroupBox1.Name = "uiGroupBox1";
             this.uiGroupBox1.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
-            this.uiGroupBox1.Size = new System.Drawing.Size(858, 83);
+            this.uiGroupBox1.Size = new System.Drawing.Size(858, 107);
             this.uiGroupBox1.TabIndex = 0;
             this.uiGroupBox1.Text = "Filtros de Búsqueda";
             this.uiGroupBox1.VisualStyle = Janus.Windows.UI.Dock.PanelVisualStyle.Office2010;
@@ -463,7 +465,7 @@ namespace Estilo_Propio_Csharp
             this.OptGenerarPDF.ForeColor = System.Drawing.Color.Black;
             this.OptGenerarPDF.Image = ((System.Drawing.Image)(resources.GetObject("OptGenerarPDF.Image")));
             this.OptGenerarPDF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.OptGenerarPDF.Location = new System.Drawing.Point(457, 54);
+            this.OptGenerarPDF.Location = new System.Drawing.Point(457, 50);
             this.OptGenerarPDF.Name = "OptGenerarPDF";
             this.OptGenerarPDF.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OptGenerarPDF.Size = new System.Drawing.Size(144, 24);
@@ -503,7 +505,7 @@ namespace Estilo_Propio_Csharp
             this.OptIDPublicacion.ForeColor = System.Drawing.Color.Black;
             this.OptIDPublicacion.Image = ((System.Drawing.Image)(resources.GetObject("OptIDPublicacion.Image")));
             this.OptIDPublicacion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.OptIDPublicacion.Location = new System.Drawing.Point(271, 54);
+            this.OptIDPublicacion.Location = new System.Drawing.Point(271, 50);
             this.OptIDPublicacion.Name = "OptIDPublicacion";
             this.OptIDPublicacion.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OptIDPublicacion.Size = new System.Drawing.Size(151, 24);
@@ -523,7 +525,7 @@ namespace Estilo_Propio_Csharp
             this.OptRangoFecha.ForeColor = System.Drawing.Color.Black;
             this.OptRangoFecha.Image = ((System.Drawing.Image)(resources.GetObject("OptRangoFecha.Image")));
             this.OptRangoFecha.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.OptRangoFecha.Location = new System.Drawing.Point(9, 54);
+            this.OptRangoFecha.Location = new System.Drawing.Point(9, 50);
             this.OptRangoFecha.Name = "OptRangoFecha";
             this.OptRangoFecha.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OptRangoFecha.Size = new System.Drawing.Size(190, 24);
@@ -648,7 +650,7 @@ namespace Estilo_Propio_Csharp
             this.buttonBar1.Groups.AddRange(new Janus.Windows.ButtonBar.ButtonBarGroup[] {
             buttonBar1_Group_0});
             this.buttonBar1.HeaderGroupVisible = false;
-            this.buttonBar1.Location = new System.Drawing.Point(0, 98);
+            this.buttonBar1.Location = new System.Drawing.Point(0, 115);
             this.buttonBar1.Margin = new System.Windows.Forms.Padding(2);
             this.buttonBar1.Name = "buttonBar1";
             this.buttonBar1.OfficeColorScheme = Janus.Windows.ButtonBar.OfficeColorScheme.Blue;
@@ -675,12 +677,12 @@ namespace Estilo_Propio_Csharp
             this.gridEX1.FilterRowButtonStyle = Janus.Windows.GridEX.FilterRowButtonStyle.ConditionOperatorDropDown;
             this.gridEX1.FilterRowUpdateMode = Janus.Windows.GridEX.FilterRowUpdateMode.WhenValueChanges;
             this.gridEX1.GroupByBoxVisible = false;
-            this.gridEX1.Location = new System.Drawing.Point(0, 123);
+            this.gridEX1.Location = new System.Drawing.Point(0, 140);
             this.gridEX1.Margin = new System.Windows.Forms.Padding(2);
             this.gridEX1.Name = "gridEX1";
             this.gridEX1.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
             this.gridEX1.RecordNavigator = true;
-            this.gridEX1.Size = new System.Drawing.Size(1133, 327);
+            this.gridEX1.Size = new System.Drawing.Size(1133, 310);
             this.gridEX1.TabIndex = 30;
             this.gridEX1.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
             this.gridEX1.FormattingRow += new Janus.Windows.GridEX.RowLoadEventHandler(this.gridEX1_FormattingRow);
@@ -691,6 +693,26 @@ namespace Estilo_Propio_Csharp
             // gridEXExporter1
             // 
             this.gridEXExporter1.GridEX = this.gridEX1;
+            // 
+            // OptVerFichasParciales
+            // 
+            this.OptVerFichasParciales.AutoSize = true;
+            this.OptVerFichasParciales.BackColor = System.Drawing.Color.Transparent;
+            this.OptVerFichasParciales.Cursor = System.Windows.Forms.Cursors.Default;
+            this.OptVerFichasParciales.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OptVerFichasParciales.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OptVerFichasParciales.ForeColor = System.Drawing.Color.Black;
+            this.OptVerFichasParciales.Image = ((System.Drawing.Image)(resources.GetObject("OptVerFichasParciales.Image")));
+            this.OptVerFichasParciales.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.OptVerFichasParciales.Location = new System.Drawing.Point(9, 79);
+            this.OptVerFichasParciales.Name = "OptVerFichasParciales";
+            this.OptVerFichasParciales.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.OptVerFichasParciales.Size = new System.Drawing.Size(157, 24);
+            this.OptVerFichasParciales.TabIndex = 157;
+            this.OptVerFichasParciales.Tag = "7";
+            this.OptVerFichasParciales.Text = "         Ver Fichas Parciales";
+            this.OptVerFichasParciales.UseVisualStyleBackColor = false;
+            this.OptVerFichasParciales.Click += new System.EventHandler(this.OpcionFiltroBusqueda);
             // 
             // FrmBandejaControlFTPublicaciones
             // 
@@ -771,5 +793,6 @@ namespace Estilo_Propio_Csharp
         private Janus.Windows.EditControls.UIComboBox cboStatusFT;
         public System.Windows.Forms.RadioButton OptGenerarPDF;
         private Janus.Windows.GridEX.Export.GridEXExporter gridEXExporter1;
+        public System.Windows.Forms.RadioButton OptVerFichasParciales;
     }
 }

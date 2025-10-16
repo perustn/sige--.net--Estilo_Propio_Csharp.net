@@ -59,6 +59,7 @@ namespace Estilo_Propio_Csharp
             this.Panel6 = new System.Windows.Forms.Panel();
             this.rbtParcial = new System.Windows.Forms.RadioButton();
             this.panDatosFT_parcial = new System.Windows.Forms.Panel();
+            this.LblParcial = new System.Windows.Forms.Label();
             this.dtpFecComprometidaFT_Parcial = new System.Windows.Forms.DateTimePicker();
             this.Label14 = new System.Windows.Forms.Label();
             this.BtnMantMotivo = new Janus.Windows.EditControls.UIButton();
@@ -76,7 +77,6 @@ namespace Estilo_Propio_Csharp
             this.Label10 = new System.Windows.Forms.Label();
             this.Label9 = new System.Windows.Forms.Label();
             this.Label6 = new System.Windows.Forms.Label();
-            this.LblParcial = new System.Windows.Forms.Label();
             this.Panel3.SuspendLayout();
             this.PanFicha.SuspendLayout();
             this.PanelCompraTela.SuspendLayout();
@@ -484,6 +484,24 @@ namespace Estilo_Propio_Csharp
             this.panDatosFT_parcial.TabIndex = 26;
             this.panDatosFT_parcial.Visible = false;
             // 
+            // LblParcial
+            // 
+            this.LblParcial.BackColor = System.Drawing.Color.Gold;
+            this.LblParcial.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LblParcial.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblParcial.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.LblParcial.ForeColor = System.Drawing.Color.Red;
+            this.LblParcial.Image = global::Estilo_Propio_Csharp.Properties.Resources.info_16X16;
+            this.LblParcial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LblParcial.Location = new System.Drawing.Point(0, 0);
+            this.LblParcial.Name = "LblParcial";
+            this.LblParcial.Size = new System.Drawing.Size(418, 95);
+            this.LblParcial.TabIndex = 194;
+            this.LblParcial.Text = "            Este tipo de registros sólo puede ser usado cuando la \r\n            v" +
+    "ersión se encuentra en etapa de producción.";
+            this.LblParcial.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LblParcial.Visible = false;
+            // 
             // dtpFecComprometidaFT_Parcial
             // 
             this.dtpFecComprometidaFT_Parcial.Location = new System.Drawing.Point(6, 68);
@@ -695,24 +713,6 @@ namespace Estilo_Propio_Csharp
             this.Label6.TabIndex = 19;
             this.Label6.Text = "       Indique el tipo de registro de publicación de F.T que se \r\n       debe apl" +
     "icar a esta primera versión";
-            // 
-            // LblParcial
-            // 
-            this.LblParcial.BackColor = System.Drawing.Color.Gold;
-            this.LblParcial.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LblParcial.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblParcial.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.LblParcial.ForeColor = System.Drawing.Color.Red;
-            this.LblParcial.Image = global::Estilo_Propio_Csharp.Properties.Resources.info_16X16;
-            this.LblParcial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LblParcial.Location = new System.Drawing.Point(0, 0);
-            this.LblParcial.Name = "LblParcial";
-            this.LblParcial.Size = new System.Drawing.Size(418, 95);
-            this.LblParcial.TabIndex = 194;
-            this.LblParcial.Text = "            Este tipo de registros sólo puede ser usado cuando la \r\n            v" +
-    "ersión se encuentra en etapa de producción.";
-            this.LblParcial.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LblParcial.Visible = false;
             // 
             // FrmBandejaControlFTPublicaciones_CrearFT
             // 

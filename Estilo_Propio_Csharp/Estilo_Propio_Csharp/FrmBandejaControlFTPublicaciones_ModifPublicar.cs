@@ -265,7 +265,7 @@ namespace Estilo_Propio_Csharp
         private async Task ModificarPrePublicarAsync()
         {
             DialogResult rpt;
-            rpt = MessageBox.Show("¿Está seguro de cambiar Status a Modificar por Pre Publicación de la FT seleccionada?", "Pregunta", MessageBoxButtons.YesNo);
+            rpt = MessageBox.Show("¿Está seguro de cambiar Status a FT en Modificación?", "Pregunta", MessageBoxButtons.YesNo);
             if (DialogResult.Yes == rpt)
             {               
                 strSQL = string.Empty;
