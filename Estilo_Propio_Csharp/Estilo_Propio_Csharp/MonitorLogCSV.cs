@@ -368,7 +368,7 @@ namespace Estilo_Propio_Csharp
             try
             {
                 using (var fileStream = new FileStream(rutaArchivo, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var reader = new StreamReader(fileStream))
+                using (var reader = new StreamReader(fileStream,Encoding.UTF8))
                 {
                     var lineas = new List<string>();
                     string linea;

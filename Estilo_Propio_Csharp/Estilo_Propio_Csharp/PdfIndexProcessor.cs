@@ -338,7 +338,7 @@ namespace Estilo_Propio_Csharp
                     gfx.DrawString($"Fecha: {metadata.documento.fechaCreacion}", fuenteSubtitulo,
                                   XBrushes.Black, margenIzquierdo, y);
                     y += 18;
-                    gfx.DrawString($"Total páginas: {metadata.documento.totalPaginasPDF} | Secciones: {metadata.documento.hojas.Count}",
+                    gfx.DrawString($"Total páginas: {metadata.documento.totalPaginasPDF + paginasIndiceEstimadas } | Secciones: {metadata.documento.hojas.Count}",
                                   fuenteSubtitulo, XBrushes.Black, margenIzquierdo, y);
                     y += 30;
                 }
@@ -360,8 +360,8 @@ namespace Estilo_Propio_Csharp
 
                 gfx.DrawString("SECCIÓN", fuenteItem, XBrushes.White,
                               new XRect(margenIzquierdo, y + 2, 160, 18), XStringFormats.CenterLeft);
-                gfx.DrawString("DESCRIPCIÓN", fuenteItem, XBrushes.White,
-                              new XRect(margenIzquierdo + 180, y + 2, 200, 18), XStringFormats.CenterLeft);
+                //gfx.DrawString("DESCRIPCIÓN", fuenteItem, XBrushes.White,
+                //              new XRect(margenIzquierdo + 180, y + 2, 200, 18), XStringFormats.CenterLeft);
                 gfx.DrawString("PÁGINAS", fuenteItem, XBrushes.White,
                               new XRect(pagina.Width - 100, y + 2, 80, 18), XStringFormats.Center);
 
@@ -392,15 +392,15 @@ namespace Estilo_Propio_Csharp
                     gfx.DrawString(hoja.tituloIndice, fuenteEnlace, XBrushes.Blue,
                                   new XRect(margenIzquierdo, y, 160, 18), XStringFormats.CenterLeft);
 
-                    // Descripción (truncar si es muy larga)
-                    string descripcionTruncada = hoja.descripcion;
-                    if (descripcionTruncada.Length > 35)
-                    {
-                        descripcionTruncada = descripcionTruncada.Substring(0, 32) + "...";
-                    }
+                    //// Descripción (truncar si es muy larga)
+                    //string descripcionTruncada = hoja.descripcion;
+                    //if (descripcionTruncada.Length > 35)
+                    //{
+                    //    descripcionTruncada = descripcionTruncada.Substring(0, 32) + "...";
+                    //}
 
-                    gfx.DrawString(descripcionTruncada, fuenteItem, XBrushes.Black,
-                                  new XRect(margenIzquierdo + 180, y, 200, 18), XStringFormats.CenterLeft);
+                    //gfx.DrawString(descripcionTruncada, fuenteItem, XBrushes.Black,
+                    //              new XRect(margenIzquierdo + 180, y, 200, 18), XStringFormats.CenterLeft);
 
                     // Rango de páginas
                     string textoPaginas;
@@ -561,7 +561,7 @@ namespace Estilo_Propio_Csharp
                 int itemsQueCaben = (int)(espacioDisponible / altoItem);
 
                 //Para debugging: dibujar rectángulos visibles
-               var gfx = XGraphics.FromPdfPage(paginaIndice);
+               //var gfx = XGraphics.FromPdfPage(paginaIndice);
                 var penDebug = new XPen(XColors.Red, 1) { DashStyle = XDashStyle.Dash };
 
                 for (int i = 0; i < itemsQueCaben && itemsProcessados < metadata.documento.hojas.Count; i++)
@@ -575,7 +575,7 @@ namespace Estilo_Propio_Csharp
                     double bottom = y + altoItem;
 
                     // 🐛 DEBUGGING: Dibujar rectángulo visible (quitar después)
-                    gfx.DrawRectangle(penDebug, left, top, right - left, bottom - top);
+                    //gfx.DrawRectangle(penDebug, left, top, right - left, bottom - top);
 
                     // Crear enlace con coordenadas corregidas
                     try
@@ -623,7 +623,7 @@ namespace Estilo_Propio_Csharp
                     indiceMarcador++;
                 }
 
-                gfx.Dispose();
+                //gfx.Dispose();
             }
         }
 
