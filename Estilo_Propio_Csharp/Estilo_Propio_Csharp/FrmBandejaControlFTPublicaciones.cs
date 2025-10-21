@@ -803,6 +803,8 @@ namespace Estilo_Propio_Csharp
                         oPrePubl.TxtCodMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Motivo"].Index).ToString();
                         oPrePubl.TxtDesMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Nombre_Motivo"].Index).ToString();
 
+                        oPrePubl.TxtObservacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["ComentariosPubl"].Index).ToString();
+
                         if (Convert.ToBoolean(gridEX1.GetValue(gridEX1.RootTable.Columns["Flg_LaFT_EsCompleta"].Index).ToString()) == true)
                         {
                             oPrePubl.ChkEsEstampado.Checked = true;
@@ -845,6 +847,8 @@ namespace Estilo_Propio_Csharp
                         oModPubl.TxtComentariosGenerales.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Observacion_FT"].Index).ToString();
                         oModPubl.TxtCodMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Motivo"].Index).ToString();
                         oModPubl.TxtDesMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Nombre_Motivo"].Index).ToString();
+
+                        oModPubl.TxtObservacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["ComentariosPubl"].Index).ToString();
 
                         if (Convert.ToBoolean(gridEX1.GetValue(gridEX1.RootTable.Columns["Flg_LaFT_EsCompleta"].Index).ToString()) == true)
                         {
