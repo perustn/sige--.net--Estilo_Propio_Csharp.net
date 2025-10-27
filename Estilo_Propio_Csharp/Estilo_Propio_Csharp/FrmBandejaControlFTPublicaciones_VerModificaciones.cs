@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -71,9 +72,10 @@ namespace Estilo_Propio_Csharp
                     {
                         var withBlock1 = withBlock.RootTable;
                         withBlock1.HeaderLines = 2;
-                        withBlock1.RowHeight = 30;
-                        withBlock1.PreviewRow = true;
+                        withBlock1.RowHeight = 45;
+                        withBlock1.PreviewRow = false;
                         withBlock1.PreviewRowLines = 15;
+                        withBlock1.PreviewRowMember = "Cambio";
 
                         foreach (GridEXColumn oGridEXColumn in withBlock1.Columns)
                         {
@@ -91,7 +93,7 @@ namespace Estilo_Propio_Csharp
                         }
                         {
                             var withBlock2 = withBlock1.Columns["Cambio"];
-                            withBlock2.Width = 120;
+                            withBlock2.Width =480;
                         }
                         {
                             var withBlock2 = withBlock1.Columns["Cod_Usuario"];
@@ -101,15 +103,16 @@ namespace Estilo_Propio_Csharp
 
                         {
                             var withBlock2 = withBlock1.Columns["Fec_Actualizacion"];
-                            withBlock2.Caption = "FECHA ACTUALIZACION";
-                            withBlock2.Width = 120;
+                            withBlock2.Caption = "FECHA ACTUALIZA";
+                            withBlock2.Width = 90;
                             withBlock2.TextAlignment = TextAlignment.Center;
                             withBlock2.FormatString = "dd/MM/yyyy";
                         }
 
                         {
                             var withBlock2 = withBlock1.Columns["Status"];
-                            withBlock2.Width = 90;
+                            withBlock2.Width =60;
+                            withBlock2.TextAlignment = TextAlignment.Center;
                         }
                     }
                 }
@@ -117,6 +120,37 @@ namespace Estilo_Propio_Csharp
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void ButtonBar1_ItemClick(object sender, Janus.Windows.ButtonBar.ItemEventArgs e)
+        {
+            try
+            {
+                switch (e.Item.Key)
+                {
+                    case "EXPORTAR":
+                        if (GrdLista.RowCount == 0)
+                            return;
+                        string Ruta_Archivo;
+
+                        Ruta_Archivo = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                        Random numAleatorio = new Random(System.Convert.ToInt32(DateTime.Now.Ticks & int.MaxValue));
+                        string RutaUniArchivo = string.Format(Ruta_Archivo + @"\Export_{0}.xls", System.Convert.ToString(numAleatorio.Next()));
+                        System.IO.FileStream fs = new System.IO.FileStream(RutaUniArchivo, System.IO.FileMode.Create);
+
+                        gridEXExporter1.ExportMode = Janus.Windows.GridEX.ExportMode.AllRows;
+                        gridEXExporter1.GridEX = GrdLista;
+                        gridEXExporter1.Export(fs);
+                        fs.Close();
+                        Process.Start(RutaUniArchivo);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

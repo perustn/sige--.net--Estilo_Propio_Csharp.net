@@ -29,32 +29,21 @@ namespace Estilo_Propio_Csharp
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             Janus.Windows.GridEX.GridEXLayout GrdLista_DesignTimeLayout = new Janus.Windows.GridEX.GridEXLayout();
-            this.GrdLista = new Janus.Windows.GridEX.GridEX();
+            Janus.Windows.ButtonBar.ButtonBarGroup ButtonBar1_Group_0 = new Janus.Windows.ButtonBar.ButtonBarGroup();
+            Janus.Windows.ButtonBar.ButtonBarItem ButtonBar1_Item_0_0 = new Janus.Windows.ButtonBar.ButtonBarItem();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmBandejaControlFTPublicaciones_VerModificaciones));
             this.Panel1 = new System.Windows.Forms.Panel();
             this.label29 = new System.Windows.Forms.Label();
             this.TxtIdPublicacion = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.GrdLista)).BeginInit();
+            this.GrdLista = new Janus.Windows.GridEX.GridEX();
+            this.ButtonBar1 = new Janus.Windows.ButtonBar.ButtonBar();
+            this.gridEXExporter1 = new Janus.Windows.GridEX.Export.GridEXExporter(this.components);
             this.Panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GrdLista)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ButtonBar1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // GrdLista
-            // 
-            this.GrdLista.AllowEdit = Janus.Windows.GridEX.InheritableBoolean.False;
-            this.GrdLista.AlternatingColors = true;
-            GrdLista_DesignTimeLayout.LayoutString = "<GridEXLayoutData><RootTable><GroupCondition /></RootTable></GridEXLayoutData>";
-            this.GrdLista.DesignTimeLayout = GrdLista_DesignTimeLayout;
-            this.GrdLista.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GrdLista.EnterKeyBehavior = Janus.Windows.GridEX.EnterKeyBehavior.None;
-            this.GrdLista.GroupByBoxVisible = false;
-            this.GrdLista.HideSelection = Janus.Windows.GridEX.HideSelection.HighlightInactive;
-            this.GrdLista.Location = new System.Drawing.Point(0, 27);
-            this.GrdLista.Name = "GrdLista";
-            this.GrdLista.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
-            this.GrdLista.RecordNavigator = true;
-            this.GrdLista.Size = new System.Drawing.Size(547, 356);
-            this.GrdLista.TabIndex = 283;
-            this.GrdLista.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
             // 
             // Panel1
             // 
@@ -64,7 +53,7 @@ namespace Estilo_Propio_Csharp
             this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.Panel1.Location = new System.Drawing.Point(0, 0);
             this.Panel1.Name = "Panel1";
-            this.Panel1.Size = new System.Drawing.Size(547, 27);
+            this.Panel1.Size = new System.Drawing.Size(840, 27);
             this.Panel1.TabIndex = 282;
             // 
             // label29
@@ -95,12 +84,67 @@ namespace Estilo_Propio_Csharp
             this.TxtIdPublicacion.Size = new System.Drawing.Size(44, 20);
             this.TxtIdPublicacion.TabIndex = 126;
             // 
+            // GrdLista
+            // 
+            this.GrdLista.AllowEdit = Janus.Windows.GridEX.InheritableBoolean.False;
+            this.GrdLista.AlternatingColors = true;
+            this.GrdLista.DefaultFilterRowComparison = Janus.Windows.GridEX.FilterConditionOperator.Contains;
+            GrdLista_DesignTimeLayout.LayoutString = "<GridEXLayoutData><RootTable><GroupCondition /></RootTable></GridEXLayoutData>";
+            this.GrdLista.DesignTimeLayout = GrdLista_DesignTimeLayout;
+            this.GrdLista.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GrdLista.EnterKeyBehavior = Janus.Windows.GridEX.EnterKeyBehavior.None;
+            this.GrdLista.FilterMode = Janus.Windows.GridEX.FilterMode.Automatic;
+            this.GrdLista.FilterRowButtonStyle = Janus.Windows.GridEX.FilterRowButtonStyle.ConditionOperatorDropDown;
+            this.GrdLista.FilterRowUpdateMode = Janus.Windows.GridEX.FilterRowUpdateMode.WhenValueChanges;
+            this.GrdLista.GroupByBoxVisible = false;
+            this.GrdLista.HideSelection = Janus.Windows.GridEX.HideSelection.HighlightInactive;
+            this.GrdLista.Location = new System.Drawing.Point(0, 49);
+            this.GrdLista.Name = "GrdLista";
+            this.GrdLista.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
+            this.GrdLista.RecordNavigator = true;
+            this.GrdLista.Size = new System.Drawing.Size(840, 434);
+            this.GrdLista.TabIndex = 284;
+            this.GrdLista.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
+            // 
+            // ButtonBar1
+            // 
+            this.ButtonBar1.Dock = System.Windows.Forms.DockStyle.Top;
+            ButtonBar1_Group_0.ImageKey = "Opciones.jpg";
+            ButtonBar1_Item_0_0.Image = ((System.Drawing.Image)(resources.GetObject("ButtonBar1_Item_0_0.Image")));
+            ButtonBar1_Item_0_0.Key = "EXPORTAR";
+            ButtonBar1_Item_0_0.LargeImageKey = "new_16x16.png";
+            ButtonBar1_Item_0_0.SmallImageIndex = 10;
+            ButtonBar1_Item_0_0.Text = "Exportar información a excel";
+            ButtonBar1_Group_0.Items.AddRange(new Janus.Windows.ButtonBar.ButtonBarItem[] {
+            ButtonBar1_Item_0_0});
+            ButtonBar1_Group_0.Key = "Group1";
+            ButtonBar1_Group_0.Text = "Opciones";
+            ButtonBar1_Group_0.TextAlignment = Janus.Windows.ButtonBar.Alignment.Near;
+            ButtonBar1_Group_0.View = Janus.Windows.ButtonBar.ButtonBarView.SmallIcons;
+            this.ButtonBar1.Groups.AddRange(new Janus.Windows.ButtonBar.ButtonBarGroup[] {
+            ButtonBar1_Group_0});
+            this.ButtonBar1.HeaderGroupVisible = false;
+            this.ButtonBar1.ItemAppearance = Janus.Windows.ButtonBar.ItemAppearance.Flat;
+            this.ButtonBar1.Location = new System.Drawing.Point(0, 27);
+            this.ButtonBar1.Name = "ButtonBar1";
+            this.ButtonBar1.OfficeColorScheme = Janus.Windows.ButtonBar.OfficeColorScheme.Blue;
+            this.ButtonBar1.Orientation = Janus.Windows.ButtonBar.ButtonBarOrientation.Horizontal;
+            this.ButtonBar1.SelectionArea = Janus.Windows.ButtonBar.SelectionArea.FullItem;
+            this.ButtonBar1.ShadowOnHover = true;
+            this.ButtonBar1.Size = new System.Drawing.Size(840, 22);
+            this.ButtonBar1.SmallImageSize = new System.Drawing.Size(16, 16);
+            this.ButtonBar1.TabIndex = 283;
+            this.ButtonBar1.Text = "Opciones";
+            this.ButtonBar1.VisualStyle = Janus.Windows.ButtonBar.VisualStyle.Office2010;
+            this.ButtonBar1.ItemClick += new Janus.Windows.ButtonBar.ItemEventHandler(this.ButtonBar1_ItemClick);
+            // 
             // FrmBandejaControlFTPublicaciones_VerModificaciones
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(547, 383);
+            this.ClientSize = new System.Drawing.Size(840, 483);
             this.Controls.Add(this.GrdLista);
+            this.Controls.Add(this.ButtonBar1);
             this.Controls.Add(this.Panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -110,18 +154,20 @@ namespace Estilo_Propio_Csharp
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Ver Modificaciones respecto a Publc.Ant";
             this.Load += new System.EventHandler(this.FrmBandejaControlFTPublicaciones_VerModificaciones_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.GrdLista)).EndInit();
             this.Panel1.ResumeLayout(false);
             this.Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GrdLista)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ButtonBar1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        internal Janus.Windows.GridEX.GridEX GrdLista;
         internal System.Windows.Forms.Panel Panel1;
         public System.Windows.Forms.Label label29;
         public System.Windows.Forms.TextBox TxtIdPublicacion;
+        internal Janus.Windows.GridEX.GridEX GrdLista;
+        internal Janus.Windows.ButtonBar.ButtonBar ButtonBar1;
+        private Janus.Windows.GridEX.Export.GridEXExporter gridEXExporter1;
     }
 }
