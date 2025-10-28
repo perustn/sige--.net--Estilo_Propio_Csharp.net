@@ -29,7 +29,11 @@ namespace Estilo_Propio_Csharp
         /// </summary>
         private void InitializeComponent()
         {
+            Janus.Windows.GridEX.GridEXLayout GridEx1_DesignTimeLayout = new Janus.Windows.GridEX.GridEXLayout();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.PanelAtributos = new System.Windows.Forms.Panel();
+            this.GridEx1 = new Janus.Windows.GridEX.GridEX();
+            this.label34 = new System.Windows.Forms.Label();
             this.BtnTipoGrafico = new Janus.Windows.EditControls.UIButton();
             this.BtnImagen = new Janus.Windows.EditControls.UIButton();
             this.TxtDescripcionDetallada = new System.Windows.Forms.TextBox();
@@ -140,6 +144,8 @@ namespace Estilo_Propio_Csharp
             this.TxtNroReq = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1.SuspendLayout();
+            this.PanelAtributos.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GridEx1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.gbxCodColorFondo.SuspendLayout();
@@ -157,6 +163,7 @@ namespace Estilo_Propio_Csharp
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.PanelAtributos);
             this.groupBox1.Controls.Add(this.BtnTipoGrafico);
             this.groupBox1.Controls.Add(this.BtnImagen);
             this.groupBox1.Controls.Add(this.TxtDescripcionDetallada);
@@ -172,20 +179,66 @@ namespace Estilo_Propio_Csharp
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(7, 1);
+            this.groupBox1.Location = new System.Drawing.Point(5, -3);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(501, 215);
+            this.groupBox1.Size = new System.Drawing.Size(501, 347);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // PanelAtributos
+            // 
+            this.PanelAtributos.Controls.Add(this.GridEx1);
+            this.PanelAtributos.Controls.Add(this.label34);
+            this.PanelAtributos.Location = new System.Drawing.Point(8, 200);
+            this.PanelAtributos.Name = "PanelAtributos";
+            this.PanelAtributos.Size = new System.Drawing.Size(488, 142);
+            this.PanelAtributos.TabIndex = 133;
+            this.PanelAtributos.Visible = false;
+            // 
+            // GridEx1
+            // 
+            this.GridEx1.AlternatingColors = true;
+            this.GridEx1.AutoEdit = true;
+            this.GridEx1.DefaultFilterRowComparison = Janus.Windows.GridEX.FilterConditionOperator.Contains;
+            GridEx1_DesignTimeLayout.LayoutString = "<GridEXLayoutData><RootTable><GroupCondition /></RootTable></GridEXLayoutData>";
+            this.GridEx1.DesignTimeLayout = GridEx1_DesignTimeLayout;
+            this.GridEx1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GridEx1.EnterKeyBehavior = Janus.Windows.GridEX.EnterKeyBehavior.None;
+            this.GridEx1.FilterRowUpdateMode = Janus.Windows.GridEX.FilterRowUpdateMode.WhenValueChanges;
+            this.GridEx1.GroupByBoxVisible = false;
+            this.GridEx1.Location = new System.Drawing.Point(0, 16);
+            this.GridEx1.Name = "GridEx1";
+            this.GridEx1.OfficeColorScheme = Janus.Windows.GridEX.OfficeColorScheme.Blue;
+            this.GridEx1.RowHeaders = Janus.Windows.GridEX.InheritableBoolean.Default;
+            this.GridEx1.Size = new System.Drawing.Size(488, 126);
+            this.GridEx1.TabIndex = 108;
+            this.GridEx1.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
+            this.GridEx1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.GridEx1_KeyPress);
+            // 
+            // label34
+            // 
+            this.label34.BackColor = System.Drawing.Color.Gold;
+            this.label34.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label34.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label34.Font = new System.Drawing.Font("Verdana", 6F, System.Drawing.FontStyle.Bold);
+            this.label34.ForeColor = System.Drawing.Color.Blue;
+            this.label34.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label34.Location = new System.Drawing.Point(0, 0);
+            this.label34.Name = "label34";
+            this.label34.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label34.Size = new System.Drawing.Size(488, 16);
+            this.label34.TabIndex = 107;
+            this.label34.Text = "INGRESAR EL VALOR A LOS ATRIBUTOS";
+            this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // BtnTipoGrafico
             // 
             this.BtnTipoGrafico.Image = global::Estilo_Propio_Csharp.Properties.Resources.search_16X16;
             this.BtnTipoGrafico.ImageKey = "48px-Crystal_Clear_action_apply.png";
-            this.BtnTipoGrafico.Location = new System.Drawing.Point(476, 35);
+            this.BtnTipoGrafico.Location = new System.Drawing.Point(476, 33);
             this.BtnTipoGrafico.Name = "BtnTipoGrafico";
             this.BtnTipoGrafico.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
             this.BtnTipoGrafico.Size = new System.Drawing.Size(20, 20);
@@ -197,7 +250,7 @@ namespace Estilo_Propio_Csharp
             // 
             this.BtnImagen.Image = global::Estilo_Propio_Csharp.Properties.Resources.search_16X16;
             this.BtnImagen.ImageKey = "48px-Crystal_Clear_action_apply.png";
-            this.BtnImagen.Location = new System.Drawing.Point(476, 189);
+            this.BtnImagen.Location = new System.Drawing.Point(476, 175);
             this.BtnImagen.Name = "BtnImagen";
             this.BtnImagen.OfficeColorScheme = Janus.Windows.UI.OfficeColorScheme.Blue;
             this.BtnImagen.Size = new System.Drawing.Size(20, 20);
@@ -211,12 +264,12 @@ namespace Estilo_Propio_Csharp
             this.TxtDescripcionDetallada.BackColor = System.Drawing.SystemColors.Window;
             this.TxtDescripcionDetallada.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.TxtDescripcionDetallada.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtDescripcionDetallada.Location = new System.Drawing.Point(137, 124);
+            this.TxtDescripcionDetallada.Location = new System.Drawing.Point(137, 116);
             this.TxtDescripcionDetallada.MaxLength = 0;
             this.TxtDescripcionDetallada.Multiline = true;
             this.TxtDescripcionDetallada.Name = "TxtDescripcionDetallada";
             this.TxtDescripcionDetallada.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtDescripcionDetallada.Size = new System.Drawing.Size(359, 62);
+            this.TxtDescripcionDetallada.Size = new System.Drawing.Size(359, 57);
             this.TxtDescripcionDetallada.TabIndex = 74;
             this.TxtDescripcionDetallada.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtDescripcionDetallada_KeyPress);
             // 
@@ -226,7 +279,7 @@ namespace Estilo_Propio_Csharp
             this.TxtRutaImagen.BackColor = System.Drawing.SystemColors.Window;
             this.TxtRutaImagen.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.TxtRutaImagen.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtRutaImagen.Location = new System.Drawing.Point(137, 190);
+            this.TxtRutaImagen.Location = new System.Drawing.Point(137, 176);
             this.TxtRutaImagen.MaxLength = 0;
             this.TxtRutaImagen.Name = "TxtRutaImagen";
             this.TxtRutaImagen.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -240,12 +293,12 @@ namespace Estilo_Propio_Csharp
             this.TxtDescripcion.BackColor = System.Drawing.SystemColors.Window;
             this.TxtDescripcion.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.TxtDescripcion.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtDescripcion.Location = new System.Drawing.Point(137, 58);
+            this.TxtDescripcion.Location = new System.Drawing.Point(137, 56);
             this.TxtDescripcion.MaxLength = 0;
             this.TxtDescripcion.Multiline = true;
             this.TxtDescripcion.Name = "TxtDescripcion";
             this.TxtDescripcion.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TxtDescripcion.Size = new System.Drawing.Size(359, 62);
+            this.TxtDescripcion.Size = new System.Drawing.Size(359, 57);
             this.TxtDescripcion.TabIndex = 73;
             this.TxtDescripcion.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtDescripcion_KeyPress);
             // 
@@ -255,7 +308,7 @@ namespace Estilo_Propio_Csharp
             this.TxtDesTipoGrafico.BackColor = System.Drawing.SystemColors.Window;
             this.TxtDesTipoGrafico.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.TxtDesTipoGrafico.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtDesTipoGrafico.Location = new System.Drawing.Point(181, 35);
+            this.TxtDesTipoGrafico.Location = new System.Drawing.Point(181, 34);
             this.TxtDesTipoGrafico.MaxLength = 0;
             this.TxtDesTipoGrafico.Name = "TxtDesTipoGrafico";
             this.TxtDesTipoGrafico.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -269,7 +322,7 @@ namespace Estilo_Propio_Csharp
             this.TxtCodTipoGrafico.BackColor = System.Drawing.SystemColors.Window;
             this.TxtCodTipoGrafico.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.TxtCodTipoGrafico.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TxtCodTipoGrafico.Location = new System.Drawing.Point(137, 35);
+            this.TxtCodTipoGrafico.Location = new System.Drawing.Point(137, 34);
             this.TxtCodTipoGrafico.MaxLength = 0;
             this.TxtCodTipoGrafico.Name = "TxtCodTipoGrafico";
             this.TxtCodTipoGrafico.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -308,7 +361,7 @@ namespace Estilo_Propio_Csharp
             // label33
             // 
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(4, 196);
+            this.label33.Location = new System.Drawing.Point(4, 182);
             this.label33.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(141, 13);
@@ -318,7 +371,7 @@ namespace Estilo_Propio_Csharp
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(5, 128);
+            this.label32.Location = new System.Drawing.Point(5, 124);
             this.label32.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(156, 13);
@@ -328,7 +381,7 @@ namespace Estilo_Propio_Csharp
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(5, 62);
+            this.label16.Location = new System.Drawing.Point(5, 64);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(145, 13);
@@ -338,7 +391,7 @@ namespace Estilo_Propio_Csharp
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(5, 41);
+            this.label3.Location = new System.Drawing.Point(5, 40);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(137, 13);
@@ -1352,6 +1405,13 @@ namespace Estilo_Propio_Csharp
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Adjuntos";
             // 
+            // BtnCargar
+            // 
+            this.BtnCargar.Location = new System.Drawing.Point(0, 0);
+            this.BtnCargar.Name = "BtnCargar";
+            this.BtnCargar.Size = new System.Drawing.Size(75, 23);
+            this.BtnCargar.TabIndex = 0;
+            // 
             // ChkFisica
             // 
             this.ChkFisica.AutoSize = true;
@@ -1480,9 +1540,9 @@ namespace Estilo_Propio_Csharp
             this.panel2.BackColor = System.Drawing.Color.Transparent;
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 250);
+            this.panel2.Location = new System.Drawing.Point(0, 223);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(515, 30);
+            this.panel2.Size = new System.Drawing.Size(511, 30);
             this.panel2.TabIndex = 276;
             // 
             // panel3
@@ -1490,7 +1550,7 @@ namespace Estilo_Propio_Csharp
             this.panel3.Controls.Add(this.uiButton1);
             this.panel3.Controls.Add(this.BtnAceptar);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(308, 0);
+            this.panel3.Location = new System.Drawing.Point(304, 0);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(207, 30);
             this.panel3.TabIndex = 0;
@@ -1529,7 +1589,7 @@ namespace Estilo_Propio_Csharp
             this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.Panel1.Location = new System.Drawing.Point(0, 0);
             this.Panel1.Name = "Panel1";
-            this.Panel1.Size = new System.Drawing.Size(515, 27);
+            this.Panel1.Size = new System.Drawing.Size(511, 27);
             this.Panel1.TabIndex = 277;
             // 
             // label29
@@ -1586,7 +1646,7 @@ namespace Estilo_Propio_Csharp
             this.panel4.Location = new System.Drawing.Point(0, 27);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(515, 223);
+            this.panel4.Size = new System.Drawing.Size(511, 196);
             this.panel4.TabIndex = 0;
             // 
             // TxtNroReq
@@ -1612,7 +1672,7 @@ namespace Estilo_Propio_Csharp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(515, 280);
+            this.ClientSize = new System.Drawing.Size(511, 253);
             this.ControlBox = false;
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.Panel1);
@@ -1626,6 +1686,8 @@ namespace Estilo_Propio_Csharp
             this.Load += new System.EventHandler(this.FrmBandejaSolicitudAplicacionesBDESTF_MAN_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.PanelAtributos.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.GridEx1)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1766,5 +1828,8 @@ namespace Estilo_Propio_Csharp
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         internal Janus.Windows.EditControls.UIButton BtnImagen;
         internal Janus.Windows.EditControls.UIButton BtnTipoGrafico;
+        internal System.Windows.Forms.Panel PanelAtributos;
+        internal Janus.Windows.GridEX.GridEX GridEx1;
+        public System.Windows.Forms.Label label34;
     }
 }

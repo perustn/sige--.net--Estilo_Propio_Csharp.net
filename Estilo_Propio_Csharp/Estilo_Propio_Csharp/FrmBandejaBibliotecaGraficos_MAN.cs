@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Janus.Windows.GridEX;
+using Janus.Windows.GridEX.EditControls;
 using System.IO;
 
 
@@ -21,6 +22,7 @@ namespace Estilo_Propio_Csharp
         public Boolean IsCambioOK;
         string strSQL;
         ClsHelper oHp = new ClsHelper();
+        ModGeneral oMod = new ModGeneral();
         public string sOpcion = "";
         public string sNro_Req = "";
         public new DataTable oDt;
@@ -29,6 +31,7 @@ namespace Estilo_Propio_Csharp
         private Color colEmpresa;
         public string nombreArchivo;
         public string result;
+        public String IsSolicitaAtributo;
         private readonly string[] FormatImageValid = { ".jpg", ".jpeg", ".png", ".bmp" };
 
         public Boolean LlamadaDesdeGraficosEP = false;
@@ -46,7 +49,7 @@ namespace Estilo_Propio_Csharp
         }
 
         private void FrmBandejaSolicitudAplicacionesBDESTF_MAN_Load(object sender, EventArgs e)
-        {          
+        {
             DataTable oDt = oHp.DevuelveDatos(string.Format("SELECT * FROM SEG_Empresas where cod_empresa = '{0}'", VariablesGenerales.pCodEmpresa), VariablesGenerales.pConnectSeguridad);
             if (!(oDt == null))
             {
@@ -67,9 +70,22 @@ namespace Estilo_Propio_Csharp
                     string rutaBase = resultado != null ? resultado.ToString() : string.Empty;
                     string newRuta = rutaBase + "_" + nombreArchivo + ".jpg";
                     TxtRutaImagen.Text = newRuta;
+
+                    if( Convert.ToBoolean(oHp.DevuelveDato("select IsSolicitaAtributo from Es_TiposImagenes_por_Proceso_Ruta_Manufactura where Cod_proceso = '" + TxtCodProceso.Text + "' and Tipo_Grafico = " + TxtCodTipoGrafico.Text + "", VariablesGenerales.pConnect)) == true)
+                    {
+                        PanelAtributos.Visible = true;
+                        this.Size = new System.Drawing.Size(527, 442);
+                    }
+                    else
+                    {
+                        PanelAtributos.Visible = false;
+                        this.Size = new System.Drawing.Size(527, 292);
+                    }
                 }
-            }            
-        }       
+
+                CargaGrillaAtributos();
+            }
+        }
 
         private void TxtCod_FamItem_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -121,14 +137,14 @@ namespace Estilo_Propio_Csharp
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }        
+        }
 
         private void TxtCodSubTipo_Req_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
             {
                 BuscarSubTipoReq();
-            }            
+            }
         }
 
         private void TxtDesSubTipo_Req_KeyPress(object sender, KeyPressEventArgs e)
@@ -171,7 +187,7 @@ namespace Estilo_Propio_Csharp
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }           
+        }
 
         private void TxtCodEtapa_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -229,7 +245,7 @@ namespace Estilo_Propio_Csharp
             {
                 TxtCliente.Focus();
             }
-        }     
+        }
 
         private void TxtCodEstCli_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -248,11 +264,11 @@ namespace Estilo_Propio_Csharp
         }
         private void TxtCombinacion_KeyPress(object sender, KeyPressEventArgs e)
         {
-                     
-                if (e.KeyChar == (char)13)
-                {
-                    BuscarCombinacion();
-                }            
+
+            if (e.KeyChar == (char)13)
+            {
+                BuscarCombinacion();
+            }
         }
 
         private void TxtCodTecnica_KeyPress(object sender, KeyPressEventArgs e)
@@ -308,8 +324,8 @@ namespace Estilo_Propio_Csharp
         private void TxtUbicacion_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
-            {                
-                BuscarUbicacion();                
+            {
+                BuscarUbicacion();
             }
 
         }
@@ -364,7 +380,7 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-      
+
 
         private void TxtTemporada_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -454,7 +470,7 @@ namespace Estilo_Propio_Csharp
                 FrmBusquedaGeneral oTipo = new FrmBusquedaGeneral();
 
 
-                oTipo.sQuery = "Exec sm_muestra_tg_estclitem '"+ TxtCliente.Tag +"','"+ TxtTemporada.Tag +"'";
+                oTipo.sQuery = "Exec sm_muestra_tg_estclitem '" + TxtCliente.Tag + "','" + TxtTemporada.Tag + "'";
 
 
                 oTipo.Cargar_Datos();
@@ -495,11 +511,7 @@ namespace Estilo_Propio_Csharp
             try
             {
                 FrmBusquedaGeneral oTipo = new FrmBusquedaGeneral();
-
-
-                oTipo.sQuery = "Exec ap_busca_colores_desde_cartas_tela_cliente_temporada '"+ TxtCliente.Tag +"','"+ TxtTemporada.Tag +"'";
-
-
+                oTipo.sQuery = "Exec ap_busca_colores_desde_cartas_tela_cliente_temporada '" + TxtCliente.Tag + "','" + TxtTemporada.Tag + "'";
                 oTipo.Cargar_Datos();
                 if (oTipo.dtResultados.Rows.Count == 1)
                 {
@@ -524,18 +536,13 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-
-
-        
-
         private void TxtDes_Tela_KeyPress(object sender, KeyPressEventArgs e)
-       {
+        {
             if (e.KeyChar == (char)13)
             {
                 BuscarTela();
             }
         }
-
 
         public void BuscarTela()
         {
@@ -571,14 +578,13 @@ namespace Estilo_Propio_Csharp
                         TxtDes_Tela.Text = Convert.ToString(oTipo.RegistroSeleccionado.Cells["des_Tela_comercial"].Value);
                         TipoAdd = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Cod_FamTela"].Value);
                         TipoAdd2 = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Des_FamTela"].Value);
-                        TipoAdd3  = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Cod_tiptela"].Value);
+                        TipoAdd3 = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Cod_tiptela"].Value);
                         TipoAdd4 = Convert.ToString(oTipo.RegistroSeleccionado.Cells["des_tiptela"].Value);
                         TipoAdd5 = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Cod_SubTipTela"].Value);
                         TipoAdd6 = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Descripcion_subtipela"].Value);
                         TipoAdd7 = Convert.ToString(oTipo.RegistroSeleccionado.Cells["ComposicionComercialEnFibras"].Value);
                     }
                 }
-
 
                 validaAtibutosTela(0);
 
@@ -614,15 +620,15 @@ namespace Estilo_Propio_Csharp
             {
                 gbxTela.Enabled = true;
 
-                if (flgCargaInicial !=1)
-                { 
-                TxtCodTipo_Tej.Text = "";
-                TxtDesTipo_Tej.Text = "";
-                TxtCodTipo_Tela.Text = "";
-                TxtDesTipo_Tela.Text = "";
-                TxtCodSubTipo_Tela.Text = "";
-                TxtDesSubTipo_Tela.Text = "";
-                TxtComposicion_Comercial.Text = "";
+                if (flgCargaInicial != 1)
+                {
+                    TxtCodTipo_Tej.Text = "";
+                    TxtDesTipo_Tej.Text = "";
+                    TxtCodTipo_Tela.Text = "";
+                    TxtDesTipo_Tela.Text = "";
+                    TxtCodSubTipo_Tela.Text = "";
+                    TxtDesSubTipo_Tela.Text = "";
+                    TxtComposicion_Comercial.Text = "";
                     TxtCodRuta.Text = "";
                     TxtDesRuta.Text = "";
                 }
@@ -713,7 +719,7 @@ namespace Estilo_Propio_Csharp
                 FrmBusquedaGeneral oTipo = new FrmBusquedaGeneral();
 
 
-                oTipo.sQuery = "Exec tx_muestra_Tg_TipTela_SubTipos '"+ TxtCodTipo_Tela.Text +"'";
+                oTipo.sQuery = "Exec tx_muestra_Tg_TipTela_SubTipos '" + TxtCodTipo_Tela.Text + "'";
 
 
                 oTipo.Cargar_Datos();
@@ -802,10 +808,10 @@ namespace Estilo_Propio_Csharp
                 gbxColorFondo.Visible = true;
                 gbxCodColorFondo.Visible = false;
 
-                if (flgCargaInicial!=1)
-                { 
-                TxtCodColor_FondoTela.Text = "";
-                TxtDesColor_FondoTela.Text = "";
+                if (flgCargaInicial != 1)
+                {
+                    TxtCodColor_FondoTela.Text = "";
+                    TxtDesColor_FondoTela.Text = "";
                 }
 
             }
@@ -841,17 +847,17 @@ namespace Estilo_Propio_Csharp
 
                 TxtCodRuta.Visible = false;
 
-                if (flgCargaInicial!= 1)
-                { 
-                TxtCod_Tela.Text = "";
-                TxtDes_Tela.Text = "";
+                if (flgCargaInicial != 1)
+                {
+                    TxtCod_Tela.Text = "";
+                    TxtDes_Tela.Text = "";
 
-                TxtCodTipo_Tej.Text = "";
-                TxtDesTipo_Tej.Text = "";
-                TxtCodTipo_Tela.Text = "";
-                TxtDesTipo_Tela.Text = "";
-                TxtCodSubTipo_Tela.Text = "";
-                TxtDesSubTipo_Tela.Text = "";
+                    TxtCodTipo_Tej.Text = "";
+                    TxtDesTipo_Tej.Text = "";
+                    TxtCodTipo_Tela.Text = "";
+                    TxtDesTipo_Tela.Text = "";
+                    TxtCodSubTipo_Tela.Text = "";
+                    TxtDesSubTipo_Tela.Text = "";
                     TxtComposicion_Comercial.Text = "";
                     TxtCodRuta.Text = "";
                     TxtDesRuta.Text = "";
@@ -874,7 +880,7 @@ namespace Estilo_Propio_Csharp
         {
             if (ChkFibrasTenido.Checked)
             {
-                if (flgCargaInicial !=1)
+                if (flgCargaInicial != 1)
                 { TxtTela_Estimada.Text = ""; }
                 gbxTelaEstimada.Visible = true;
             }
@@ -935,7 +941,7 @@ namespace Estilo_Propio_Csharp
                 FrmBusquedaGeneral oTipo = new FrmBusquedaGeneral();
 
 
-                oTipo.sQuery = "Exec ap_sm_muestra_colcli_estilo '" + TxtCliente.Tag + "','"+ TxtTemporada.Tag +"','"+ TxtCodEstCli.Text +"'";
+                oTipo.sQuery = "Exec ap_sm_muestra_colcli_estilo '" + TxtCliente.Tag + "','" + TxtTemporada.Tag + "','" + TxtCodEstCli.Text + "'";
 
 
                 oTipo.Cargar_Datos();
@@ -998,7 +1004,7 @@ namespace Estilo_Propio_Csharp
                 if (oTipo.dtResultados.Rows.Count == 1)
                 {
                     TxtCod_Ubicacion.Text = Convert.ToString(oTipo.dtResultados.Rows[0]["Cod_Ubicacion"]);
-                    TxtDes_Ubicacion.Text = Convert.ToString(oTipo.dtResultados.Rows[0]["Des_Ubicacion"]);                    
+                    TxtDes_Ubicacion.Text = Convert.ToString(oTipo.dtResultados.Rows[0]["Des_Ubicacion"]);
                 }
                 else
                 {
@@ -1034,7 +1040,7 @@ namespace Estilo_Propio_Csharp
 
                 if (string.IsNullOrEmpty(vRutaOriginal)) return false;
                 if (string.IsNullOrEmpty(vRutaDestino)) return false;
-                
+
 
                 string directorioArchivo = Path.GetDirectoryName(vRutaDestino);
 
@@ -1067,7 +1073,7 @@ namespace Estilo_Propio_Csharp
             {
                 MessageBox.Show(xSQLErr.Message, "SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            return false;         
+            return false;
         }
 
         private void BtnCancelar_Click(object sender, EventArgs e)
@@ -1079,7 +1085,7 @@ namespace Estilo_Propio_Csharp
         private void BtnGrabar_Click(object sender, EventArgs e)
         {
             ///////grabar();
-          
+
         }
 
         private void TxtCod_Tela_TextChanged(object sender, EventArgs e)
@@ -1106,7 +1112,7 @@ namespace Estilo_Propio_Csharp
             {
                 TxtComentarios.Focus();
             }
-            
+
         }
 
         private void TxtComentarios_KeyPress(object sender, KeyPressEventArgs e)
@@ -1135,11 +1141,11 @@ namespace Estilo_Propio_Csharp
 
         private void groupBox1_Paint(object sender, PaintEventArgs e)
         {
-            
+
         }
 
         private void BtnAceptar_Click(object sender, EventArgs e)
-        {            
+        {
             string rutaDestino = string.Empty;
             try
             {
@@ -1155,10 +1161,10 @@ namespace Estilo_Propio_Csharp
                     strSQL += "\n" + string.Format(",@tipo_grafico          ='{0}'", TxtCodTipoGrafico.Text);
                     strSQL += "\n" + string.Format(",@descripcion           ='{0}'", TxtDescripcion.Text);
                     strSQL += "\n" + string.Format(",@descripcion_det       ='{0}'", TxtDescripcionDetallada.Text);
-                    if ( nombreArchivo != "")
+                    if (nombreArchivo != "")
                     {
                         strSQL += "\n" + string.Format(",@imagen                ='{0}'", nombreArchivo);
-                    }                    
+                    }
                     strSQL += "\n" + string.Format(",@cod_usuario		    ='{0}'", VariablesGenerales.pUsuario);
                     strSQL += "\n" + string.Format(",@cod_estacion          ='{0}'", Environment.MachineName);
                     strSQL += "\n" + string.Format(",@cod_estpro            ='{0}'", vCodEstpro);
@@ -1174,25 +1180,56 @@ namespace Estilo_Propio_Csharp
                             if (oDtDatosRetorna.Rows.Count > 0)
                             {
                                 oDr = oDtDatosRetorna.Rows[0];
+                                TxtIdProceso.Text = oDr["Id_Proceso_Imagen"].ToString();
+                                GuardarAtributos();
                                 if (oDr["grafico"] != "")
                                 {
                                     TxtRutaImagen.Text = oDr["grafico"].ToString();
                                     IsCambioOK = true;
 
                                     CopiarFoto(rutaArchivo, TxtRutaImagen.Text);
-
-                                    MessageBox.Show("Cambios realizados correctamente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    DialogResult = DialogResult.OK;
                                 }
+                                MessageBox.Show("Cambios realizados correctamente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                DialogResult = DialogResult.OK;
                             }
                         }
                     }
                     else
                     {
+                        if (oDtDatosRetorna != null)
+                        {
+                            if (oDtDatosRetorna.Rows.Count > 0)
+                            {
+                                oDr = oDtDatosRetorna.Rows[0];
+                                TxtIdProceso.Text = oDr["Id_Proceso_Imagen"].ToString();
+                            }
+                            GuardarAtributos();
+                        }
                         IsCambioOK = true;
                         MessageBox.Show("Cambios realizados correctamente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         DialogResult = DialogResult.OK;
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void GuardarAtributos()
+        {
+            try
+            {
+                foreach (GridEXRow item in GridEx1.GetDataRows())
+                {
+                    strSQL = string.Empty;
+                    strSQL += "\n" + "EXEC up_man_Es_Proceso_Imagen_Atributos";
+                    strSQL += "\n" + string.Format(" @opcion            ='{0}'", "U");
+                    strSQL += "\n" + string.Format(",@id_Proceso_imagen = {0} ", ModGeneral.Val(TxtIdProceso.Text));
+                    strSQL += "\n" + string.Format(",@Id_Atributo		= {0} ", item.Cells["Id_Atributo"].Value.ToString());
+                    strSQL += "\n" + string.Format(",@Valor		        ='{0}'", item.Cells["Valor"].Value.ToString());
+                    oHp.EjecutarOperacion(strSQL);
                 }
             }
             catch (Exception ex)
@@ -1245,13 +1282,13 @@ namespace Estilo_Propio_Csharp
         private void Validacion_FondoTela(short flgCargaInicial)
         {
             //if (ChkColorFondoTela.Checked)
-           if (rbnColorFondoTela.Checked)
+            if (rbnColorFondoTela.Checked)
             {
                 ///////gbxColorFondo.Visible = true;
-                gbxCodColorFondo.Enabled = true;                
+                gbxCodColorFondo.Enabled = true;
             }
             else
-            {                                
+            {
                 gbxCodColorFondo.Enabled = false;
                 if (flgCargaInicial != 1)
                 {
@@ -1275,7 +1312,7 @@ namespace Estilo_Propio_Csharp
                 FrmBusquedaGeneral oTipo = new FrmBusquedaGeneral();
 
 
-                oTipo.sQuery = "Exec Ap_Muestra_Rutas_Tela '"+ TxtCod_Tela.Text +"'";
+                oTipo.sQuery = "Exec Ap_Muestra_Rutas_Tela '" + TxtCod_Tela.Text + "'";
 
 
                 oTipo.Cargar_Datos();
@@ -1308,10 +1345,10 @@ namespace Estilo_Propio_Csharp
             {
                 if (TxtCod_Tela.Text != "")
                 { BuscarRuta(); }
-                else 
+                else
                 {
                     MessageBox.Show("Ingrese codigo de Tela", "Validar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    TxtCod_Tela.Focus(); 
+                    TxtCod_Tela.Focus();
                 }
             }
         }
@@ -1329,15 +1366,15 @@ namespace Estilo_Propio_Csharp
                 if (TxtCod_Tela.Text != "")
                 { BuscarRuta(); }
 
-                
-                    
+
+
             }
         }
 
 
         private void validaRutaTela()
-        {            
-           if (TxtCod_Tela.Text.Trim() != "")
+        {
+            if (TxtCod_Tela.Text.Trim() != "")
             {
                 TxtCodRuta.Visible = true;
                 TxtDesRuta.Visible = true;
@@ -1346,7 +1383,7 @@ namespace Estilo_Propio_Csharp
             else
             {
                 TxtCodRuta.Text = "";
-                TxtCodRuta.Visible = false;                
+                TxtCodRuta.Visible = false;
                 TxtDesRuta.Visible = true;
                 TxtDesRuta.Focus();
             }
@@ -1379,46 +1416,8 @@ namespace Estilo_Propio_Csharp
                         TxtDesProceso.Text = Convert.ToString(oTipo.RegistroSeleccionado.Cells["descripcion"].Value);
                     }
                 }
-
+                CargaGrillaAtributos();
                 TxtCodTipoGrafico.Focus();
-                oTipo.oParent.CODIGO = ""; oTipo.oParent.DESCRIPCION = ""; oTipo.oParent.TipoAdd = "";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
-        public void BuscarTipoGrafico(short tipo)
-        {
-            try
-            {
-                FrmBusquedaGeneral oTipo = new FrmBusquedaGeneral();
-
-                
-                if (tipo == 1)
-                    oTipo.sQuery = "Exec Es_muestra_TiposImagenes_por_Proceso_Ruta_Manufactura '1','"+ TxtCodProceso.Text +"','" + TxtCodTipoGrafico.Text + "'";
-                else
-                    oTipo.sQuery = "Exec Es_muestra_TiposImagenes_por_Proceso_Ruta_Manufactura '2','"+ TxtCodProceso.Text +"','','" + TxtDesTipoGrafico.Text + "'";
-
-                oTipo.Cargar_Datos();
-                if (oTipo.dtResultados.Rows.Count == 1)
-                {
-                    TxtCodTipoGrafico.Text = Convert.ToString(oTipo.dtResultados.Rows[0]["Tipo_Grafico"]);
-                    TxtDesTipoGrafico.Text = Convert.ToString(oTipo.dtResultados.Rows[0]["descripcion"]);
-                }
-                else
-                {
-                    oTipo.ShowDialog();
-                    if (oTipo.oParent.CODIGO != "")
-                    {
-                        TxtCodTipoGrafico.Text = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Tipo_Grafico"].Value);
-                        TxtDesTipoGrafico.Text = Convert.ToString(oTipo.RegistroSeleccionado.Cells["descripcion"].Value);
-                    }
-                }
-
-                TxtDescripcion.Focus();
                 oTipo.oParent.CODIGO = ""; oTipo.oParent.DESCRIPCION = ""; oTipo.oParent.TipoAdd = "";
             }
             catch (Exception ex)
@@ -1459,6 +1458,63 @@ namespace Estilo_Propio_Csharp
             }
         }
 
+        public void BuscarTipoGrafico(short tipo)
+        {
+            try
+            {
+                FrmBusquedaGeneral oTipo = new FrmBusquedaGeneral();
+                if (tipo == 1)
+                    oTipo.sQuery = "Exec Es_muestra_TiposImagenes_por_Proceso_Ruta_Manufactura '1','" + TxtCodProceso.Text + "','" + TxtCodTipoGrafico.Text + "'";
+                else
+                    oTipo.sQuery = "Exec Es_muestra_TiposImagenes_por_Proceso_Ruta_Manufactura '2','" + TxtCodProceso.Text + "','','" + TxtDesTipoGrafico.Text + "'";
+
+                oTipo.Cargar_Datos();
+                if (oTipo.dtResultados.Rows.Count == 1)
+                {
+                    TxtCodTipoGrafico.Text = Convert.ToString(oTipo.dtResultados.Rows[0]["Tipo_Grafico"]);
+                    TxtDesTipoGrafico.Text = Convert.ToString(oTipo.dtResultados.Rows[0]["descripcion"]);
+                    IsSolicitaAtributo = Convert.ToString(oTipo.dtResultados.Rows[0]["IsSolicitaAtributo"]);
+                    if (IsSolicitaAtributo == "SI")
+                    {
+                        PanelAtributos.Visible = true;
+                        this.Size = new System.Drawing.Size(527, 442);
+                    }
+                    else
+                    {
+                        PanelAtributos.Visible = false;
+                        this.Size = new System.Drawing.Size(527, 292);
+                    }
+                }
+                else
+                {
+                    oTipo.ShowDialog();
+                    if (oTipo.oParent.CODIGO != "")
+                    {
+                        TxtCodTipoGrafico.Text = Convert.ToString(oTipo.RegistroSeleccionado.Cells["Tipo_Grafico"].Value);
+                        TxtDesTipoGrafico.Text = Convert.ToString(oTipo.RegistroSeleccionado.Cells["descripcion"].Value);
+                        IsSolicitaAtributo = Convert.ToString(oTipo.RegistroSeleccionado.Cells["IsSolicitaAtributo"].Value);
+                        if (IsSolicitaAtributo == "SI")
+                        {
+                            PanelAtributos.Visible = true;
+                            this.Size = new System.Drawing.Size(527, 442);
+                        }
+                        else
+                        {
+                            PanelAtributos.Visible = false;
+                            this.Size = new System.Drawing.Size(527, 292);
+                        }
+                    }
+                }
+                CargaGrillaAtributos();
+                TxtDescripcion.Focus();
+                oTipo.oParent.CODIGO = ""; oTipo.oParent.DESCRIPCION = ""; oTipo.oParent.TipoAdd = "";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void TxtDescripcion_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
@@ -1477,7 +1533,7 @@ namespace Estilo_Propio_Csharp
 
 
         public void Foto1()
-        {           
+        {
             try
             {
                 OpenFileDialog openFileDialog1 = new OpenFileDialog
@@ -1485,21 +1541,21 @@ namespace Estilo_Propio_Csharp
                     ////Filter = vDialogFilterImage,
                     Filter = "Imágenes (*.bmp;*.jpeg;*.jpg;*.png)|*.bmp;*.jpeg;*.jpg;*.png| All Files|*.*",
                     FileName = ""
-                    
-            };
+
+                };
 
                 if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
                     string img1 = openFileDialog1.FileName;
 
-                    rutaArchivo = openFileDialog1.FileName;                   
+                    rutaArchivo = openFileDialog1.FileName;
 
                     if (!IsValidImage(img1))
-                   {
-                       MessageBox.Show("NO es una imagen permitida", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                       return;
-                   }
-                    
+                    {
+                        MessageBox.Show("NO es una imagen permitida", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
 
                     nombreArchivo = Path.GetFileNameWithoutExtension(openFileDialog1.FileName);
                     result = Path.GetExtension(openFileDialog1.FileName);
@@ -1509,10 +1565,10 @@ namespace Estilo_Propio_Csharp
                     string strSQL = "SELECT RutaGrafico_Proceso_Imagen FROM TG_CONTROL";
                     object resultado = oHp.DevuelveDato(strSQL, VariablesGenerales.pConnect);
                     string rutaBase = resultado != null ? resultado.ToString() : string.Empty;
-                    string newRuta = rutaBase +  "_" + nombreArchivo + ".jpg";
+                    string newRuta = rutaBase + "_" + nombreArchivo + ".jpg";
 
                     TxtRutaImagen.Text = newRuta;
-                    BtnAceptar.Focus();                    
+                    BtnAceptar.Focus();
                 }
             }
             catch (Exception ex)
@@ -1551,12 +1607,112 @@ namespace Estilo_Propio_Csharp
 
         private void BtnTipoGrafico_Click(object sender, EventArgs e)
         {
-            
+
             object oForm = oHp.GetFormDesdeOtroProyecto("Estilo_Propio", ".exe", "FrmMantTipoGraficoxProcesos");
-            ((dynamic)oForm).TxtProceso.Text = TxtCodProceso.Text + " - "  + TxtDesProceso.Text;
+            ((dynamic)oForm).TxtProceso.Text = TxtCodProceso.Text + " - " + TxtDesProceso.Text;
             ((dynamic)oForm).CodProceso = TxtCodProceso.Text;
             ((dynamic)oForm).ShowDialog();
-            
+
+        }
+
+        public void CargaGrillaAtributos()
+        {
+            try
+            {
+                if (TxtIdProceso.Text == "") { TxtIdProceso.Text = 0.ToString(); }
+
+                strSQL = string.Empty;
+                strSQL += "\n" + "EXEC up_man_Es_Proceso_Imagen_Atributos";
+                strSQL += "\n" + string.Format(" @opcion            ='{0}'", "V");
+                strSQL += "\n" + string.Format(",@id_Proceso_imagen = {0} ", ModGeneral.Val(TxtIdProceso.Text));
+                strSQL += "\n" + string.Format(",@Cod_proceso		='{0}'", TxtCodProceso.Text);
+                strSQL += "\n" + string.Format(",@Tipo_Grafico		= {0} ", ModGeneral.Val(TxtCodTipoGrafico.Text));
+                oDt = oHp.DevuelveDatos(strSQL, VariablesGenerales.pConnect);
+                GridEx1.DataSource = oDt;
+                oHp.CheckLayoutGridEx(GridEx1);
+                {
+                    var withBlock = GridEx1;
+                    withBlock.FilterMode = FilterMode.None;
+                    withBlock.DefaultFilterRowComparison = FilterConditionOperator.Contains;
+                    withBlock.AllowEdit = InheritableBoolean.True;
+
+                    {
+                        var withBlock1 = withBlock.RootTable;
+                        withBlock1.HeaderLines = 2;
+                        withBlock1.RowHeight = 20;
+                        withBlock1.PreviewRow = true;
+                        withBlock1.PreviewRowLines = 15;
+                        foreach (GridEXColumn oGridEXColumn in withBlock1.Columns)
+                        {
+                            {
+                                var withBlock2 = oGridEXColumn;
+                                withBlock2.WordWrap = true;
+                                withBlock2.FilterEditType = FilterEditType.Combo;
+                            }
+                        }
+
+                        {
+                            var withBlock2 = withBlock1.Columns["Id_Atributo"];
+                            withBlock2.Caption = "ID";
+                            withBlock2.Width = 50;
+                            withBlock2.EditType = EditType.NoEdit;
+                        }
+
+                        {
+                            var withBlock2 = withBlock1.Columns["Nom_Atributo"];
+                            withBlock2.Caption = "ATRIBUTO";
+                            withBlock2.Width = 130;
+                            withBlock2.EditType = EditType.NoEdit;
+                        }
+                        {
+                            var withBlock2 = withBlock1.Columns["Valor"];
+                            withBlock2.Caption = "VALOR";
+                            withBlock2.Width = 280;
+                            withBlock2.EditType = EditType.TextBox;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void GridEx1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Verificamos que haya una celda activa y que la columna sea "valor"
+            if (GridEx1.CurrentColumn != null && GridEx1.CurrentColumn.Key.ToUpper() == "VALOR")
+            {
+                int idValue = Convert.ToInt32(GridEx1.GetValue("Id_Atributo"));
+
+                if (idValue == 1)
+                {
+                    // Solo números enteros
+                    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                        e.Handled = true;
+                }
+                else if (idValue == 2)
+                {
+                    // Solo números enteros
+                    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                        e.Handled = true;
+                }
+                else if (idValue == 3)
+                {
+                    // Solo texto (sin números)
+                    if (!char.IsControl(e.KeyChar) && char.IsDigit(e.KeyChar))
+                        e.Handled = true;
+                }
+                else if (idValue == 4)
+                {
+                    // Permitir dígitos, control y punto
+                    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+                        e.Handled = true;
+                    // No se puede validar si ya hay punto, hacer validación después
+                }
+            }
         }
     }
 }
+
