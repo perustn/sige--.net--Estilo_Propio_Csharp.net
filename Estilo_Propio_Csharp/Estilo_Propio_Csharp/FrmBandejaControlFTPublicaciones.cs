@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Janus.Windows.GridEX;
+using NPOI.SS.Formula.Functions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,7 +12,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Janus.Windows.GridEX;
 using static Estilo_Propio_Csharp.FormularioProgreso;
 
 namespace Estilo_Propio_Csharp
@@ -1099,6 +1100,22 @@ namespace Estilo_Propio_Csharp
                         fs.Close();
                         Process.Start(RutaUniArchivo);
                         break;
+
+                    case "ADJUNTO":
+                        if (gridEX1.RowCount == 0)
+                            return;
+                        object oForm3 = oHp.GetFormDesdeOtroProyecto("Estilo_Propio", ".exe", "FrmVersiones_FichaTecnica_Adjuntos");
+                        ((dynamic)oForm3).TxtEP.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString();
+                        ((dynamic)oForm3).TxtVersion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString();
+                        ((dynamic)oForm3).TxtSecFT.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index).ToString();
+                        ((dynamic)oForm3).SW_Nueva_Interface = true;
+                        
+                        ((dynamic)oForm3).ShowDialog();
+
+                        break;
+                    
+                        
+
                 }
             }
             catch (Exception ex)
