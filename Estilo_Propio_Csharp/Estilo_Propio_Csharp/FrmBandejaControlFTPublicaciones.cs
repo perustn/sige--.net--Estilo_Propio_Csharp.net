@@ -549,23 +549,27 @@ namespace Estilo_Propio_Csharp
 
                         {
                             var withBlock2 = withBlock1.Columns["Fec 1ra Pre-Public"];
+                            withBlock2.Caption = "FECHA 1ERA TERMINADO";
                             withBlock2.Width = 110;
                             withBlock2.Visible = true;
                         }
 
                         {
                             var withBlock2 = withBlock1.Columns["Fec Ult Pre-Public"];
+                            withBlock2.Caption = "FECHA ULT TERMINADO";
                             withBlock2.Width = 110;
                             withBlock2.Visible = true;
                         }
 
                         {
                             var withBlock2 = withBlock1.Columns["Usuario 1ra Pre-Public"];
+                            withBlock2.Caption = "USUARIO 1ERA TERMINADO";
                             withBlock2.Width = 150;
                         }
 
                         {
                             var withBlock2 = withBlock1.Columns["Usuario ult Pre-Public"];
+                            withBlock2.Caption = "USUARIO ULT TERMINADO";
                             withBlock2.Width = 110;
                             withBlock2.Visible = true;
                         }

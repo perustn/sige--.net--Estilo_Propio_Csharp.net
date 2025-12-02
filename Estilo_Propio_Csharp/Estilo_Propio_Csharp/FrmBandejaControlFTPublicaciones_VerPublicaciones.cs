@@ -96,14 +96,14 @@ namespace Estilo_Propio_Csharp
 
                         {
                             var withBlock2 = withBlock1.Columns["Fec_Publicacion"];
-                            withBlock2.Caption = "FECHA PUBLI.";
+                            withBlock2.Caption = "FECHA";
                             withBlock2.Width = 90;
                             withBlock2.TextAlignment = TextAlignment.Center;
                         }
 
                         {
                             var withBlock2 = withBlock1.Columns["Cod_Usuario_Publicacion"];
-                            withBlock2.Caption = "USUARIO PUBLI.";
+                            withBlock2.Caption = "USUARIO";
                             withBlock2.Width = 110;
                         }
 
