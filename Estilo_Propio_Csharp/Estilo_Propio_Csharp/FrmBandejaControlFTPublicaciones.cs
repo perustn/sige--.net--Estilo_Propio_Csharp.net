@@ -890,6 +890,11 @@ namespace Estilo_Propio_Csharp
                         oPubl.Text = "";
                         oPubl.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oPubl.TipoCambioStatus = "PUBLICAR";
+                        oPubl.EstiloPropioSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString();
+                        oPubl.Versionsel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString();
+                        oPubl.IdFichaTecnicaSel = (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index);
+                        oPubl.CodigoClienteSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString();
+                        oPubl.IDPublicacion = (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index);
                         oPubl.ShowDialog();
                         if (oPubl.IsCambioOK == true)
                         {
