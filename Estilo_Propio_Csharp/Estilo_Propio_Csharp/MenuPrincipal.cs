@@ -24,13 +24,19 @@ namespace Estilo_Propio_Csharp
 
         private void BtnBuscar_Click(object sender, EventArgs e)
         {
-            FrmBandejaBibliotecaGraficos FRM = new FrmBandejaBibliotecaGraficos();
+            FrmBandejaControlFTPublicaciones FRM = new FrmBandejaControlFTPublicaciones();
             FRM.ShowDialog();
         }
 
         private void uiButton1_Click(object sender, EventArgs e)
         {
             FrmBandejaBibliotecaFormaMedir FRM = new FrmBandejaBibliotecaFormaMedir();
+            FRM.ShowDialog();
+        }
+
+        private void uiButton2_Click(object sender, EventArgs e)
+        {
+            FrmEstiloVersionMadreDependencia FRM = new FrmEstiloVersionMadreDependencia();
             FRM.ShowDialog();
         }
     }
