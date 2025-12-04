@@ -9,6 +9,10 @@ using Janus.Windows.GridEX;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Reflection;
+using NPOI.SS.UserModel;
+
+
+
 
 namespace Estilo_Propio_Csharp
 {
@@ -415,6 +419,112 @@ namespace Estilo_Propio_Csharp
 				MessageBox.Show(ex.Message, "SQL Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return null;
 			}
+		}
+
+
+		public class CellsRange
+		{
+			public int startRow { get; set; }
+			public int startCol { get; set; }
+			public int endRow { get; set; }
+			public int endCol { get; set; }
+
+			public string sheetName { get; set; }
+		}
+
+		public CellsRange getCellsInRange(IWorkbook workbook, string rangeName)
+		{
+			IName namedRange = workbook.GetName(rangeName);
+
+			if (namedRange == null)
+			{
+				Console.WriteLine($"El rango con nombre '{rangeName}' no existe.");
+				return null;
+			}
+
+			// Obtener los detalles del rango
+			string sheetName = namedRange.SheetName;
+			string reference = namedRange.RefersToFormula; // Ejemplo: "Sheet1!$A$1:$C$3"
+
+			Console.WriteLine($"El rango '{rangeName}' está definido en la hoja '{sheetName}' con referencia '{reference}'");
+
+			// Parsear la referencia para obtener los límites del rango
+
+			string area = reference.Split('!')[1].Replace("$", ""); // Remover símbolos de dólar
+			string[] parts = area.Split(':'); // Dividir por el rango (ej: "A1:C3")
+			string startCell = parts[0];
+			string endCell = startCell;
+
+			if (parts.Length > 1)
+			{
+				endCell = parts[1];
+			}
+
+			// Convertir celdas a índices (Ejemplo: A1 -> fila 0, columna 0)
+			CellsRange cells = new CellsRange();
+			cells.sheetName = sheetName;
+			cells.startRow = int.Parse(startCell.Substring(1)) - 1; // Fila de inicio
+			cells.startCol = startCell[0] - 'A';                    // Columna de inicio
+			cells.endRow = int.Parse(endCell.Substring(1)) - 1;     // Fila de fin
+			cells.endCol = endCell[0] - 'A';                        // Columna de fin
+
+			return cells;
+		}
+
+		public object GetCellValue(ICell cell)
+		{
+			if (cell == null)
+			{
+				return String.Empty;
+			}
+
+			switch (cell?.CellType)
+			{
+				case CellType.String:
+					return cell.StringCellValue;
+				case CellType.Numeric:
+					if (DateUtil.IsCellDateFormatted(cell))
+					{
+						return cell.DateCellValue.ToString(); // Valor de fecha
+					}
+					return cell.NumericCellValue.ToString(); // Valor numérico
+				case CellType.Boolean:
+					return cell.BooleanCellValue.ToString();
+
+				case CellType.Formula:
+
+					// Manejar celdas con fórmulas según el tipo de resultado
+					switch (cell.CachedFormulaResultType)
+					{
+						case CellType.String:
+							return cell.StringCellValue; // Fórmula con resultado de texto
+						case CellType.Numeric:
+							if (DateUtil.IsCellDateFormatted(cell))
+							{
+								return cell.DateCellValue.ToString(); // Valor de fecha
+							}
+							return cell.NumericCellValue.ToString(); // Fórmula con resultado numérico
+						case CellType.Boolean:
+							return cell.BooleanCellValue.ToString(); // Fórmula con resultado booleano
+						default:
+							return "Tipo de fórmula desconocido";
+					}
+				case CellType.Blank:
+					return String.Empty;
+
+				case CellType.Error:
+					return cell.ErrorCellValue.ToString();
+
+				case CellType.Unknown:
+
+				default:
+					return cell?.ToString() ?? "";
+			}
+		}
+
+		public string RellenaDeCerosEnIzquierda(string strValor, int intCantidadDeCeros)
+		{
+			return new string('0', intCantidadDeCeros - strValor.Length) + strValor;
 		}
 
 	}

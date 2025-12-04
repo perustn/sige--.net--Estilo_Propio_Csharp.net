@@ -193,9 +193,29 @@ namespace Estilo_Propio_Csharp.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ic_sort_desccending_16x16 {
+            get {
+                object obj = ResourceManager.GetObject("ic_sort_desccending_16x16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ic_table_header_edit_48x48 {
             get {
                 object obj = ResourceManager.GetObject("ic_table_header_edit_48x48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap info_16X16 {
+            get {
+                object obj = ResourceManager.GetObject("info_16X16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
