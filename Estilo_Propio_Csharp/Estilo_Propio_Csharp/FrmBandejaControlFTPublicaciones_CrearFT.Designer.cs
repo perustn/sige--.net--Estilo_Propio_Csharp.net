@@ -620,7 +620,7 @@ namespace Estilo_Propio_Csharp
             this.Label4.Name = "Label4";
             this.Label4.Size = new System.Drawing.Size(414, 31);
             this.Label4.TabIndex = 26;
-            this.Label4.Text = "Comentarios Generales de la FT";
+            this.Label4.Text = "Observaciones Generales";
             this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label7
