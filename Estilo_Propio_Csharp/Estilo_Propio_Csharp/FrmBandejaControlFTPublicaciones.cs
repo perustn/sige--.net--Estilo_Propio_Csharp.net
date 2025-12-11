@@ -500,9 +500,9 @@ namespace Estilo_Propio_Csharp
 
                         {
                             var withBlock2 = withBlock1.Columns["Observacion_FT"];
-                            withBlock2.Caption = "OBSERVACION FT";
+                            withBlock2.Caption = "OBSERVACIONES GENERALES";
                             withBlock2.Visible = true;
-                            withBlock2.Width = 150;
+                            withBlock2.Width = 250;
                         }
 
                         {
@@ -522,6 +522,7 @@ namespace Estilo_Propio_Csharp
                             var withBlock2 = withBlock1.Columns["ComentariosPubl"];
                             withBlock2.Caption = "COMENTARIOS PUBLICACION";
                             withBlock2.Visible = true;
+                            withBlock2.Width = 200;
                         }
 
                         {
@@ -887,7 +888,7 @@ namespace Estilo_Propio_Csharp
                             return;
                         }
                         FrmBandejaControlFTPublicaciones_Publicar oPubl = new FrmBandejaControlFTPublicaciones_Publicar();
-                        oPubl.Text = "";
+                        oPubl.Text = "Cambio Status a FT Publicada";
                         oPubl.TxtIdPublicacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index).ToString();
                         oPubl.TipoCambioStatus = "PUBLICAR";
                         oPubl.EstiloPropioSel = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString();
