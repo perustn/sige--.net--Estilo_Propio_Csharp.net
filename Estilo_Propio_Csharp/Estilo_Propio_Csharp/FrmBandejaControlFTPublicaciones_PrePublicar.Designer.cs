@@ -40,6 +40,8 @@ namespace Estilo_Propio_Csharp
             this.panel4 = new System.Windows.Forms.Panel();
             this.ChkEsEstampado = new Janus.Windows.EditControls.UICheckBox();
             this.grpMotivoParcial = new Janus.Windows.EditControls.UIGroupBox();
+            this.dtpFecComprometidaFT_Parcial = new System.Windows.Forms.DateTimePicker();
+            this.Label14 = new System.Windows.Forms.Label();
             this.TxtCodMotivoParcial = new System.Windows.Forms.TextBox();
             this.TxtDesMotivoParcial = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -53,8 +55,6 @@ namespace Estilo_Propio_Csharp
             this.Label4 = new System.Windows.Forms.Label();
             this.LblParcial = new System.Windows.Forms.Label();
             this.grxRutaDePrenda = new Janus.Windows.GridEX.GridEX();
-            this.dtpFecComprometidaFT_Parcial = new System.Windows.Forms.DateTimePicker();
-            this.Label14 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.Panel1.SuspendLayout();
@@ -198,6 +198,25 @@ namespace Estilo_Propio_Csharp
             this.grpMotivoParcial.TabIndex = 245;
             this.grpMotivoParcial.VisualStyle = Janus.Windows.UI.Dock.PanelVisualStyle.Office2010;
             // 
+            // dtpFecComprometidaFT_Parcial
+            // 
+            this.dtpFecComprometidaFT_Parcial.Location = new System.Drawing.Point(8, 61);
+            this.dtpFecComprometidaFT_Parcial.Name = "dtpFecComprometidaFT_Parcial";
+            this.dtpFecComprometidaFT_Parcial.Size = new System.Drawing.Size(406, 20);
+            this.dtpFecComprometidaFT_Parcial.TabIndex = 246;
+            this.dtpFecComprometidaFT_Parcial.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dtpFecComprometidaFT_Parcial_KeyPress);
+            // 
+            // Label14
+            // 
+            this.Label14.AutoSize = true;
+            this.Label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.Label14.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Label14.Location = new System.Drawing.Point(6, 44);
+            this.Label14.Name = "Label14";
+            this.Label14.Size = new System.Drawing.Size(295, 13);
+            this.Label14.TabIndex = 245;
+            this.Label14.Text = "Indique la fecha comprometida de registro de tipo \"completo\"";
+            // 
             // TxtCodMotivoParcial
             // 
             this.TxtCodMotivoParcial.AcceptsReturn = true;
@@ -295,9 +314,9 @@ namespace Estilo_Propio_Csharp
             this.label32.Location = new System.Drawing.Point(435, 14);
             this.label32.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(81, 13);
+            this.label32.Size = new System.Drawing.Size(126, 13);
             this.label32.TabIndex = 72;
-            this.label32.Text = "Observaciones:";
+            this.label32.Text = "Comentarios Publicación:";
             // 
             // panel5
             // 
@@ -336,7 +355,7 @@ namespace Estilo_Propio_Csharp
             this.Label4.Name = "Label4";
             this.Label4.Size = new System.Drawing.Size(148, 79);
             this.Label4.TabIndex = 27;
-            this.Label4.Text = "Comentarios Generales de la FT";
+            this.Label4.Text = "Observaciones Generales";
             this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LblParcial
@@ -374,25 +393,6 @@ namespace Estilo_Propio_Csharp
             this.grxRutaDePrenda.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2010;
             this.grxRutaDePrenda.FormattingRow += new Janus.Windows.GridEX.RowLoadEventHandler(this.grxRutaDePrenda_FormattingRow);
             this.grxRutaDePrenda.Click += new System.EventHandler(this.grxRutaDePrenda_Click);
-            // 
-            // dtpFecComprometidaFT_Parcial
-            // 
-            this.dtpFecComprometidaFT_Parcial.Location = new System.Drawing.Point(8, 61);
-            this.dtpFecComprometidaFT_Parcial.Name = "dtpFecComprometidaFT_Parcial";
-            this.dtpFecComprometidaFT_Parcial.Size = new System.Drawing.Size(406, 20);
-            this.dtpFecComprometidaFT_Parcial.TabIndex = 246;
-            this.dtpFecComprometidaFT_Parcial.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dtpFecComprometidaFT_Parcial_KeyPress);
-            // 
-            // Label14
-            // 
-            this.Label14.AutoSize = true;
-            this.Label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.Label14.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Label14.Location = new System.Drawing.Point(6, 44);
-            this.Label14.Name = "Label14";
-            this.Label14.Size = new System.Drawing.Size(295, 13);
-            this.Label14.TabIndex = 245;
-            this.Label14.Text = "Indique la fecha comprometida de registro de tipo \"completo\"";
             // 
             // FrmBandejaControlFTPublicaciones_PrePublicar
             // 

@@ -131,9 +131,9 @@ namespace Estilo_Propio_Csharp
             this.label32.Location = new System.Drawing.Point(6, 34);
             this.label32.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(81, 13);
+            this.label32.Size = new System.Drawing.Size(246, 13);
             this.label32.TabIndex = 72;
-            this.label32.Text = "Observaciones:";
+            this.label32.Text = "Comentarios Publicación ........................................";
             // 
             // Panel1
             // 
@@ -257,7 +257,7 @@ namespace Estilo_Propio_Csharp
             this.Label4.Name = "Label4";
             this.Label4.Size = new System.Drawing.Size(148, 79);
             this.Label4.TabIndex = 27;
-            this.Label4.Text = "Comentarios Generales de la FT";
+            this.Label4.Text = "Observaciones Generales";
             this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LblParcial
