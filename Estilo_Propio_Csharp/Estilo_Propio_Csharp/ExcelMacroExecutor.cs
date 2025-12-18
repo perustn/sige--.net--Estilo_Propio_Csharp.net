@@ -114,7 +114,8 @@ namespace Estilo_Propio_Csharp
             ConfiguracionCeldaControlAvanzada configAvanzada = null,
             IProgress<ProgresoInfo> progress = null, 
             CancellationToken cancellationToken = default,
-            ConfiguracionLogCSV configCSV = null
+            ConfiguracionLogCSV configCSV = null,
+            Boolean ExportarPDF = true
             )
         {
             var resultado = new ResultadoEjecucion();
@@ -126,7 +127,15 @@ namespace Estilo_Propio_Csharp
 
             CSVLogWriter csvWriter = null;
             MonitorLogCSV monitor = null;
-
+            string TipoHoja = "";
+            if(ExportarPDF == true)
+            {
+                TipoHoja = "PDF";
+            }
+            else
+            {
+                TipoHoja = "XLT";
+            }
             try
             {
                 // Validaciones iniciales
@@ -151,7 +160,7 @@ namespace Estilo_Propio_Csharp
                         progress?.Report(new ProgresoInfo
                         {
                             Porcentaje = 13,
-                            Mensaje = "Generando PDF",
+                            Mensaje = "Generando " + TipoHoja,
                             Detalle = "Inicializar CSV Writer"
                         });
 
@@ -162,7 +171,7 @@ namespace Estilo_Propio_Csharp
                         progress?.Report(new ProgresoInfo
                         {
                             Porcentaje = 14,
-                            Mensaje = "Generando PDF",
+                            Mensaje = "Generando " + TipoHoja,
                             Detalle = "Inicializar Excel"
                         });
 
@@ -176,7 +185,7 @@ namespace Estilo_Propio_Csharp
                         progress?.Report(new ProgresoInfo
                         {
                             Porcentaje = 15,
-                            Mensaje = "Generando PDF",
+                            Mensaje = "Generando " + TipoHoja,
                             Detalle = $"Abriendo archivo: {rutaArchivo}"
                         });
 
@@ -239,7 +248,7 @@ namespace Estilo_Propio_Csharp
                                 progress?.Report(new ProgresoInfo
                                 {
                                     Porcentaje = (int)(entrada.Contador + 15),
-                                    Mensaje = "Generando PDF",
+                                    Mensaje = "Generando " + TipoHoja,
                                     Detalle = ($"{entrada.Modulo}: {entrada.Evento} {entrada.Detalles}")
                                 });
                             };
@@ -289,7 +298,7 @@ namespace Estilo_Propio_Csharp
                         progress?.Report(new ProgresoInfo
                         {
                             Porcentaje = 66,
-                            Mensaje = "Generando PDF",
+                            Mensaje = "Generando " + TipoHoja,
                             Detalle = $"Ejecutando macro: {nombreMacro}"
                         });
 

@@ -116,7 +116,7 @@ namespace Estilo_Propio_Csharp
         }
 
         private async Task<ResultadoEjecucion> GenerarPDFAsync_V2(string codEstpro, string codVersion, int IDFichaTecnica, string rutaFile, string nombreFile,
-            IProgress<ProgresoInfo> progress, CancellationToken cancellationToken)
+            IProgress<ProgresoInfo> progress, CancellationToken cancellationToken, Boolean ExportaPDF, string TipoHoja)
         {
             string RouteFileXLT = VariablesGenerales.pRuta;
             string RouteLogo = oHp.DevuelveDato("SELECT Ruta_Logo = ISNULL(Ruta_Logo, '') From SEGURIDAD..SEG_EMPRESAS WHERE Cod_Empresa = '" +
@@ -188,10 +188,10 @@ namespace Estilo_Propio_Csharp
                         codEstpro,
                         codVersion,
                         IDFichaTecnica,
-                        true,
+                        true, 
                         rutaFile,
                         nombreFile,
-                        "PDF"
+                        TipoHoja
                         },
             timeoutSegundos: 1000,
             celdaControl: null,
@@ -200,8 +200,9 @@ namespace Estilo_Propio_Csharp
             configAvanzada: config,
             progress, 
             cancellationToken,
-            configCSV: configCSV
-            );;
+            configCSV: configCSV,
+            ExportarPDF: ExportaPDF
+            );
 
          return resultado;
 
@@ -355,7 +356,7 @@ namespace Estilo_Propio_Csharp
         // Método público que permite llevar el control del proceso
         public async Task<bool> GenerarPDFAsync(string codEstpro, 
             string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel,
-            IProgress<ProgresoInfo> progress, CancellationToken cancellationToken)
+            IProgress<ProgresoInfo> progress, CancellationToken cancellationToken, Boolean ExportaPDF)
         {
             int porcentaje = 0;
             progress?.Report(new ProgresoInfo
@@ -366,25 +367,38 @@ namespace Estilo_Propio_Csharp
             });
 
             bool isGeneroOK = false;
-
+            string TipoHoja = "";
+            string pathPDF = "";
+            string pathPDF_ConIndice = "";
+            string pathPDF_Compartido = "";
             string rutaArchivoPDF = CreaCarpetaLocal();
             string nombreArchivoPDF = string.Format("FT-EP{0}-{1}-{2}_T", codEstpro, codVersion, IdPublicacion);
             string nombreArchivoPDF_ConIndice = string.Format("FT-EP{0}-{1}-{2}", codEstpro, codVersion, IdPublicacion);
-
-            string pathPDF = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF, ".PDF");
-            string pathPDF_ConIndice = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF_ConIndice, ".PDF");
-
             string rutaArchivoPDF_Compartido = ValidaCarpetaCompartida(CodigoClienteSel);
-            string pathPDF_Compartido = Path.Combine(rutaArchivoPDF_Compartido, nombreArchivoPDF_ConIndice + ".PDF");
 
+            if (ExportaPDF == true)
+            {
+                TipoHoja = "PDF";
+                pathPDF = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF, ".PDF");
+                pathPDF_ConIndice = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF_ConIndice, ".PDF");
+                pathPDF_Compartido = Path.Combine(rutaArchivoPDF_Compartido, nombreArchivoPDF_ConIndice + ".PDF");
+            }
+            else
+            {
+                TipoHoja = "xlt";
+                pathPDF = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF, ".xlt");
+                pathPDF_ConIndice = string.Format("{0}{1}{2}", rutaArchivoPDF, nombreArchivoPDF_ConIndice, ".xlt");
+                pathPDF_Compartido = Path.Combine(rutaArchivoPDF_Compartido, nombreArchivoPDF_ConIndice + ".xlt");
+            }                   
+            
             try
             {
                 porcentaje = 5;
                 progress?.Report(new ProgresoInfo
                 {
                     Porcentaje = porcentaje,
-                    Mensaje = "Generando PDF",
-                    Detalle = "Eliminando PDF existente"
+                    Mensaje = "Generando " + TipoHoja,
+                    Detalle = "Eliminando " + TipoHoja + " existente"
                 });
 
                 EliminaPDF(pathPDF);
@@ -393,13 +407,13 @@ namespace Estilo_Propio_Csharp
                 progress?.Report(new ProgresoInfo
                 {
                     Porcentaje = porcentaje,
-                    Mensaje = "Generando PDF",
+                    Mensaje = "Generando " + TipoHoja,
                     Detalle = "Inicio de Invocacion de plantilla XLT"
                 });
 
                 string mensajePDF = "";
                 ResultadoEjecucion resultado = await GenerarPDFAsync_V2(codEstpro, codVersion, IDFichaTecnica, rutaArchivoPDF, nombreArchivoPDF,
-                    progress, cancellationToken);
+                    progress, cancellationToken, ExportaPDF, TipoHoja);
 
                 if (resultado.Exitoso)
                 {
@@ -407,7 +421,7 @@ namespace Estilo_Propio_Csharp
                     progress?.Report(new ProgresoInfo
                     {
                         Porcentaje = porcentaje,
-                        Mensaje = "Generando PDF",
+                        Mensaje = "Generando " + TipoHoja,
                         Detalle = ($"✓ Macro ejecutada exitosamente en {resultado.TiempoEjecucion.TotalSeconds:F2}s")
                     });
                 }
@@ -420,43 +434,50 @@ namespace Estilo_Propio_Csharp
                             progress?.Report(new ProgresoInfo
                             {
                                 Porcentaje = porcentaje,
-                                Mensaje = "Generando PDF",
+                                Mensaje = "Generando " + TipoHoja,
                                 Detalle = log.ToString()
                             });
                         }
                     }
-                    throw new ProcessingException($"Error al Generar PDF: {resultado.MensajeError}");
+                    throw new ProcessingException($"Error al Generar " + TipoHoja + ": {resultado.MensajeError}");
                 }
 
-                var procesador = new PdfIndexProcessor();
-                procesador.ProcesarPdfConIndice(pathPDF, resultado.RutaArchivoMetaData, pathPDF_ConIndice);
-
-                porcentaje = 80;
-                progress?.Report(new ProgresoInfo
-                {
-                    Porcentaje = porcentaje,
-                    Mensaje = "Generando PDF",
-                    Detalle = "Protegiendo PDF"
-                });
-
                 string EventoParaValidaProteccionPDf = oHp.DevuelveDato("select dbo.sm_valida_Tg_Eventos_Parametrizables('431')",
-                        VariablesGenerales.pConnect).ToString();
-
+                          VariablesGenerales.pConnect).ToString();
                 ResultadoProteccionPDF proteccionPDF = null;
-                if (EventoParaValidaProteccionPDf == "S")
+
+                if (ExportaPDF == true)
                 {
-                    proteccionPDF = await ProtegerPdfExe(pathPDF_ConIndice);
-                    if (!proteccionPDF.Exitoso)
+                    var procesador = new PdfIndexProcessor();
+                    procesador.ProcesarPdfConIndice(pathPDF, resultado.RutaArchivoMetaData, pathPDF_ConIndice);
+
+                    porcentaje = 80;
+                    progress?.Report(new ProgresoInfo
                     {
-                        throw new ProcessingException($"Error al Proteger PDF");
-                    };
+                        Porcentaje = porcentaje,
+                        Mensaje = "Generando PDF",
+                        Detalle = "Protegiendo PDF"
+                    });                                   
+                                        
+                    if (EventoParaValidaProteccionPDf == "S")
+                    {
+                        proteccionPDF = await ProtegerPdfExe(pathPDF_ConIndice);
+                        if (!proteccionPDF.Exitoso)
+                        {
+                            throw new ProcessingException($"Error al Proteger PDF");
+                        };
+                    }
+                }
+                else
+                {
+                    CopiarArchivo(pathPDF, pathPDF_ConIndice);
                 }
 
                 porcentaje = 90;
                 progress?.Report(new ProgresoInfo
                 {
                     Porcentaje = porcentaje,
-                    Mensaje = "Generando PDF",
+                    Mensaje = "Generando " + TipoHoja,
                     Detalle = "Copiando a ruta compartida"
                 });
 
@@ -466,8 +487,8 @@ namespace Estilo_Propio_Csharp
                 progress?.Report(new ProgresoInfo
                 {
                     Porcentaje = porcentaje,
-                    Mensaje = "Generando PDF",
-                    Detalle = "Guardando Ruta de PDF en base de datos"
+                    Mensaje = "Generando " + TipoHoja,
+                    Detalle = "Guardando Ruta de " + TipoHoja + " en base de datos"
                 });
 
                 var task = Task.Run(() =>
@@ -485,15 +506,15 @@ namespace Estilo_Propio_Csharp
                 mensajePDF = await task;
                 if (!mensajePDF.Equals(""))
                 {
-                    throw new ProcessingException($"Error al guardar PDF en BD: {mensajePDF}");
+                    throw new ProcessingException($"Error al guardar " + TipoHoja + " en BD: {mensajePDF}");
                 }
 
                 porcentaje = 97;
                 progress?.Report(new ProgresoInfo
                 {
                     Porcentaje = porcentaje,
-                    Mensaje = "Generando PDF",
-                    Detalle = "Eliminando PDF Local Temporal"
+                    Mensaje = "Generando " + TipoHoja,
+                    Detalle = "Eliminando " + TipoHoja + " Local Temporal"
                 });
 
                 EliminaPDF(pathPDF);
