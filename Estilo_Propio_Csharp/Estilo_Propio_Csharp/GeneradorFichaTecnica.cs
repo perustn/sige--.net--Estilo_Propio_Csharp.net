@@ -12,12 +12,14 @@ using System.Windows.Forms;
 using static Estilo_Propio_Csharp.FormularioProgreso;
 using Microsoft.Office.Interop.Excel;
 using Application = Microsoft.Office.Interop.Excel.Application;
+using Microsoft.Extensions.Logging;
 
 namespace Estilo_Propio_Csharp
 {
     class GeneradorFichaTecnica
     {
         ClsHelper oHp = new ClsHelper();
+        public event System.Action OnProcesoCompleto;
 
         // Método público que recibe los 3 parámetros
         public async Task<bool> GenerarFtPDFAsync(string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel)
@@ -353,6 +355,7 @@ namespace Estilo_Propio_Csharp
             return executionOk;
         }
 
+
         // Método público que permite llevar el control del proceso
         public async Task<bool> GenerarPDFAsync(string codEstpro, 
             string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel,
@@ -626,6 +629,110 @@ namespace Estilo_Propio_Csharp
                 }
             }
             return resultado;
+        }
+
+        public async Task<bool> EvaluaSeguridadImpresion(string carpetaDestino)
+        {
+            ResultadoProteccionPDF resultado = new ResultadoProteccionPDF();
+            string nameProy = "Estilo_Propio_Csharp";
+            string tipo = ".exe";
+            string sPath = AppDomain.CurrentDomain.BaseDirectory;
+            string sDllName = sPath + @"\" + nameProy + tipo;
+            string executablePath = sDllName;
+
+            // Define tus parámetros en una lista
+            List<string> parameters = new List<string>
+            {
+                "EVALUASEGURIDAD",
+                VariablesGenerales.pConnect,
+                VariablesGenerales.pConnectSeguridad,
+                VariablesGenerales.pConnectVB6,
+                VariablesGenerales.pCodEmpresa,
+                VariablesGenerales.pUsuario,
+                VariablesGenerales.pRuta,
+                VariablesGenerales.pCodPerfil,
+                carpetaDestino
+            };
+
+            string allArguments = string.Join(" ", parameters.Select(p => p.Contains(" ") ? $"\"{p}\"" : p));
+
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = executablePath;
+                process.StartInfo.Arguments = allArguments;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.CreateNoWindow = true;
+
+                process.Start();
+
+                // Leemos la salida de la consola del EXE
+                string output = await process.StandardOutput.ReadToEndAsync();
+                await Task.Run(() => process.WaitForExit());
+
+                if (process.ExitCode == 0)
+                {
+                    // Buscamos la línea que contiene nuestro marcador
+                    string[] lineas = output.Split(new[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    // Buscamos la línea específica de impresión
+                    var lineaPermiso = lineas.FirstOrDefault(l => l.Contains("PERMISO_IMPRESION:"));
+
+                    if (lineaPermiso != null)
+                    {
+                        // Retornamos true si dice "True", false si dice "False"
+                        return lineaPermiso.Split(':')[1].Trim().ToLower() == "true";
+                    }
+                }
+            }
+
+            // Si algo falla o no se encuentra la línea, por seguridad asumimos que NO se puede (o manejas el error)
+            return false;
+        }
+
+        public async void DesbloquedaPDF(string rutaOriginal, string rutaDestino, string passwordConocida, int IDSolicitud)
+        {
+            GeneradorFichaTecnica generador = new GeneradorFichaTecnica();
+
+            CopiarArchivo(rutaOriginal, rutaDestino);
+
+            // 1. Evaluamos si se permite imprimir
+            bool permiteImprimir = await generador.EvaluaSeguridadImpresion(rutaDestino);
+            if (!permiteImprimir)
+            {
+                // 2. DESBLOQUEAR: Si no permite, intentamos liberar el PDF
+                //var confirmacion = MessageBox.Show(
+                //    "El documento está protegido contra impresión. ¿Desea desbloquearlo para imprimir?",
+                //    "Seguridad PDF", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                //if (confirmacion == DialogResult.Yes)
+                //{
+                var pdfService = new PDFProtectionPdfSharp.PdfProtectionService(null);
+
+                var resultado = await pdfService.UnprotectPdfAsync(rutaDestino, rutaDestino, passwordConocida, true);
+
+                    if (resultado.Success)
+                    {
+                        rutaDestino = resultado.OutputPath;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se pudo desbloquear el PDF: " + resultado.Message);
+                        return; // Cancelamos el proceso
+                    }
+                //}
+                //else
+                //{
+                //    return; // El usuario no quiso desbloquearlo
+                //}
+            }
+
+            // 3. IMPRIMIR: Llamamos a PdfPrinterHelper con la ruta final (original o desbloqueada)
+            PdfPrinterHelper printer = new PdfPrinterHelper();
+            printer.OnImpresionFinalizada += () => {
+                OnProcesoCompleto?.Invoke();
+            };
+            printer.PrintWithUserConfiguration(rutaDestino, IDSolicitud);
         }
     }
 }
