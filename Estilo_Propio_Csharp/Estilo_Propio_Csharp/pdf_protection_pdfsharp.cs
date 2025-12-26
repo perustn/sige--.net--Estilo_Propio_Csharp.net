@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using Estilo_Propio_Csharp;
+using System.Windows.Forms;
 
 namespace PDFProtectionPdfSharp
 {
@@ -451,6 +452,53 @@ namespace PDFProtectionPdfSharp
         }
 
         #endregion
+
+        public async Task<PdfProtectionResult> UnprotectPdfAsync(string inputPath, string outputPath, string ownerPassword, bool overwrite = false)
+        {
+            var result = new PdfProtectionResult { Success = false };
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    // 1. Abrimos para modificar
+                    using (var document = PdfReader.Open(inputPath, ownerPassword, PdfDocumentOpenMode.Modify))
+                    {
+                        // 2. Limpiamos las contraseñas
+                        document.SecuritySettings.UserPassword = "";
+                        document.SecuritySettings.OwnerPassword = "";
+
+                        // 3. ESTA ES LA LÍNEA CRUCIAL: 
+                        // Al asignar una contraseña vacía y LUEGO poner el nivel en None,
+                        // forzamos a PdfSharp a liberar el motor de cifrado.
+                        document.SecuritySettings.DocumentSecurityLevel = PdfDocumentSecurityLevel.None;
+
+                        // 4. Forzamos los permisos a "Abierto"
+                        document.SecuritySettings.PermitPrint = true;
+                        document.SecuritySettings.PermitFullQualityPrint = true;
+                        document.SecuritySettings.PermitModifyDocument = true;
+                        document.SecuritySettings.PermitExtractContent = true;
+                        document.SecuritySettings.PermitAccessibilityExtractContent = true;
+                        document.SecuritySettings.PermitAnnotations = true;
+                        document.SecuritySettings.PermitFormsFill = true;
+                        document.SecuritySettings.PermitAssembleDocument = true;
+
+                        // 5. Guardamos (puede ser en la misma ruta si overwrite es true)
+                        document.Save(outputPath);
+                    }
+                });
+
+                result.Success = true;
+                result.OutputPath = outputPath;
+                result.Message = "Seguridad removida exitosamente.";
+            }
+            catch (Exception ex)
+            {
+                result.Message = $"Error: {ex.Message}";
+            }
+
+            return result;
+        }
     }
 
     /// <summary>
@@ -582,6 +630,6 @@ namespace PDFProtectionPdfSharp
                     logger.LogError(ex, "❌ Error analizando {File}", file);
                 }
             }
-        }
+        }      
     }
 }

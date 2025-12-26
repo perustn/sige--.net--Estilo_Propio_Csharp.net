@@ -111,6 +111,10 @@ namespace Estilo_Propio_Csharp
                 case "FRMESTILOVERSIONMADREDEPENDENCIA":
                     MyForm = new FrmEstiloVersionMadreDependencia();
                     break;
+
+                case "FRMSOLICITUDESAUTORIZACIONIMPFT":
+                    MyForm = new FrmSolicitudesAutorizacionImpFT();
+                    break;
             }
             return MyForm;
         }

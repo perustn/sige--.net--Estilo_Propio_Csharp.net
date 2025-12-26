@@ -853,9 +853,7 @@ namespace Estilo_Propio_Csharp
                         oModPubl.TxtComentariosGenerales.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Observacion_FT"].Index).ToString();
                         oModPubl.TxtCodMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Motivo"].Index).ToString();
                         oModPubl.TxtDesMotivo.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["Nombre_Motivo"].Index).ToString();
-
                         oModPubl.TxtObservacion.Text = gridEX1.GetValue(gridEX1.RootTable.Columns["ComentariosPubl"].Index).ToString();
-
                         if (Convert.ToBoolean(gridEX1.GetValue(gridEX1.RootTable.Columns["Flg_LaFT_EsCompleta"].Index).ToString()) == true)
                         {
                             oModPubl.ChkEsEstampado.Checked = true;
@@ -938,7 +936,7 @@ namespace Estilo_Propio_Csharp
                                         gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString(), 
                                         (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index), 
                                         (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index), 
-                                        gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString());
+                                        gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString(),true);
                         }
                         break;
 
@@ -1123,8 +1121,58 @@ namespace Estilo_Propio_Csharp
                         ((dynamic)oForm3).ShowDialog();
 
                         break;
-                    
-                        
+
+                    case "FTEXCEL":
+                        if (gridEX1.RecordCount == 0) { return; }
+                        if ((string)gridEX1.GetValue(gridEX1.RootTable.Columns["STATUS_FT_PUBLICACION"].Index) != "G")
+                        {
+                            MessageBox.Show("Para generar en excel, la FT debe estar en estatus: Generada por Terminar", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) != 0)
+                        {
+
+                            GeneraFTPDFAsync(gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString(),
+                                        gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString(),
+                                        (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index),
+                                        (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index),
+                                        gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString(),false);
+                        }
+                        break;
+
+                    case "TERMINADO":
+                        if (gridEX1.RecordCount == 0) { return; }
+                        if ((int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index) == 0)
+                        {
+                            MessageBox.Show("Registro no tiene ID Publicado", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                        rpt = MessageBox.Show("¿Está seguro de cambiar estado a Terminado de la FT seleccionada?", "Pregunta", MessageBoxButtons.YesNo);
+                        if (DialogResult.Yes == rpt)
+                        {
+                            strSQL = string.Empty;
+                            strSQL += "\n" + "EXEC FT_CAMBIA_ESTADO_GENERADO_POR_TERMINAR_A_TERMINADO";
+                            strSQL += "\n" + string.Format(" @id_publicacion    = {0}", gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index));
+                            strSQL += "\n" + string.Format(",@cod_usuario		='{0}'", VariablesGenerales.pUsuario);
+                            //strSQL += "\n" + string.Format(",@cod_estacion		='{0}'", Environment.MachineName);
+
+                            if (oHp.EjecutarOperacion(strSQL) == true)
+                            {
+                                CargaGrilla();
+                                GeneraFTPDFAsync(gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_EstPro"].Index).ToString(),
+                                        gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Version"].Index).ToString(),
+                                        (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_FichaTecnica"].Index),
+                                        (int)gridEX1.GetValue(gridEX1.RootTable.Columns["Id_Publicacion"].Index),
+                                        gridEX1.GetValue(gridEX1.RootTable.Columns["Cod_Cliente"].Index).ToString(),true);
+                            }
+                        }
+                        break;
 
                 }
             }
@@ -1333,7 +1381,7 @@ namespace Estilo_Propio_Csharp
             }
         }
 
-        public async Task GeneraFTPDFAsync(string EstiloPropioSel,string Versionsel,int IdFichaTecnicaSel, int IDPublicacion, string CodigoClienteSel)
+        public async Task GeneraFTPDFAsync(string EstiloPropioSel,string Versionsel,int IdFichaTecnicaSel, int IDPublicacion, string CodigoClienteSel, Boolean ExportaPDF)
         {
             if (isExecutionGeneracionFT) {
                 MessageBox.Show("Ya se esta procesando una FT", "Incormacion", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1363,7 +1411,7 @@ namespace Estilo_Propio_Csharp
                 // Ejecutar tu método asíncrono
                 //var resultado = await TuMetodoAsincrono(progress, cancellationTokenSource.Token);
                 bool resultado = await GenFT.GenerarPDFAsync(EstiloPropioSel, Versionsel, IdFichaTecnicaSel, IDPublicacion, CodigoClienteSel,
-                    progress, cancellationTokenSource.Token);
+                    progress, cancellationTokenSource.Token, ExportaPDF);
 
                 //if (resultado)
                 //{
