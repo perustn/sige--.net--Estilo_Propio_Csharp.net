@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -34,8 +36,11 @@ namespace Estilo_Propio_Csharp
                 {
 
                     case "PROTECCIONPDF":
-                            EjecutarProteccionPdf(args[8]);
-                            break;
+                        EjecutarProteccionPdf(args[8]);
+                        break;
+                    case "EVALUASEGURIDAD":
+                        EvaluaSeguridadPDF(args[8]).GetAwaiter().GetResult();
+                        break;
                     case "UPC":
                         Application.Run(new FrmCargaUPCdesdeExcel());
                         break;
@@ -72,6 +77,43 @@ namespace Estilo_Propio_Csharp
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en protección PDF: {ex.Message}");
+                Environment.Exit(1);
+            }
+        }
+
+        private static async Task EvaluaSeguridadPDF(string archivoDestino)
+        {
+            try
+            {
+                // 1. Configurar el Factory de Logs (Requiere NuGet Microsoft.Extensions.Logging.Console)
+                using var loggerFactory = LoggerFactory.Create(builder => {
+                    builder.AddConsole();
+                    builder.SetMinimumLevel(LogLevel.Information);
+                });
+
+                // 2. Instanciar el servicio pasando el logger
+                using var pdfService = new PDFProtectionPdfSharp.PdfProtectionService(
+                    loggerFactory.CreateLogger<PDFProtectionPdfSharp.PdfProtectionService>()
+                );
+
+                // 3. Obtener la información de seguridad
+                var info = await pdfService.GetSecurityInfoAsync(archivoDestino);
+
+                if (info.HasSecurity && info.CurrentPermissions != null)
+                {
+                    // Imprime True si tiene permiso, False si está bloqueado
+                    Console.WriteLine($"PERMISO_IMPRESION: {info.CurrentPermissions.AllowPrint}");
+                }
+                else
+                {
+                    // Si no tiene seguridad, por defecto se puede imprimir
+                    Console.WriteLine("PERMISO_IMPRESION: True");
+                }
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en evaluación PDF: {ex.Message}");
                 Environment.Exit(1);
             }
         }

@@ -295,7 +295,7 @@ namespace Estilo_Propio_Csharp
                     }
 
                     /// Genera Excel y convierte a PDF
-                    if (await GeneraFTAsync(EstiloPropioSel, Versionsel, IdFichaTecnicaSel, IDPublicacion, CodigoClienteSel))
+                    if (await GeneraFTAsync(EstiloPropioSel, Versionsel, IdFichaTecnicaSel, IDPublicacion, CodigoClienteSel,true))
                     {
                         IsCambioOK = true;
                         MessageBox.Show("El Proceso Se Ha Generado Correctamente", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -307,7 +307,7 @@ namespace Estilo_Propio_Csharp
 
         object IIf(bool expression, object truePart, object falsePart) { return expression ? truePart : falsePart; }
 
-        private async Task<bool> GeneraFTAsync(string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel)
+        private async Task<bool> GeneraFTAsync(string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel, Boolean ExportaPDF)
         {
 
             bool returnOK = false;
@@ -332,7 +332,7 @@ namespace Estilo_Propio_Csharp
                 // Ejecutar tu método asíncrono
                 //var resultado = await TuMetodoAsincrono(progress, cancellationTokenSource.Token);
                 bool resultado = await GenFT.GenerarPDFAsync(codEstpro, codVersion, IDFichaTecnica, IDPublicacion, CodigoClienteSel,
-                    progress, cancellationTokenSource.Token);
+                    progress, cancellationTokenSource.Token, ExportaPDF);
 
                 if (resultado)
                 {
