@@ -31,7 +31,7 @@ namespace Estilo_Propio_Csharp
         private DataRow oDr;
         clsBtnSeguridadJanus oSeg = new clsBtnSeguridadJanus();
         public Boolean IsCambioOK;
-
+        public string EventoParametrizableGenrarPDF;
 
         public int IDFichaTecnica;
         public int ID_FT;
@@ -74,6 +74,8 @@ namespace Estilo_Propio_Csharp
                 CargarRutaDePrenda();
                 MarcarTodos(true);
                 grxRutaDePrenda.Enabled = false;
+
+                EventoParametrizableGenrarPDF = oHp.DevuelveDato("select DBO.sm_valida_Tg_Eventos_Parametrizables(437)", VariablesGenerales.pConnect).ToString();
 
             }
             catch (Exception)
@@ -404,12 +406,21 @@ namespace Estilo_Propio_Csharp
                 }
 
                 MessageBox.Show($"Se genero el id de publicacion {_IDPublicacion.ToString()}", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                if(await GeneraFTAsync(TxtEstiloPropio.Text, TxtVersion.Text, _IDFichaTecnica, _IDPublicacion, ClienteSel))
+                
+                if(EventoParametrizableGenrarPDF == "S")
                 {
                     IsCambioOK = true;
                     DialogResult = DialogResult.OK;
                 }
+                else
+                {
+                    if (await GeneraFTAsync(TxtEstiloPropio.Text, TxtVersion.Text, _IDFichaTecnica, _IDPublicacion, ClienteSel, true))
+                    {
+                        IsCambioOK = true;
+                        DialogResult = DialogResult.OK;
+                    }
+                }
+                
             }
             catch (Exception ex)
             {
@@ -489,7 +500,7 @@ namespace Estilo_Propio_Csharp
             return (IDPublicacion, IDFichaTecnica);
         }
 
-        private async Task<bool> GeneraFTAsync (string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel)
+        private async Task<bool> GeneraFTAsync (string codEstpro, string codVersion, int IDFichaTecnica, int IdPublicacion, string CodigoClienteSel, Boolean ExportaPDF)
         {
             bool returnOK = false;
             var cancellationTokenSource = new CancellationTokenSource();
@@ -514,7 +525,7 @@ namespace Estilo_Propio_Csharp
                 // Ejecutar tu método asíncrono
                 //var resultado = await TuMetodoAsincrono(progress, cancellationTokenSource.Token);
                 bool resultado = await GenFT.GenerarPDFAsync(codEstpro, codVersion, IDFichaTecnica, IDPublicacion, CodigoClienteSel,
-                    progress, cancellationTokenSource.Token);
+                    progress, cancellationTokenSource.Token, ExportaPDF);
 
                 if (resultado)
                 {

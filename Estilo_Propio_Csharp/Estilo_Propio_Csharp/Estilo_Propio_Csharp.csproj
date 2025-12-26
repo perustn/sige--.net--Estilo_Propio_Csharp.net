@@ -96,14 +96,14 @@
     <Reference Include="Microsoft.Bcl.HashCode, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.HashCode.6.0.0\lib\netstandard2.0\Microsoft.Bcl.HashCode.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Configuration.7.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Configuration, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.8.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Configuration.Abstractions.7.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.Abstractions.8.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.Binder, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Configuration.Binder.7.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Configuration.Binder, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.Binder.8.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.8.0.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
@@ -111,23 +111,23 @@
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.8.0.2\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.7.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.8.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.8.0.2\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Configuration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.Configuration.7.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Configuration.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging.Configuration, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Configuration.8.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Console, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.Console.7.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Console.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging.Console, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Console.8.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Console.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Options, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Options.8.0.2\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Options.ConfigurationExtensions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Options.ConfigurationExtensions.7.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Options.ConfigurationExtensions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Options.ConfigurationExtensions.8.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Primitives, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.8.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
@@ -154,6 +154,9 @@
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats, Version=2.7.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.7.3\lib\netstandard2.0\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfiumViewer, Version=2.13.0.0, Culture=neutral, PublicKeyToken=91e4789cfb0609e0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PdfiumViewer.2.13.0.0\lib\net20\PdfiumViewer.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
@@ -270,6 +273,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmMaestroAprobadores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmMaestroAprobadores.Designer.cs">
+      <DependentUpon>FrmMaestroAprobadores.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSolicitudesAutorizacionImpFT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSolicitudesAutorizacionImpFT.Designer.cs">
+      <DependentUpon>FrmSolicitudesAutorizacionImpFT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSolicitudesAutorizacionImpFT_Generar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSolicitudesAutorizacionImpFT_Generar.Designer.cs">
+      <DependentUpon>FrmSolicitudesAutorizacionImpFT_Generar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSolicitudesAutorizacionImpFT_VerLogEstados.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSolicitudesAutorizacionImpFT_VerLogEstados.Designer.cs">
+      <DependentUpon>FrmSolicitudesAutorizacionImpFT_VerLogEstados.cs</DependentUpon>
+    </Compile>
     <Compile Include="MonitorLogCSV.cs" />
     <Compile Include="MonitorLogBuffer.cs" />
     <Compile Include="ClsForm.cs" />
@@ -455,6 +482,7 @@
     <Compile Include="NullLogger.cs" />
     <Compile Include="oParent.cs" />
     <Compile Include="PdfIndexProcessor.cs" />
+    <Compile Include="PdfPrinterHelper.cs" />
     <Compile Include="pdf_protection_pdfsharp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -542,8 +570,20 @@
     <EmbeddedResource Include="FrmEstiloVersionMadreDependencia_Adicionar.resx">
       <DependentUpon>FrmEstiloVersionMadreDependencia_Adicionar.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmMaestroAprobadores.resx">
+      <DependentUpon>FrmMaestroAprobadores.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmMantMotivoRechazo.resx">
       <DependentUpon>FrmMantMotivoRechazo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSolicitudesAutorizacionImpFT.resx">
+      <DependentUpon>FrmSolicitudesAutorizacionImpFT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSolicitudesAutorizacionImpFT_Generar.resx">
+      <DependentUpon>FrmSolicitudesAutorizacionImpFT_Generar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSolicitudesAutorizacionImpFT_VerLogEstados.resx">
+      <DependentUpon>FrmSolicitudesAutorizacionImpFT_VerLogEstados.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MenuPrincipal.resx">
       <DependentUpon>MenuPrincipal.cs</DependentUpon>
